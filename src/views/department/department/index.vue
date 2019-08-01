@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="filter.departmentNo" placeholder="部门编号" style="width: 200px;" class="filter-item" />
-      <el-input v-model="filter.departmentName" placeholder="部门名称" style="width: 200px;" class="filter-item" />
+      <el-input v-model="filter.departmentNo" placeholder="部门编号" style="width: 200px;" class="filter-item" clearable />
+      <el-input v-model="filter.departmentName" placeholder="部门名称" style="width: 200px;" class="filter-item" clearable />
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="getDeptList">查询</el-button>
       <el-button class="filter-item" icon="el-icon-plus" @click="addInit">添加</el-button>
     </div>

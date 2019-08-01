@@ -20,3 +20,27 @@ export function deleteDeptById(id) {
     method: 'post'
   })
 }
+
+// ////////////////职位////////////////////
+export function getJobs(data) {
+  return request({
+    url: '/department/getJobList',
+    method: 'post',
+    data
+  })
+}
+
+export function saveJobInfo(data) {
+  return request({
+    url: '/department/saveJob',
+    method: 'post',
+    data
+  })
+}
+
+export function deleteJobById(id) {
+  return request({
+    url: `/department/deleteJobById/${id}`,
+    method: 'post'
+  })
+}

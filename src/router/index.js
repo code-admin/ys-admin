@@ -92,8 +92,8 @@ export const constantRoutes = [
       {
         path: '/job/list',
         name: 'JobList',
-        component: () => import('@/views/table/index'),
-        meta: { title: '岗位设置' }
+        component: () => import('@/views/department/job/index.vue'),
+        meta: { title: '职位设置' }
       }
     ]
   },
