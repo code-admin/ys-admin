@@ -64,14 +64,14 @@ export const constantRoutes = [
       {
         path: '/user/employee',
         name: 'UserEmployee',
-        component: () => import('@/views/table/index'),
+        component: () => import('@/views/user/employee/index'),
         meta: { title: '员工管理' }
       },
 
       {
         path: '/user/customer',
         name: 'UserCustomer',
-        component: () => import('@/views/table/index'),
+        component: () => import('@/views/user/customer/index'),
         meta: { title: '客户管理' }
       }
     ]

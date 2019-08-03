@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import { fetDeptList, saveDeptment, deleteDeptById } from '@/api/department'
+import { fetchDeptList, saveDeptment, deleteDeptById } from '@/api/department'
 export default {
   data() {
     return {
@@ -99,7 +99,7 @@ export default {
         departmentNo: this.filter.departmentNo.trim(),
         departmentName: this.filter.departmentName.trim()
       }
-      fetDeptList(params).then(res => {
+      fetchDeptList(params).then(res => {
         if (res.code === 10000) {
           this.deptList = res.data
           this.total = res.total

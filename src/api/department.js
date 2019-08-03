@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-export function fetDeptList(data) {
+export function fetchDeptList(data) {
   return request({
     url: '/department/getDepartmentList',
     method: 'post',
@@ -14,6 +14,7 @@ export function saveDeptment(data) {
     data
   })
 }
+
 export function deleteDeptById(id) {
   return request({
     url: `/department/deleteDepartmentById/${id}`,
@@ -41,6 +42,13 @@ export function saveJobInfo(data) {
 export function deleteJobById(id) {
   return request({
     url: `/department/deleteJobById/${id}`,
+    method: 'post'
+  })
+}
+
+export function getJobListByDeptId(id) {
+  return request({
+    url: `/department/getJobByDepartmentId/${id}`,
     method: 'post'
   })
 }

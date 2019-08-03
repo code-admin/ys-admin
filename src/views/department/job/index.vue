@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import { getJobs, saveJobInfo, deleteJobById, fetDeptList } from '@/api/department'
+import { getJobs, saveJobInfo, deleteJobById, fetchDeptList } from '@/api/department'
 export default {
   data() {
     return {
@@ -150,7 +150,7 @@ export default {
     },
 
     getDeptList() {
-      fetDeptList({ pageIndex: 1, pageSize: 100000 }).then(res => {
+      fetchDeptList({ pageIndex: 1, pageSize: 100000 }).then(res => {
         if (res.code === 10000) this.deptList = res.data
       })
     }
