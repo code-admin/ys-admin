@@ -55,6 +55,23 @@ export const constantRoutes = [
   },
 
   {
+    path: '/product',
+    component: Layout,
+    redirect: '/product/list',
+    name: 'Product',
+    meta: { title: '产品管理', icon: 'product' },
+    alwaysShow: true,
+    children: [
+      {
+        path: '/product/list',
+        name: 'ProductList',
+        component: () => import('@/views/product/index'),
+        meta: { title: '产品列表' }
+      }
+    ]
+  },
+
+  {
     path: '/user',
     component: Layout,
     redirect: '/user/employee',
@@ -107,10 +124,16 @@ export const constantRoutes = [
       {
         path: '/feedback/list',
         name: 'FeedbackList',
-        component: () => import('@/views/table/index'),
+        component: () => import('@/views/feedback/index'),
         meta: { title: '反馈查询' }
       },
-
+      {
+        path: '/feedback/detail/:id',
+        name: 'FeedbackDetail',
+        component: () => import('@/views/feedback/detail'),
+        hidden: true,
+        meta: { title: '反馈详情' }
+      },
       {
         path: '/feedback/report',
         name: 'FeedbackReport',

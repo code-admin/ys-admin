@@ -145,7 +145,7 @@ export default {
       })
     },
     addInit() {
-      this.title = '添加员工信息'
+      this.title = '添加客户信息'
       this.user = {
         gender: 1,
         roleId: 2
@@ -153,7 +153,7 @@ export default {
       this.dialogFormVisible = !this.dialogFormVisible
     },
     editInit(obj) {
-      this.title = '修改员工信息'
+      this.title = '修改客户信息'
       this.user = obj
       this.dialogFormVisible = !this.dialogFormVisible
     },
