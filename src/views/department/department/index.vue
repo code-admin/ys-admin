@@ -88,7 +88,7 @@ export default {
       formLabelWidth: '80px'
     }
   },
-  created() {
+  mounted() {
     this.getDeptList()
   },
   methods: {

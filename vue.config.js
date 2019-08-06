@@ -40,7 +40,8 @@ module.exports = {
       // change xxx-api/login => mock/login
       // detail: https://cli.vuejs.org/config/#devserver-proxy
       '^/yase-backend': {
-        target: 'http://192.168.2.192:8090',
+        // target: 'http://192.168.2.192:8090',
+        target: 'http://111.12.59.127:8090',
         changeOrigin: true
       },
       [process.env.VUE_APP_BASE_API]: {

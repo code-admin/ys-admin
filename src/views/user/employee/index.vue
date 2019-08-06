@@ -136,9 +136,11 @@ export default {
     }
   },
   watch: {
-    'user.departmentId': function(id) {
+    'user.departmentId': function(id, val) {
       id !== undefined && this.getJobListById(id)
-      this.user.positionId = ''
+      if (val) {
+        this.user.jobId = ''
+      }
     }
   },
   mounted() {

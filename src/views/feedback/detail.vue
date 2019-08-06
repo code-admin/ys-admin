@@ -17,7 +17,7 @@
               </el-col>
               <el-col :span="19">
                 <div class="value">
-                  {{ feedback.createTime }}
+                  <i class="el-icon-time" style="padding-right:10px" /> {{ feedback.createTime }}
                 </div>
               </el-col>
             </el-row>
@@ -61,7 +61,7 @@
               </el-col>
               <el-col :span="19">
                 <div class="value">
-                  {{ feedback.productDate }}
+                  <i class="el-icon-time" style="padding-right:10px" />{{ feedback.productDate }}
                 </div>
               </el-col>
             </el-row>
@@ -89,7 +89,7 @@
               </el-col>
               <el-col :span="19">
                 <div class="value">
-                  {{ feedback.productTypeName }}
+                  <el-tag size="mini">{{ feedback.productTypeName }}</el-tag>
                 </div>
               </el-col>
             </el-row>
@@ -214,9 +214,9 @@
       <div class="content">
         <div v-if="!!remarkList" class="block">
           <el-timeline>
-            <el-timeline-item v-for="(remark,index) in remarkList" :key="remark.id" :icon="index ? '' : 'el-icon-more' " :type="index ? '' : 'primary' " :timestamp="remark.createBy+'  '+remark.createTime" placement="top">
+            <el-timeline-item v-for="(item,index) in remarkList" :key="item.id" :icon="index ? '' : 'el-icon-more' " :type="index ? '' : 'primary' " :timestamp="item.createBy+'  '+item.createTime" placement="top">
               <el-card>
-                <p>{{ remark.description }}</p>
+                <p>{{ item.description }}</p>
               </el-card>
             </el-timeline-item>
           </el-timeline>

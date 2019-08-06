@@ -9,6 +9,10 @@
       </el-select>
       <el-input v-model="filter.deviceNo" placeholder="	机台号" style="width: 200px;" class="filter-item" clearable />
       <el-date-picker v-model="filter.productDate" type="date" value-format="yyyy-MM-dd" placeholder="生产日期" style="width: 200px;" class="filter-item" clearable />
+      <el-select v-model="filter.status" placeholder="回馈状态" style="width: 200px;" class="filter-item" clearable>
+        <el-option label="待回馈" :value="1" />
+        <el-option label="已回馈" :value="2" />
+      </el-select>
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="getFeedBacks">查询</el-button>
     </div>
 
@@ -23,8 +27,8 @@
       <el-table-column label="机台号" prop="deviceNo" align="center" />
       <el-table-column label="品种" prop="productType" align="center" />
       <el-table-column label="要求" prop="requirement" align="center" />
-      <el-table-column label="宽度" prop="width" align="center" />
-      <el-table-column label="克重" prop="weight" align="center" />
+      <!-- <el-table-column label="宽度" prop="width" align="center" />
+      <el-table-column label="克重" prop="weight" align="center" /> -->
       <el-table-column label="备注" prop="remark" align="center" />
       <el-table-column label="状态" prop="status" align="center">
         <template slot-scope="scope">
