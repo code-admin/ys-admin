@@ -33,6 +33,15 @@ export function getUsers(data) {
   )
 }
 
+export function getCustomes() {
+  return request(
+    {
+      url: '/user/getCustomerList',
+      method: 'post'
+    }
+  )
+}
+
 // 保存用户信息
 export function saveUserInfo(data) {
   return request(

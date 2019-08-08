@@ -312,7 +312,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .page{
   padding: 20px;
   background: #f2f2f2;

@@ -34,21 +34,35 @@ export const constantRoutes = [
   {
     path: '/order',
     component: Layout,
-    redirect: '/order/List',
+    redirect: '/order/manage',
     name: 'Order',
     meta: { title: '订单管理', icon: 'order' },
     children: [
       {
-        path: '/order/List',
-        name: 'OrderList',
-        component: () => import('@/views/table/index'),
+        path: '/order/manage',
+        name: 'OrderManage',
+        component: () => import('@/views/order/manage/index'),
         meta: { title: '订单管理' }
+      },
+      {
+        path: '/order/manage/add',
+        name: 'OrderManageAdd',
+        component: () => import('@/views/order/manage/add'),
+        hidden: true,
+        meta: { title: '创建订单' }
+      },
+      {
+        path: '/order/manage/detail/:id',
+        name: 'OrderManageDetail',
+        component: () => import('@/views/order/manage/detail'),
+        hidden: true,
+        meta: { title: '订单详情' }
       },
 
       {
-        path: '/order/examination',
-        name: 'OrderExamination',
-        component: () => import('@/views/table/index'),
+        path: '/order/approval',
+        name: 'OrderApproval',
+        component: () => import('@/views/order/approval/index'),
         meta: { title: '订单审核' }
       }
     ]
