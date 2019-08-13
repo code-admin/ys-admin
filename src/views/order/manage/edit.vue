@@ -1,7 +1,7 @@
 <template>
-  <div class="page">
+  <div v-loading="loading" class="page">
     <div class="card">
-      <el-steps :active="1" finish-status="success" align-center>
+      <el-steps :active="orderInfo.status+1" finish-status="success" align-center>
         <el-step title="创建" />
         <el-step title="审核中" />
         <el-step title="出库" />
@@ -84,7 +84,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="收货地址">
-            <el-cascader v-model="orderInfo.pcc" :props="props" clearable placeholder="省/市/区" style="width:100%;" />
+            <el-cascader v-if="orderInfo.pcc" v-model="orderInfo.pcc" :props="props" placeholder="省/市/区" style="width:100%;" clearable />
             <el-input v-model="orderInfo.address" class="mt5" placeholder="请输入详细地址" />
           </el-form-item>
           <el-form-item label="联系方式">
@@ -112,72 +112,18 @@
 
 <script>
 import { getCustomes } from '@/api/user'
-import { getOrderTypes, getExpress, saveOrder, submitOrder } from '@/api/order'
+import { getOrderTypes, getExpress, saveOrder, submitOrder, getOrderById } from '@/api/order'
 import { getValidateProducts } from '@/api/product'
-import { getProvinces, getCitys, getCountrys, getTowns } from '@/api/common'
+import { getProvinces, getCitys, getCountrys } from '@/api/common'
 export default {
   data() {
     return {
+      loading: false,
       props: {
         lazy: true,
-        lazyLoad(node, resolve) {
-          const { level, value } = node
-          if (level === 0) {
-            getProvinces().then(res => {
-              const nodes = []
-              if (res.code === 10000 && res.data.length) {
-                res.data.map(item => {
-                  nodes.push({
-                    value: item.provinceId,
-                    label: item.name
-                  })
-                })
-                resolve(nodes)
-              }
-            })
-          } else if (level === 1) {
-            getCitys(value).then(res => {
-              const nodes = []
-              if (res.code === 10000 && res.data.length) {
-                res.data.map(item => {
-                  nodes.push({
-                    value: item.cityId,
-                    label: item.name
-                  })
-                })
-                resolve(nodes)
-              }
-            })
-          } else if (level === 2) {
-            getCountrys(value).then(res => {
-              const nodes = []
-              if (res.code === 10000 && res.data.length) {
-                res.data.map(item => {
-                  nodes.push({
-                    value: item.countryId,
-                    label: item.name
-                  })
-                })
-                resolve(nodes)
-              }
-            })
-          } else if (level === 3) {
-            getTowns(value).then(res => {
-              const nodes = []
-              if (res.code === 10000 && res.data.length) {
-                res.data.map(item => {
-                  nodes.push({
-                    value: item.townId,
-                    label: item.name,
-                    leaf: level >= 3
-                  })
-                })
-                resolve(nodes)
-              }
-            })
-          }
-        }
+        lazyLoad: (node, resolve) => this.loadPCC(node, resolve)
       },
+      options: [],
       orderInfo: {
         orderType: 2,
         orderExts: [
@@ -201,12 +147,64 @@ export default {
     }
   },
   mounted() {
-    this.getCustomeList()
-    this.getOrderTypeList()
-    this.getValidateProductList()
-    this.getExpresList()
+    this.getDetail(this.$route.params.id) // 获取订单详情
+    this.getCustomeList() // 获取客户列表
+    this.getOrderTypeList() // 获取订单类型列表
+    this.getValidateProductList() // 获取产品列表
+    this.getExpresList() // 获取发货方式
   },
   methods: {
+    getDetail(id) {
+      this.loading = !this.loading
+      getOrderById(id).then(res => {
+        this.orderInfo = res.data
+        this.loading = !this.loading
+      })
+    },
+    loadPCC(node, resolve) {
+      const { level, value } = node
+      if (level === 0) {
+        getProvinces().then(res => {
+          const nodes = []
+          if (res.code === 10000 && res.data.length) {
+            res.data.map(item => {
+              nodes.push({
+                value: item.provinceId,
+                label: item.name
+              })
+            })
+            resolve(nodes)
+          }
+        })
+      } else if (level === 1) {
+        getCitys(value).then(res => {
+          const nodes = []
+          if (res.code === 10000 && res.data.length) {
+            res.data.map(item => {
+              nodes.push({
+                value: item.cityId,
+                label: item.name
+              })
+            })
+            resolve(nodes)
+          }
+        })
+      } else if (level === 2) {
+        getCountrys(value).then(res => {
+          const nodes = []
+          if (res.code === 10000 && res.data.length) {
+            res.data.map(item => {
+              nodes.push({
+                value: item.countryId,
+                label: item.name,
+                leaf: level >= 2
+              })
+            })
+            resolve(nodes)
+          }
+        })
+      }
+    },
     getCustomeList() {
       getCustomes().then(res => {
         if (res.code === 10000) this.customeList = res.data

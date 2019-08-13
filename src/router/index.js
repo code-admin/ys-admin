@@ -52,6 +52,13 @@ export const constantRoutes = [
         meta: { title: '创建订单' }
       },
       {
+        path: '/order/manage/edit/:id',
+        name: 'OrderManageEdit',
+        component: () => import('@/views/order/manage/edit'),
+        hidden: true,
+        meta: { title: '编辑订单' }
+      },
+      {
         path: '/order/manage/detail/:id',
         name: 'OrderManageDetail',
         component: () => import('@/views/order/manage/detail'),
@@ -64,6 +71,13 @@ export const constantRoutes = [
         name: 'OrderApproval',
         component: () => import('@/views/order/approval/index'),
         meta: { title: '订单审核' }
+      },
+      {
+        path: '/order/approval/detail/:id',
+        name: 'OrderApprovalDetail',
+        component: () => import('@/views/order/approval/detail'),
+        hidden: true,
+        meta: { title: '审核详情' }
       }
     ]
   },

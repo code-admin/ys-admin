@@ -51,3 +51,53 @@ export function submitOrder(data) {
     data
   })
 }
+
+// 订单详情
+export function getOrderById(id) {
+  return request({
+    url: `/order/getOrderById/${id}`,
+    method: 'post'
+  })
+}
+
+// 关闭订单
+export function closeOrder(id) {
+  return request({
+    url: `/order/closeOrder/${id}`,
+    method: 'post'
+  })
+}
+// 添加出库记录
+export function addRemark(data) {
+  return request({
+    url: '/order/addRemark',
+    method: 'post',
+    data
+  })
+}
+
+// ///////////////审核管理///////////////////////
+export function getOrderApprovals(data) {
+  return request({
+    url: '/order/getOrderAuditList',
+    method: 'post',
+    data
+  })
+}
+
+// 审核详情
+export function getAuditById(id) {
+  return request({
+    url: `/audit/getAuditById/${id}`,
+    method: 'post'
+  })
+}
+
+// 提交审核
+export function auditOrder(data) {
+  return request({
+    url: '/audit/auditOrder',
+    method: 'post',
+    data
+  })
+}
