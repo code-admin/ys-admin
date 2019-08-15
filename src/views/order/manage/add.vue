@@ -35,7 +35,7 @@
             <el-card shadow="hover" style="min-height:454px">
               <el-form label-position="right" label-width="80px" :model="orderInfo">
                 <el-form-item label="产品/类型">
-                  <el-select v-model="orderInfo.orderExts[index].productId" placeholder="请选择产品类型" filterable clearable style="width:100%;">
+                  <el-select v-model="orderInfo.orderExts[index].productId" placeholder="请选择产品类型" filterable clearable style="width:100%;" @change="changeProduct(index)">
                     <el-option v-for="product in productList" :key="product.id" :label="product.name" :value="product.id" />
                   </el-select>
                 </el-form-item>
@@ -155,7 +155,8 @@ export default {
                 res.data.map(item => {
                   nodes.push({
                     value: item.countryId,
-                    label: item.name
+                    label: item.name,
+                    leaf: level >= 2
                   })
                 })
                 resolve(nodes)
@@ -261,9 +262,12 @@ export default {
           this.$router.back()
         }
       })
+    },
+    changeProduct(index) {
+      const changeId = this.orderInfo.orderExts[index].productId
+      this.orderInfo.orderExts[index] = { ...(this.productList.find(item => item.id === changeId)) }
     }
   }
-
 }
 </script>
 

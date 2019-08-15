@@ -19,22 +19,20 @@
           <el-tag size="mini" type="info" effect="plain">{{ scope.row.productTypeName }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="长度(cm)" prop="length" align="center" />
+      <el-table-column label="要求" prop="requirement" align="center" />
       <el-table-column label="宽度(cm)" prop="weight" align="center" />
       <el-table-column label="克重(g)" prop="width" align="center" />
+      <el-table-column label="长度(cm)" prop="length" align="center" />
       <el-table-column label="条数" prop="number" align="center" />
-      <el-table-column label="库存" prop="stockNumber" align="center" />
       <el-table-column label="价格(元)" prop="price" align="center" />
+      <el-table-column label="库存" prop="stockNumber" align="center" />
+      <el-table-column label="描述" prop="description" show-overflow-tooltip />
       <el-table-column label="下架/上架" prop="status" align="center">
         <template slot-scope="scope">
           <el-switch v-model="scope.row.enable" @change="handleEnable(scope.row)" />
         </template>
       </el-table-column>
-      <el-table-column label="描述" prop="description" show-overflow-tooltip>
-        <template slot-scope="scope">
-          <span>{{ scope.row.description }}</span>
-        </template>
-      </el-table-column>
+
       <el-table-column label="操作" prop="id" align="center" width="90">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="editInit(scope.row)">
@@ -50,6 +48,7 @@
     <el-drawer
       ref="drawer"
       :title="title"
+      size="30%"
       :visible.sync="dialogFormVisible"
       direction="rtl"
       custom-class="demo-drawer"
@@ -67,8 +66,8 @@
               <el-option v-for="productType in productTypeList" :key="productType.id" :label="productType.name" :value="productType.id" />
             </el-select>
           </el-form-item>
-          <el-form-item label="长度" :label-width="formLabelWidth">
-            <el-input v-model="product.length" autocomplete="off" placeholder="长度(cm)" />
+          <el-form-item label="要求" :label-width="formLabelWidth">
+            <el-input v-model="product.requirement" autocomplete="off" placeholder="请输入要求" />
           </el-form-item>
           <el-form-item label="宽度" :label-width="formLabelWidth">
             <el-input v-model="product.width" autocomplete="off" placeholder="宽度(cm)" />
@@ -76,14 +75,17 @@
           <el-form-item label="克重" :label-width="formLabelWidth">
             <el-input v-model="product.weight" autocomplete="off" placeholder="克重(g)" />
           </el-form-item>
+          <el-form-item label="长度" :label-width="formLabelWidth">
+            <el-input v-model="product.length" autocomplete="off" placeholder="长度(cm)" />
+          </el-form-item>
           <el-form-item label="条数" :label-width="formLabelWidth">
             <el-input v-model="product.number" autocomplete="off" placeholder="(条)" />
           </el-form-item>
-          <el-form-item label="库存" :label-width="formLabelWidth">
-            <el-input v-model="product.stockNumber" autocomplete="off" placeholder="请输入库存数" />
-          </el-form-item>
           <el-form-item label="价格" :label-width="formLabelWidth">
             <el-input v-model="product.price" autocomplete="off" placeholder="请输入基准价" />
+          </el-form-item>
+          <el-form-item label="库存" :label-width="formLabelWidth">
+            <el-input v-model="product.stockNumber" autocomplete="off" placeholder="请输入库存数" />
           </el-form-item>
           <el-form-item label="下架/上架" :label-width="formLabelWidth">
             <el-switch v-model="product.enable" />
@@ -200,6 +202,8 @@ export default {
 }
 .demo-drawer__content{
   padding: 20px;
+  height: calc(100vh - 60px);
+  overflow:scroll;
 }
 </style>
 

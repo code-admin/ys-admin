@@ -35,12 +35,9 @@
           <el-tag size="mini" :type="scope.row.status ? 'info' : 'danger'">{{ scope.row.status ? '已回馈' : '待回馈' }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" prop="id" align="center" width="160">
+      <el-table-column label="操作" prop="id" align="center">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="editInit(scope.row)">
-            回 馈
-          </el-button>
-          <el-button type="info" size="mini" @click="toDetail(scope.row)">
+          <el-button size="mini" @click="toDetail(scope.row)">
             查 看
           </el-button>
         </template>

@@ -44,7 +44,7 @@
       <el-table-column label="操作" prop="id" sortable="custom" align="center" width="160">
         <template slot-scope="scope">
           <el-button size="mini" @click="detail(scope.row)">查看</el-button>
-          <el-button type="primary" size="mini" @click="detail(scope.row)">审核</el-button>
+          <el-button v-if="scope.row.historyFlag === 0" type="primary" size="mini" @click="approval(scope.row)">审核</el-button>
         </template>
       </el-table-column>
 
@@ -106,7 +106,10 @@ export default {
       })
     },
     detail(obj) {
-      this.$router.push({ name: 'OrderApprovalDetail', params: { id: obj.auditId }})
+      this.$router.push({ name: 'OrderApprovalDetail', params: { type: 0, id: obj.auditId }})
+    },
+    approval(obj) {
+      this.$router.push({ name: 'OrderApprovalDetail', params: { type: 1, id: obj.auditId }})
     },
     handleSizeChange(val) {
       this.filter.pageSize = val

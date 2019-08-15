@@ -73,7 +73,7 @@ export const constantRoutes = [
         meta: { title: '订单审核' }
       },
       {
-        path: '/order/approval/detail/:id',
+        path: '/order/approval/detail/:type/:id',
         name: 'OrderApprovalDetail',
         component: () => import('@/views/order/approval/detail'),
         hidden: true,
@@ -165,7 +165,7 @@ export const constantRoutes = [
       {
         path: '/feedback/report',
         name: 'FeedbackReport',
-        component: () => import('@/views/table/index'),
+        component: () => import('@/views/feedback/index'),
         meta: { title: '反馈报表' }
       }
     ]
