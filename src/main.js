@@ -6,6 +6,11 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale/lang/en' // lang i18n
 
+// import Echarts from 'echarts'
+import VueECharts from 'vue-echarts' // 在 webpack 环境下指向 components/ECharts.vue
+// 全局引入
+require('echarts')
+
 import '@/styles/index.scss' // global css
 
 import App from './App'
@@ -30,6 +35,10 @@ if (process.env.NODE_ENV === 'production') {
 
 // set ElementUI lang to EN
 Vue.use(ElementUI, { locale })
+
+// echarts
+// Vue.use(Echarts)
+Vue.component('v-chart', VueECharts)
 
 Vue.config.productionTip = false
 

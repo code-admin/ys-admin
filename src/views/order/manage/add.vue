@@ -31,7 +31,7 @@
       <div class="title">产品信息</div>
       <div class="content mt20">
         <el-row :gutter="20">
-          <el-col v-for="(goods,index) in orderInfo.orderExts" :key="index" :sm="24" :md="12" :lg="8" :xl="4">
+          <el-col v-for="(goods,index) in orderInfo.orderExts" :key="index" :sm="24" :md="12" :lg="8" :xl="6">
             <el-card shadow="hover" style="min-height:454px">
               <el-form label-position="right" label-width="80px" :model="orderInfo">
                 <el-form-item label="产品/类型">
@@ -229,7 +229,7 @@ export default {
       })
     },
     addGoods() {
-      this.orderInfo.orderExts.push({ length: null, number: null, price: null, productId: null, totalPrice: 0, weight: null, width: null })
+      this.orderInfo.orderExts.push({ requirement: null, length: null, number: null, price: null, productId: null, totalPrice: 0, weight: null, width: null })
     },
     deleteGoods(index) {
       if (this.orderInfo.orderExts < 2) return
@@ -264,8 +264,17 @@ export default {
       })
     },
     changeProduct(index) {
+      // const changeId = this.orderInfo.orderExts[index].productId
+      // this.orderInfo.orderExts[index] = { ...(this.productList.find(item => item.id === changeId)) }
+
       const changeId = this.orderInfo.orderExts[index].productId
-      this.orderInfo.orderExts[index] = { ...(this.productList.find(item => item.id === changeId)) }
+      const product = this.productList.find(item => item.id === changeId)
+      this.orderInfo.orderExts[index].requirement = product.requirement
+      this.orderInfo.orderExts[index].width = product.width
+      this.orderInfo.orderExts[index].weight = product.weight
+      this.orderInfo.orderExts[index].number = product.number
+      this.orderInfo.orderExts[index].length = product.length
+      this.orderInfo.orderExts[index].price = product.price
     }
   }
 }

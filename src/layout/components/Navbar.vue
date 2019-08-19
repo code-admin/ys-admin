@@ -5,6 +5,7 @@
     <breadcrumb class="breadcrumb-container" />
 
     <div class="right-menu">
+      <div class="user-name">{{ name }}</div>
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
@@ -12,8 +13,8 @@
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/">
-            <el-dropdown-item>
-              首页
+            <el-dropdown-item icon="dashboard">
+              <svg-icon icon-class="dashboard" />&nbsp;首页
             </el-dropdown-item>
           </router-link>
           <!-- <a target="_blank" href="https://github.com/PanJiaChen/vue-admin-template/">
@@ -22,8 +23,8 @@
           <a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">
             <el-dropdown-item>Docs</el-dropdown-item>
           </a> -->
-          <el-dropdown-item divided>
-            <span style="display:block;" @click="logout">退出</span>
+          <el-dropdown-item icon="el-icon-switch-button" divided>
+            <span @click="logout">退出</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -44,6 +45,7 @@ export default {
   computed: {
     ...mapGetters([
       'sidebar',
+      'name',
       'avatar'
     ])
   },
@@ -93,6 +95,12 @@ export default {
       outline: none;
     }
 
+    .user-name{
+        display: inline-block;
+        padding: 0 8px;
+        vertical-align: text-bottom;
+    }
+
     .right-menu-item {
       display: inline-block;
       padding: 0 8px;
@@ -117,7 +125,6 @@ export default {
       .avatar-wrapper {
         margin-top: 5px;
         position: relative;
-
         .user-avatar {
           cursor: pointer;
           width: 40px;
