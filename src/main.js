@@ -9,7 +9,7 @@ import locale from 'element-ui/lib/locale/lang/en' // lang i18n
 // import Echarts from 'echarts'
 import VueECharts from 'vue-echarts' // 在 webpack 环境下指向 components/ECharts.vue
 // 全局引入
-require('echarts')
+// require('echarts')
 
 import '@/styles/index.scss' // global css
 

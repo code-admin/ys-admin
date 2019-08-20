@@ -3,6 +3,9 @@
 </template>
 
 <script>
+import 'echarts/lib/chart/bar'
+import 'echarts/lib/component/tooltip'
+import 'echarts/lib/component/title'
 export default {
   name: 'PillarChart',
   props: {

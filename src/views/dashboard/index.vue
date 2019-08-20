@@ -4,22 +4,31 @@
       <el-col :sm="24" :md="8">
         <div class="card">
           <div class="box">
+
             <div class="number-card flex justify-between">
               <div class="content" style="background:	#87CEFA;color:#ffffff;">
-                <svg-icon icon-class="order" />
+                <svg-icon icon-class="order" class="icon" />
               </div>
-              <div class="right-box">
-                <p>当前待审核订单</p>
-                <span>{{ ringData && ringData.totalAuditOrder ? ringData.totalAuditOrder : 0 }}</span>
+              <div class="right">
+                <div class="box">
+                  <p>当前待审核订单</p>
+                  <span>{{ ringData && ringData.totalAuditOrder ? ringData.totalAuditOrder : 0 }}</span>
+                </div>
               </div>
             </div>
+
             <div class="number-card mt20 flex justify-between">
-              <div class="content" style="background:#FFA500; color:#ffffff;"> <svg-icon icon-class="feed_back" /></div>
-              <div class="right-box">
-                <p>当前待回馈</p>
-                <span>{{ ringData && ringData.totalFeedback ? ringData.totalFeedback : 0 }}</span>
+              <div class="content" style="background:#FFA500; color:#ffffff;">
+                <svg-icon icon-class="feed_back" class="icon" />
+              </div>
+              <div class="right">
+                <div class="box">
+                  <p>当前待回馈</p>
+                  <span>{{ ringData && ringData.totalFeedback ? ringData.totalFeedback : 0 }}</span>
+                </div>
               </div>
             </div>
+
           </div>
         </div>
       </el-col>
@@ -117,22 +126,42 @@ export default {
         background: #ffffff;
         border-radius: 4px;
         .content{
-          width: 150px;
+          width: 240px;
           height: 100%;
           line-height: 100%;
           border-radius: 4px;
           font-size: 50px;
-        }
-        .right-box{
-          text-align: right;
-          padding: 10px;
-          p{
-            font-size: 16px;
-            color: #929eaa;
+          position: relative;
+          .icon{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin: -25px 0 0 -25px;
           }
-          span{
-            font-size: 32px;
-            color: #576573;
+        }
+        .right{
+          width: 100%;
+          height: 100%;
+          line-height: 100%;
+          position: relative;
+          .box{
+            height: 80px;
+            padding: 0 10px;
+            position: absolute;
+            top: 50%;
+            right: 0px;
+            margin-top: -40px;
+            background: #ffffff;
+            text-align: right;
+            p{
+              font-size: 16px;
+              font-weight: 500;
+              color: #929eaa;
+            }
+            span{
+              font-size: 32px;
+              color: #576573;
+            }
           }
         }
       }

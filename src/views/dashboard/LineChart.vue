@@ -4,7 +4,9 @@
 
 <script>
 import 'echarts/lib/chart/line'
-// import 'echarts/lib/component/polar'
+import 'echarts/lib/component/tooltip'
+import 'echarts/lib/component/title'
+import 'echarts/lib/component/legend'
 export default {
   name: 'LineChart',
   props: {
@@ -28,6 +30,15 @@ export default {
           },
           top: '10px',
           left: '20px'
+        },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross',
+            label: {
+              backgroundColor: '#6a7985'
+            }
+          }
         },
         grid: {
           top: '15%',

@@ -3,6 +3,10 @@
 </template>
 
 <script>
+import 'echarts/lib/chart/pie'
+import 'echarts/lib/component/tooltip'
+import 'echarts/lib/component/title'
+
 var datas = [{ value: 0, name: '按克重销售' }, { value: 0, name: '按条数销售' }]
 var scale = 0.75
 var rich = {
