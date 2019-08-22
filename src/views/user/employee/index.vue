@@ -22,12 +22,22 @@
           <svg-icon :icon-class="scope.row.gender ? 'male' : 'female'" />
         </template>
       </el-table-column>
+      <el-table-column label="身份证" prop="identityCard" align="center" />
       <el-table-column label="手机号" prop="phone" align="center" />
-
       <el-table-column label="所属部门" prop="departmentName" align="center" sortable="custom" />
       <el-table-column label="所属职位" prop="jobName" align="center" sortable="custom" />
       <el-table-column label="班次" prop="className" align="center" sortable="custom" />
-      <el-table-column label="设备数" prop="deviceNumber" align="center" sortable="custom" />
+      <el-table-column label="设备数" prop="deviceNumber" align="center" sortable="custom">
+        <template slot-scope="scope">
+          <el-popover placement="right" width="300px" trigger="click">
+            <el-table :data="scope.row.deviceList">
+              <el-table-column width="150" property="deviceNumber" label="设备编号" />
+              <el-table-column width="150" property="deviceName" label="设备名称" />
+            </el-table>
+            <el-button slot="reference" type="text" size="mini">{{ scope.row.deviceList.length }}台</el-button>
+          </el-popover>
+        </template>
+      </el-table-column>
       <el-table-column label="用户角色" prop="roleName" align="center" show-overflow-tooltip />
       <el-table-column label="禁用/启用" prop="enable" align="center">
         <template slot-scope="scope">
@@ -86,10 +96,24 @@
           <el-select v-model="user.classId" placeholder="请选择班次" style="width:100%">
             <el-option :value="1" label="甲班" />
             <el-option :value="2" label="乙班" />
+            <el-option :value="3" label="白班" />
+            <el-option :value="4" label="夜班" />
           </el-select>
         </el-form-item>
-        <el-form-item label="设备数" :label-width="formLabelWidth">
-          <el-input v-model="user.deviceNumber" autocomplete="off" placeholder="请输入设备数" />
+        <el-form-item label="设备" :label-width="formLabelWidth">
+          <el-select
+            v-model="user.deviceIdList"
+            multiple
+            filterable
+            remote
+            reserve-keyword
+            placeholder="请输入设备名称"
+            :remote-method="getDeviceList"
+            :loading="loading"
+            style="width:100%"
+          >
+            <el-option v-for="(device, index) in deviceList" :key="index" :label="`${device.deviceNumber}/${device.deviceName}`" :value="device.id" />
+          </el-select>
         </el-form-item>
 
         <el-form-item v-if="!!roleList" label="系统角色" :label-width="formLabelWidth">
@@ -110,6 +134,7 @@
 <script>
 import { fetchDeptList, getJobListByDeptId } from '@/api/department'
 import { getUsers, getRoleList, saveUserInfo, resetPwd, disable } from '@/api/user'
+import { getValidateDeviceList } from '@/api/device'
 export default {
   data() {
     return {
@@ -128,6 +153,8 @@ export default {
       userList: [],
       deptList: [],
       jobList: [],
+      loading: false,
+      deviceList: [],
       roleList: [],
       user: {},
       title: '',
@@ -171,6 +198,7 @@ export default {
       })
     },
     addInit() {
+      this.getDeviceList('')
       this.title = '添加员工信息'
       this.user = {
         gender: 1,
@@ -179,9 +207,11 @@ export default {
       this.dialogFormVisible = !this.dialogFormVisible
     },
     editInit(obj) {
+      // this.getDeviceList('')
+      this.deviceList = obj.deviceList
+      this.getJobListById(obj.departmentId)
       this.title = '修改员工信息'
       this.user = obj
-      this.getJobListById(obj.departmentId)
       this.dialogFormVisible = !this.dialogFormVisible
     },
     saveUser() {
@@ -222,6 +252,18 @@ export default {
     getJobListById(deptId) {
       getJobListByDeptId(deptId).then(res => {
         if (res.code === 10000) this.jobList = res.data
+      })
+    },
+    getDeviceList(name) {
+      const params = {
+        deviceName: name,
+        pageIndex: 1,
+        pageSize: 100000
+      }
+      this.loading = !this.loading
+      getValidateDeviceList(params).then(res => {
+        this.loading = !this.loading
+        if (res.code === 10000) this.deviceList = res.data
       })
     }
   }

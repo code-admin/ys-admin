@@ -87,14 +87,20 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/product/list',
     name: 'Product',
-    meta: { title: '产品管理', icon: 'product' },
+    meta: { title: '产品仓库', icon: 'product' },
     alwaysShow: true,
     children: [
       {
         path: '/product/list',
         name: 'ProductList',
         component: () => import('@/views/product/index'),
-        meta: { title: '产品列表' }
+        meta: { title: '产品管理' }
+      },
+      {
+        path: '/product/iostock',
+        name: 'IOStock',
+        component: () => import('@/views/product/iostock/index'),
+        meta: { title: '产品出入库' }
       }
     ]
   },
@@ -169,6 +175,21 @@ export const constantRoutes = [
         meta: { title: '反馈报表' }
       }
     ]
+  },
+  {
+    path: '/system',
+    component: Layout,
+    redirect: '/system/device',
+    name: 'System',
+    meta: { title: '系统管理', icon: 'system-management' },
+    alwaysShow: true,
+    children: [
+      {
+        path: 'device',
+        name: 'Device',
+        component: () => import('@/views/system/device/index'),
+        meta: { title: '设备维护' }
+      }]
   },
 
   // 404 page must be placed at the end !!!

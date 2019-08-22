@@ -3,36 +3,36 @@
     <div class="filter-container">
       <el-input v-model="filter.productNo" placeholder="产品编号" style="width: 200px;" class="filter-item" clearable />
       <el-input v-model="filter.productName" placeholder="产品名称" style="width: 200px;" class="filter-item" clearable />
-      <el-select v-if="!!productTypeList" v-model="filter.productType" placeholder="产品类型" style="width: 200px;" class="filter-item" clearable>
-        <el-option v-for="productType in productTypeList" :key="productType.id" :label="productType.name" :value="productType.id" />
-      </el-select>
+      <el-input v-model="filter.requirement" placeholder="要求" style="width: 200px;" class="filter-item" clearable />
+      <el-input v-model="filter.width" placeholder="宽度" style="width: 200px;" class="filter-item" clearable />
+      <el-input v-model="filter.weight" placeholder="克重" style="width: 200px;" class="filter-item" clearable />
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="getProductList">查询</el-button>
       <el-button class="filter-item" icon="el-icon-plus" @click="addInit">添加</el-button>
     </div>
 
     <el-table :key="tableKey" v-loading="listLoading" :data="productList" border fit highlight-current-row style="width: 100%;">
       <el-table-column type="index" width="50" align="center" />
-      <el-table-column label="产品编号" prop="productNo" align="center" width="80" />
-      <el-table-column label="产品名称" prop="name" align="center" show-overflow-tooltip width="160" />
-      <el-table-column label="产品类型" prop="productTypeName" align="center">
+      <el-table-column label="产品编号" prop="productNo" align="center" show-overflow-tooltip width="120" />
+      <el-table-column label="产品名称" prop="name" align="center" show-overflow-tooltip width="150">
         <template slot-scope="scope">
-          <el-tag size="mini" type="info" effect="plain">{{ scope.row.productTypeName }}</el-tag>
+          <el-tag size="mini" type="info" effect="plain">{{ scope.row.name }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="要求" prop="requirement" align="center" />
-      <el-table-column label="宽度(cm)" prop="weight" align="center" />
-      <el-table-column label="克重(g)" prop="width" align="center" />
-      <el-table-column label="长度(cm)" prop="length" align="center" />
-      <el-table-column label="条数" prop="number" align="center" />
-      <el-table-column label="价格(元)" prop="price" align="center" />
+      <el-table-column label="要求" prop="requirement" align="center" show-overflow-tooltip width="120" />
+      <el-table-column label="宽度(cm)" prop="width" align="center" />
+      <el-table-column label="克重(g)" prop="weight" align="center" />
+      <el-table-column label="个数" prop="number" align="center" />
       <el-table-column label="库存" prop="stockNumber" align="center" />
+      <el-table-column label="今日入库" prop="todayStockNumber" align="center" />
+      <el-table-column label="今日出库" prop="todaySaledNumber" align="center" />
+      <el-table-column label="预售" prop="preSaledNumber" align="center" />
+      <el-table-column label="在产数" prop="productingNumber" align="center" />
       <el-table-column label="描述" prop="description" show-overflow-tooltip />
       <el-table-column label="下架/上架" prop="status" align="center">
         <template slot-scope="scope">
           <el-switch v-model="scope.row.enable" @change="handleEnable(scope.row)" />
         </template>
       </el-table-column>
-
       <el-table-column label="操作" prop="id" align="center" width="90">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="editInit(scope.row)">
@@ -56,42 +56,48 @@
       <div class="demo-drawer__content">
         <el-form :model="product">
           <el-form-item label="产品编号" :label-width="formLabelWidth">
-            <el-input v-model="product.productNo" autocomplete="off" placeholder="请输入产品编号" />
+            <el-input v-model="product.productNo" placeholder="请输入产品编号" />
           </el-form-item>
           <el-form-item label="产品名称" :label-width="formLabelWidth">
-            <el-input v-model="product.name" autocomplete="off" placeholder="请输入产品编号" />
-          </el-form-item>
-          <el-form-item label="产品类型" :label-width="formLabelWidth">
-            <el-select v-if="!!productTypeList" v-model="product.type" placeholder="请选择产品类型" style="width:100%">
-              <el-option v-for="productType in productTypeList" :key="productType.id" :label="productType.name" :value="productType.id" />
-            </el-select>
+            <el-input v-model="product.name" placeholder="请输入产品编号" />
           </el-form-item>
           <el-form-item label="要求" :label-width="formLabelWidth">
-            <el-input v-model="product.requirement" autocomplete="off" placeholder="请输入要求" />
+            <el-input v-model="product.requirement" placeholder="请输入要求" />
           </el-form-item>
           <el-form-item label="宽度" :label-width="formLabelWidth">
-            <el-input v-model="product.width" autocomplete="off" placeholder="宽度(cm)" />
+            <el-input v-model="product.width" placeholder="宽度(cm)" />
           </el-form-item>
           <el-form-item label="克重" :label-width="formLabelWidth">
-            <el-input v-model="product.weight" autocomplete="off" placeholder="克重(g)" />
+            <el-input v-model="product.weight" placeholder="克重(g)" />
           </el-form-item>
           <el-form-item label="长度" :label-width="formLabelWidth">
-            <el-input v-model="product.length" autocomplete="off" placeholder="长度(cm)" />
+            <el-input v-model="product.length" placeholder="长度(cm)" />
           </el-form-item>
-          <el-form-item label="条数" :label-width="formLabelWidth">
-            <el-input v-model="product.number" autocomplete="off" placeholder="(条)" />
+          <el-form-item label="个数" :label-width="formLabelWidth">
+            <el-input v-model="product.number" placeholder="(条)" />
           </el-form-item>
           <el-form-item label="价格" :label-width="formLabelWidth">
-            <el-input v-model="product.price" autocomplete="off" placeholder="请输入基准价" />
+            <el-input v-model="product.price" placeholder="请输入基准价" />
           </el-form-item>
           <el-form-item label="库存" :label-width="formLabelWidth">
-            <el-input v-model="product.stockNumber" autocomplete="off" placeholder="请输入库存数" />
+            <el-input v-model="product.stockNumber" placeholder="请输入库存数" />
           </el-form-item>
+
+          <el-form-item label="今日入库" :label-width="formLabelWidth">
+            <el-input v-model="product.todayStockNumber" placeholder="请输入库存数" />
+          </el-form-item>
+          <el-form-item label="今日出库" :label-width="formLabelWidth">
+            <el-input v-model="product.todaySaledNumber" placeholder="请输入库存数" />
+          </el-form-item>
+          <el-form-item label="在产数" :label-width="formLabelWidth">
+            <el-input v-model="product.productingNumber" placeholder="请输入库存数" />
+          </el-form-item>
+
           <el-form-item label="下架/上架" :label-width="formLabelWidth">
             <el-switch v-model="product.enable" />
           </el-form-item>
           <el-form-item label="描述" :label-width="formLabelWidth">
-            <el-input v-model="product.description" type="textarea" autocomplete="off" placeholder="请输入描述" />
+            <el-input v-model="product.description" type="textarea" placeholder="请输入描述" />
           </el-form-item>
         </el-form>
         <div class="demo-drawer__footer">

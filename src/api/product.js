@@ -41,3 +41,21 @@ export function getValidateProducts() {
     method: 'post'
   })
 }
+
+// 产品出入库列表
+export function getProductLogList(data) {
+  return request({
+    url: '/product/getProductLogList',
+    method: 'post',
+    data
+  })
+}
+
+// 新增出入库
+export function createProductLog(data) {
+  return request({
+    url: '/product/createProductLog',
+    method: 'post',
+    data
+  })
+}

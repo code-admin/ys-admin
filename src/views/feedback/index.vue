@@ -23,6 +23,8 @@
       <el-table-column label="问题类型" prop="questionName" align="center" />
       <el-table-column label="具体说明" prop="description" align="center" />
       <el-table-column label="客户名称" prop="customerName" align="center" />
+      <el-table-column label="订单编号" prop="orderNo" align="center" />
+      <el-table-column label="订单时间" prop="orderTime" align="center" />
       <el-table-column label="生产时间" prop="productDate" align="center" sortable="custom" width="110" />
       <el-table-column label="机台号" prop="deviceNo" align="center" />
       <el-table-column label="品种" prop="productType" align="center" />

@@ -8,177 +8,203 @@
       <el-divider />
       <div class="content">
         <el-row :gutter="20">
-          <el-col :span="8">
+          <el-col :sm="12" :md="8" :lg="6">
             <el-row :gutter="20">
-              <el-col :span="5">
+              <el-col :span="8">
                 <div class="lable">
                   反馈时间:
                 </div>
               </el-col>
-              <el-col :span="19">
+              <el-col :span="16">
                 <div class="value">
                   <i class="el-icon-time" style="padding-right:10px" /> {{ feedback.createTime }}
                 </div>
               </el-col>
             </el-row>
           </el-col>
-          <el-col :span="8">
+          <el-col :sm="12" :md="8" :lg="6">
             <el-row :gutter="20">
-              <el-col :span="5">
+              <el-col :span="8">
                 <div class="lable">
                   问题类型:
                 </div>
               </el-col>
-              <el-col :span="19">
+              <el-col :span="16">
                 <div class="value">
                   {{ feedback.questionTypeName }}
                 </div>
               </el-col>
             </el-row>
           </el-col>
-          <el-col :span="8">
+          <el-col :sm="12" :md="8" :lg="6">
             <el-row :gutter="20">
-              <el-col :span="5">
+              <el-col :span="8">
                 <div class="lable">
                   客户名称:
                 </div>
               </el-col>
-              <el-col :span="19">
+              <el-col :span="16">
                 <div class="value">
                   {{ feedback.customerName }}
                 </div>
               </el-col>
             </el-row>
           </el-col>
-        </el-row>
-        <el-row :gutter="20" class="mt20">
-          <el-col :span="8">
+
+          <el-col :sm="12" :md="8" :lg="6">
             <el-row :gutter="20">
-              <el-col :span="5">
+              <el-col :span="8">
+                <div class="lable">
+                  订单编号:
+                </div>
+              </el-col>
+              <el-col :span="16">
+                <div class="value">
+                  {{ feedback.orderNo }}
+                </div>
+              </el-col>
+            </el-row>
+          </el-col>
+          <el-col :sm="12" :md="8" :lg="6">
+            <el-row :gutter="20">
+              <el-col :span="8">
+                <div class="lable">
+                  订单时间:
+                </div>
+              </el-col>
+              <el-col :span="16">
+                <div class="value">
+                  {{ feedback.orderTime }}
+                </div>
+              </el-col>
+            </el-row>
+          </el-col>
+
+          <el-col :sm="12" :md="8" :lg="6">
+            <el-row :gutter="20">
+              <el-col :span="8">
                 <div class="lable">
                   生产时间:
                 </div>
               </el-col>
-              <el-col :span="19">
+              <el-col :span="16">
                 <div class="value">
                   <i class="el-icon-time" style="padding-right:10px" />{{ feedback.productDate }}
                 </div>
               </el-col>
             </el-row>
           </el-col>
-          <el-col :span="8">
+          <el-col :sm="12" :md="8" :lg="6">
             <el-row :gutter="20">
-              <el-col :span="5">
+              <el-col :span="8">
                 <div class="lable">
                   机台号:
                 </div>
               </el-col>
-              <el-col :span="19">
+              <el-col :span="16">
                 <div class="value">
                   {{ feedback.deviceNo }}
                 </div>
               </el-col>
             </el-row>
           </el-col>
-          <el-col :span="8">
+          <el-col :sm="12" :md="8" :lg="6">
             <el-row :gutter="20">
-              <el-col :span="5">
+              <el-col :span="8">
                 <div class="lable">
                   品种:
                 </div>
               </el-col>
-              <el-col :span="19">
+              <el-col :span="16">
                 <div class="value">
                   <el-tag size="mini">{{ feedback.productTypeName }}</el-tag>
                 </div>
               </el-col>
             </el-row>
           </el-col>
-        </el-row>
-        <el-row :gutter="20" class="mt20">
-          <el-col :span="8">
+
+          <el-col :sm="12" :md="8" :lg="6">
             <el-row :gutter="20">
-              <el-col :span="5">
+              <el-col :span="8">
                 <div class="lable">
                   要求:
                 </div>
               </el-col>
-              <el-col :span="19">
+              <el-col :span="16">
                 <div class="value">
                   {{ feedback.requirement }}
                 </div>
               </el-col>
             </el-row>
           </el-col>
-          <el-col :span="8">
+          <el-col :sm="12" :md="8" :lg="6">
             <el-row :gutter="20">
-              <el-col :span="5">
+              <el-col :span="8">
                 <div class="lable">
                   宽度:
                 </div>
               </el-col>
-              <el-col :span="19">
+              <el-col :span="16">
                 <div class="value">
                   {{ feedback. width }}
                 </div>
               </el-col>
             </el-row>
           </el-col>
-          <el-col :span="8">
+          <el-col :sm="12" :md="8" :lg="6">
             <el-row :gutter="20">
-              <el-col :span="5">
+              <el-col :span="8">
                 <div class="lable">
                   长度:
                 </div>
               </el-col>
-              <el-col :span="19">
+              <el-col :span="16">
                 <div class="value">
                   {{ feedback.length }}
                 </div>
               </el-col>
             </el-row>
           </el-col>
-        </el-row>
-        <el-row :gutter="20" class="mt20">
-          <el-col :span="8">
+
+          <el-col :sm="12" :md="8" :lg="6">
             <el-row :gutter="20">
-              <el-col :span="5">
+              <el-col :span="8">
                 <div class="lable">
                   克重:
                 </div>
               </el-col>
-              <el-col :span="19">
+              <el-col :span="16">
                 <div class="value">
                   {{ feedback.weight }}
                 </div>
               </el-col>
             </el-row>
           </el-col>
-          <el-col :span="8">
+          <el-col :sm="12" :md="8" :lg="6">
             <el-row :gutter="20">
-              <el-col :span="5">
+              <el-col :span="8">
                 <div class="lable">
                   个数:
                 </div>
               </el-col>
-              <el-col :span="19">
+              <el-col :span="16">
                 <div class="value">
                   {{ feedback.length }}
                 </div>
               </el-col>
             </el-row>
           </el-col>
-          <el-col :span="8" />
         </el-row>
-        <el-row :gutter="20" class="mt20">
-          <el-col :span="8">
+
+        <el-row :gutter="20">
+          <el-col :sm="12" :md="8" :lg="6">
             <el-row :gutter="20">
-              <el-col :span="5">
+              <el-col :span="8">
                 <div class="lable">
                   具体说明:
                 </div>
               </el-col>
-              <el-col :span="19">
+              <el-col :span="16">
                 <div class="value">
                   {{ feedback.description }}
                 </div>
@@ -186,15 +212,15 @@
             </el-row>
           </el-col>
         </el-row>
-        <el-row :gutter="20" class="mt20">
-          <el-col :span="8">
+        <el-row :gutter="20">
+          <el-col :sm="12" :md="8" :lg="6">
             <el-row :gutter="20">
-              <el-col :span="5">
+              <el-col :span="8">
                 <div class="lable">
                   备注:
                 </div>
               </el-col>
-              <el-col :span="19">
+              <el-col :span="16">
                 <div class="value">
                   {{ feedback.remark }}
                 </div>
@@ -328,8 +354,10 @@ export default {
     .content{
       margin-bottom: 15px;
       font-size: 12px;
+      line-height: 28px;
       .lable{
         color: #777777;
+        text-align: right;
       }
       .value{
         color: #444444;
