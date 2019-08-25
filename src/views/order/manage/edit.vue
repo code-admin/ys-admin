@@ -3,9 +3,11 @@
     <div class="card">
       <el-steps :active="orderInfo.status+1" finish-status="success" align-center>
         <el-step title="创建" />
-        <el-step title="审核中" />
+        <el-step title="审核" />
         <el-step title="出库" />
-        <el-step title="结束" />
+        <el-step title="待签" />
+        <el-step title="确认" />
+        <el-step title="完成" />
       </el-steps>
     </div>
 
@@ -61,7 +63,7 @@
               <div v-if="index > 0" style="text-align: center;"><el-button icon="el-icon-delete" @click="deleteGoods(index)">删除</el-button></div>
             </el-card>
           </el-col>
-          <el-col :sm="24" :md="12" :lg="8" :xl="4">
+          <el-col :sm="24" :md="12" :lg="8" :xl="6">
             <el-card shadow="hover">
               <div class="plus">
                 <el-tooltip class="item" effect="dark" content="点击添加" placement="top">

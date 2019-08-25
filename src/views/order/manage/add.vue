@@ -3,9 +3,11 @@
     <div class="card">
       <el-steps :active="1" finish-status="success" align-center>
         <el-step title="创建" />
-        <el-step title="审核中" />
+        <el-step title="审核" />
         <el-step title="出库" />
-        <el-step title="结束" />
+        <el-step title="待签" />
+        <el-step title="确认" />
+        <el-step title="完成" />
       </el-steps>
     </div>
 
@@ -34,9 +36,9 @@
           <el-col v-for="(goods,index) in orderInfo.orderExts" :key="index" :sm="24" :md="12" :lg="8" :xl="6">
             <el-card shadow="hover" style="min-height:454px">
               <el-form label-position="right" label-width="80px" :model="orderInfo">
-                <el-form-item label="产品/类型">
+                <el-form-item label="产品">
                   <el-select v-model="orderInfo.orderExts[index].productId" placeholder="请选择产品类型" filterable clearable style="width:100%;" @change="changeProduct(index)">
-                    <el-option v-for="product in productList" :key="product.id" :label="product.name" :value="product.id" />
+                    <el-option v-for="product in productList" :key="product.id" :label="`${product.productNo} / ${product.name}`" :value="product.id" />
                   </el-select>
                 </el-form-item>
                 <el-form-item label="要求">
@@ -61,7 +63,7 @@
               <div v-if="index > 0" style="text-align: center;"><el-button icon="el-icon-delete" @click="deleteGoods(index)">删除</el-button></div>
             </el-card>
           </el-col>
-          <el-col :sm="24" :md="12" :lg="8" :xl="4">
+          <el-col :sm="24" :md="12" :lg="8" :xl="6">
             <el-card shadow="hover">
               <div class="plus">
                 <el-tooltip class="item" effect="dark" content="点击添加" placement="top">

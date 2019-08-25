@@ -101,3 +101,12 @@ export function auditOrder(data) {
     data
   })
 }
+
+// 订单出库
+export function deliveryOrder(data) {
+  return request({
+    url: '/order/deliveryOrder',
+    method: 'post',
+    data
+  })
+}

@@ -21,16 +21,17 @@
     <el-table :key="tableKey" v-loading="listLoading" :data="orderList" border fit highlight-current-row style="width: 100%;">
       <el-table-column type="selection" align="center" width="55" />
       <el-table-column type="index" width="50" align="center" />
-      <el-table-column label="订单编号" prop="orderNo" align="center" sortable="custom" />
-      <el-table-column label="下单人" prop="customerName" align="center" />
-      <el-table-column label="销售类型" prop="orderTypeName" align="center">
+      <el-table-column label="订单号" prop="orderNo" align="center" sortable="custom" />
+      <el-table-column label="客户" prop="customerName" align="center" />
+      <el-table-column label="单据类型" prop="makingTypeName" align="center" />
+      <!-- <el-table-column label="销售类型" prop="orderTypeName" align="center">
         <template slot-scope="scope">
           <el-tag type="primary" size="mini">{{ scope.row.orderTypeName }}</el-tag>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="制单人类型" prop="userTypeName" align="center" />
       <el-table-column label="制单人" prop="createBy" align="center" />
-      <el-table-column label="总价(元)" prop="totalPrice" align="center" />
+      <el-table-column label="金额(元)" prop="totalPrice" align="center" />
       <el-table-column label="状态" prop="statusName" align="center">
         <template slot-scope="scope">
           <el-tag :type="scope.row.status == 3 ? 'info': 'success'" size="mini">{{ scope.row.statusName }}</el-tag>
