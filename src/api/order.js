@@ -110,3 +110,11 @@ export function deliveryOrder(data) {
     data
   })
 }
+
+// 订单完成出库
+export function confirmOut(id) {
+  return request({
+    url: `/order/confirm/${id}`,
+    method: 'post'
+  })
+}

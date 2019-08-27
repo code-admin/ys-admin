@@ -55,7 +55,7 @@
           <el-form-item label="出入库类型" :label-width="formLabelWidth">
             <el-select v-model="history.operation" placeholder="请选择产品" style="width:100%">
               <el-option label="入库" :value="1" />
-              <el-option label="出库" :value="2" />
+              <el-option label="出库" :value="2" disabled />
             </el-select>
           </el-form-item>
           <el-form-item label="产品编号" :label-width="formLabelWidth">

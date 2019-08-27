@@ -34,7 +34,7 @@
       <el-table-column label="金额(元)" prop="totalPrice" align="center" />
       <el-table-column label="状态" prop="statusName" align="center">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.status == 3 ? 'info': 'success'" size="mini">{{ scope.row.statusName }}</el-tag>
+          <el-tag :type="scope.row.status == 5 ? 'info': 'success'" size="mini">{{ scope.row.statusName }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="下单时间" prop="orderTime" align="center" sortable="custom" width="180">
@@ -47,8 +47,7 @@
         <template slot-scope="scope">
           <el-button size="mini" @click="detail(scope.row)">查看</el-button>
           <el-button v-if="scope.row.status == 0" type="primary" size="mini" @click="edit(scope.row)">编辑</el-button>
-          <el-button v-if="scope.row.status == 2" type="warning" size="mini" @click="outStock(scope.row)">出库</el-button>
-          <el-popover v-if="scope.row.status != 3" :ref="scope.row.id" placement="top" width="300" trigger="click">
+          <el-popover :ref="scope.row.id" placement="top" width="300" trigger="click">
             <p>确定要关闭该订单吗？关闭后，该订单将不再可操作!!</p>
             <div style="text-align: right; margin: 0">
               <el-button size="mini" type="text" @click="()=>{$refs[scope.row.id].doClose()}">取消</el-button>

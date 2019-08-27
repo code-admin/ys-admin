@@ -72,7 +72,7 @@
         <el-table-column type="selection" width="30" />
         <el-table-column prop="requirement" label="产品编号/名称" align="center" show-overflow-tooltip>
           <template slot-scope="scope">
-            <el-tag type="info" size="mini">{{ `${scope.row.product.productNo} / ${scope.row.product.name}` }}</el-tag>
+            <el-tag type="info" size="mini">{{ `${scope.row.product && scope.row.product.productNo} / ${scope.row.product && scope.row.product.name}` }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="requirement" label="要求" show-overflow-tooltip align="center" />
@@ -89,33 +89,52 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="操作" align="center">
+        <el-table-column v-if="orderInfo.status === 2 || orderInfo.status === 3" label="操作" align="center">
           <template slot-scope="scope">
             <el-button type="text" @click="showOutStock(scope.row)">出库</el-button>
           </template>
         </el-table-column>
       </el-table>
-      <div class="totalPrice">
+      <div :class=" (orderInfo.status === 2 || orderInfo.status === 3) ? 'totalPrice' : 'totalPrice2'">
         <p>总价: {{ orderInfo.totalPrice ? orderInfo.totalPrice : '--' }} ¥</p>
       </div>
     </div>
 
-    <div class="card mt20">
-      <div class="title">出库记录</div>
+    <div v-if="orderInfo.status > 1" class="card mt20">
+      <div class="flex justify-between">
+        <div class="title">出库记录</div>
+        <el-popover
+          v-if="orderInfo.orderExpressList && orderInfo.orderExpressList.length && orderInfo.status === 3"
+          v-model="finishVisible"
+          placement="top"
+          width="160"
+        >
+          <p>确认要完成出库吗</p>
+          <div style="text-align: right; margin: 0">
+            <el-button size="mini" type="text" @click="finishVisible = false">取消</el-button>
+            <el-button type="primary" size="mini" @click="confirmOutStock">确定</el-button>
+          </div>
+          <el-button slot="reference" size="mini" type="danger">完成出库</el-button>
+        </el-popover>
+      </div>
       <el-divider />
-      <el-table :data="orderInfo.orderExts" style="width: 100%">
-        <el-table-column prop="requirement" label="产品编号/名称" align="center" show-overflow-tooltip>
+      <el-table :data="orderInfo.orderExpressList" style="width: 100%">
+        <el-table-column prop="productNo" label="产品编号/名称" align="center" show-overflow-tooltip>
           <template slot-scope="scope">
-            <el-tag type="info" size="mini">{{ `${scope.row.product.productNo} / ${scope.row.product.name}` }}</el-tag>
+            <el-tag type="info" size="mini">{{ `${scope.row.productNo} / ${scope.row.productName}` }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="requirement" label="要求" show-overflow-tooltip align="center" />
         <el-table-column prop="width" label="宽度(cm)" align="center" />
         <el-table-column prop="weight" label="克重(g)" align="center" />
-        <el-table-column prop="requirement" label="出库数" align="center" show-overflow-tooltip />
-        <el-table-column prop="requirement" label="司机/电话" align="center" show-overflow-tooltip />
-        <el-table-column prop="requirement" label="记录人" align="center" show-overflow-tooltip />
-        <el-table-column prop="requirement" label="时间" align="center" show-overflow-tooltip />
+        <el-table-column prop="number" label="出库数" align="center" show-overflow-tooltip />
+        <el-table-column prop="requirement" label="司机/电话" align="center" show-overflow-tooltip>
+          <template slot-scope="scope">
+            {{ `${scope.row.driverName}/${scope.row.driverPhone}` }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="createBy" label="记录人" align="center" show-overflow-tooltip />
+        <el-table-column prop="createTime" label="时间" align="center" show-overflow-tooltip />
       </el-table>
     </div>
 
@@ -176,7 +195,7 @@
 </template>
 
 <script>
-import { getOrderById, deliveryOrder } from '@/api/order'
+import { getOrderById, deliveryOrder, confirmOut } from '@/api/order'
 import { getUsers } from '@/api/user'
 export default {
   data() {
@@ -184,6 +203,7 @@ export default {
       loading: false,
       loadingUser: false,
       outStockVisible: false,
+      finishVisible: false,
       orderInfo: {},
       outStockList: null,
       userList: []
@@ -237,6 +257,14 @@ export default {
       })
       this.outStockVisible = !this.outStockVisible
     },
+    confirmOutStock() {
+      confirmOut(this.$route.params.id).then(res => {
+        if (res.code === 10000) {
+          this.$message({ message: '出库已完成！', type: 'success' })
+          this.getDetailById(this.$route.params.id)
+        }
+      })
+    },
     setUser(i) {
       const loginName = this.outStockList[i].loginName
       const user = this.userList.find(item => item.loginName === loginName)
@@ -271,6 +299,13 @@ export default {
     .totalPrice{
       text-align: right;
       padding-right:16%;
+      font-size: 18px;
+      font-weight: 500;
+      color: #f40;
+    }
+    .totalPrice2{
+      text-align: right;
+      padding-right:4%;
       font-size: 18px;
       font-weight: 500;
       color: #f40;
