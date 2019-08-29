@@ -19,10 +19,11 @@
         </template>
       </el-table-column>
       <el-table-column label="要求" prop="requirement" align="center" show-overflow-tooltip width="120" />
-      <el-table-column label="宽度(cm)" prop="width" align="center" />
-      <el-table-column label="克重(g)" prop="weight" align="center" />
+      <el-table-column label="宽度(CM)" prop="width" align="center" />
+      <el-table-column label="克重(G)" prop="weight" align="center" />
       <el-table-column label="个数" prop="number" align="center" />
-      <el-table-column label="库存" prop="stockNumber" align="center" />
+      <el-table-column label="库存(个)" prop="stockNumber" align="center" />
+      <el-table-column label="重量(KG)" prop="netWeight" align="center" />
       <el-table-column label="今日入库" prop="todayStockNumber" align="center" />
       <el-table-column label="今日出库" prop="todaySaledNumber" align="center" />
       <el-table-column label="预售" prop="preSaledNumber" align="center" />
@@ -73,22 +74,24 @@
           <el-form-item label="长度" :label-width="formLabelWidth">
             <el-input v-model="product.length" placeholder="长度(cm)" />
           </el-form-item>
-          <el-form-item label="个数" :label-width="formLabelWidth">
+          <el-form-item label="个数(条)" :label-width="formLabelWidth">
             <el-input v-model="product.number" placeholder="(条)" />
           </el-form-item>
           <el-form-item label="价格" :label-width="formLabelWidth">
             <el-input v-model="product.price" placeholder="请输入基准价" />
           </el-form-item>
-          <el-form-item label="库存" :label-width="formLabelWidth">
+          <!--<el-form-item label="库存" :label-width="formLabelWidth">
             <el-input v-model="product.stockNumber" placeholder="请输入库存数" />
           </el-form-item>
-
-          <el-form-item label="今日入库" :label-width="formLabelWidth">
-            <el-input v-model="product.todayStockNumber" placeholder="请输入库存数" />
+          <el-form-item label="重量" :label-width="formLabelWidth">
+            <el-input v-model="product.netWeight" placeholder="请输入库存重量(KG)" />
+          </el-form-item>
+        <el-form-item label="今日入库" :label-width="formLabelWidth">
+            <el-input v-model="product.todayStockNumber" placeholder="请输今日入库数" />
           </el-form-item>
           <el-form-item label="今日出库" :label-width="formLabelWidth">
             <el-input v-model="product.todaySaledNumber" placeholder="请输入库存数" />
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="在产数" :label-width="formLabelWidth">
             <el-input v-model="product.productingNumber" placeholder="请输入库存数" />
           </el-form-item>

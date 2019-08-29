@@ -42,12 +42,18 @@
           <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
             <el-row :gutter="10">
               <el-col :span="8"><div class="lable">发货方式:</div></el-col>
-              <el-col :span="16"><div class="val">{{ orderInfo.deliveryTypeName }}</div></el-col>
+              <el-col :span="16"><div class="val">{{ orderInfo.deliveryName }}</div></el-col>
             </el-row>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
             <el-row :gutter="10">
-              <el-col :span="8"><div class="lable">联系方式:</div></el-col>
+              <el-col :span="8"><div class="lable">收货人:</div></el-col>
+              <el-col :span="16"><div class="val">{{ orderInfo.customerName }}</div></el-col>
+            </el-row>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
+            <el-row :gutter="10">
+              <el-col :span="8"><div class="lable">收货人电话:</div></el-col>
               <el-col :span="16"><div class="val">{{ orderInfo.phone }}</div></el-col>
             </el-row>
           </el-col>
@@ -62,13 +68,13 @@
     </div>
 
     <div class="card mt20">
-      <div class="title">下单类型: <el-tag type="primary" size="mini">{{ orderInfo.orderTypeName }}</el-tag> </div>
+      <div class="flex justify-between">
+        <div class="title">下单类型: <el-tag type="primary" size="mini">{{ orderInfo.orderTypeName }}</el-tag> </div>
+        <el-button type="primary" plain size="mini" @click="batchInit">批量出库</el-button>
+      </div>
+
       <el-divider />
-      <el-table
-        v-if="orderInfo.orderExts"
-        :data="orderInfo.orderExts"
-        style="width: 100%"
-      >
+      <el-table v-if="orderInfo.orderExts" :data="orderInfo.orderExts" style="width: 100%" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="30" />
         <el-table-column prop="requirement" label="产品编号/名称" align="center" show-overflow-tooltip>
           <template slot-scope="scope">
@@ -78,24 +84,25 @@
         <el-table-column prop="requirement" label="要求" show-overflow-tooltip align="center" />
         <el-table-column prop="width" label="宽度(cm)" align="center" />
         <el-table-column prop="weight" label="克重(g)" align="center" />
-        <el-table-column v-if="orderInfo.orderType === 1" prop="width" label="长度(cm)" align="center" />
-        <el-table-column v-if="orderInfo.orderType === 2" prop="number" label="条数" align="center" />
-        <el-table-column prop="number" label="数量" align="center" />
-        <el-table-column prop="price" label="单价(元)" align="center">
+        <el-table-column v-if="orderInfo.orderType === 2" prop="number" label="个数" align="center" />
+        <el-table-column v-if="orderInfo.orderType === 1" prop="length" label="长度(cm)" align="center" />
+        <el-table-column v-if="orderInfo.orderType === 1" prop="number" label="条数" align="center" />
+        <el-table-column prop="price" label="单价(吨)" align="center">
           <template slot-scope="scope">
             <div v-if="scope.row.price" style="color:#f40;">
               {{ scope.row.price }} ¥
             </div>
           </template>
         </el-table-column>
+        <el-table-column prop="goodsNumber" label="数量" align="center" />
 
         <el-table-column v-if="orderInfo.status === 2 || orderInfo.status === 3" label="操作" align="center">
           <template slot-scope="scope">
-            <el-button type="text" @click="showOutStock(scope.row)">出库</el-button>
+            <el-button type="text" size="mini" @click="showOutStock(scope.row,true)">出库</el-button>
           </template>
         </el-table-column>
       </el-table>
-      <div :class=" (orderInfo.status === 2 || orderInfo.status === 3) ? 'totalPrice' : 'totalPrice2'">
+      <div class="totalPrice">
         <p>总价: {{ orderInfo.totalPrice ? orderInfo.totalPrice : '--' }} ¥</p>
       </div>
     </div>
@@ -119,22 +126,41 @@
       </div>
       <el-divider />
       <el-table :data="orderInfo.orderExpressList" style="width: 100%">
-        <el-table-column prop="productNo" label="产品编号/名称" align="center" show-overflow-tooltip>
+        <el-table-column prop="productNo" label="产品编号/名称" align="center" width="140" show-overflow-tooltip>
           <template slot-scope="scope">
             <el-tag type="info" size="mini">{{ `${scope.row.productNo} / ${scope.row.productName}` }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="requirement" label="要求" show-overflow-tooltip align="center" />
-        <el-table-column prop="width" label="宽度(cm)" align="center" />
-        <el-table-column prop="weight" label="克重(g)" align="center" />
-        <el-table-column prop="number" label="出库数" align="center" show-overflow-tooltip />
-        <el-table-column prop="requirement" label="司机/电话" align="center" show-overflow-tooltip>
+        <el-table-column prop="width" label="宽度(CM)" align="center" />
+        <el-table-column prop="weight" label="克重(G)" align="center" />
+        <el-table-column v-if="orderInfo.orderType === 1" prop="productNumber" label="条数" align="center" />
+        <el-table-column prop="totalWeight" label="重量(KG)" align="center" />
+        <el-table-column prop="tareWeight" label="车皮" align="center" />
+        <el-table-column prop="price" label="单价(吨)" align="center" />
+        <el-table-column prop="netWeight" label="净重" align="center" />
+        <el-table-column prop="totalPrice" label="金额" align="center" />
+        <el-table-column prop="number" label="出库个数" align="center" show-overflow-tooltip />
+        <el-table-column prop="requirement" label="司机/电话" align="center" width="180" show-overflow-tooltip>
           <template slot-scope="scope">
-            {{ `${scope.row.driverName}/${scope.row.driverPhone}` }}
+            {{ `${scope.row.driverName} / ${scope.row.driverPhone}` }}
           </template>
         </el-table-column>
-        <el-table-column prop="createBy" label="记录人" align="center" show-overflow-tooltip />
-        <el-table-column prop="createTime" label="时间" align="center" show-overflow-tooltip />
+        <el-table-column prop="createBy" label="记录人/时间" align="center" width="180" show-overflow-tooltip>
+          <template slot-scope="scope">
+            <div>
+              {{ `${scope.row.createBy}/${scope.row.createTime}` }}
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column v-if="orderInfo.status === 2 || orderInfo.status === 3" label="操作" align="center" fixed="right" width="140">
+          <template slot-scope="scope">
+            <div v-if="scope.row.status === 0">
+              <el-button type="text" size="mini" @click="deleteOutStock(scope.row.id)">删除</el-button>
+              <el-button type="text" size="mini" @click="showOutStock(scope.row,false)">提交出库</el-button>
+            </div>
+          </template>
+        </el-table-column>
       </el-table>
     </div>
 
@@ -154,23 +180,51 @@
       </div>
     </div>
 
+    <!-- 添加出库窗口 -->
     <el-dialog :title="`添加 ( ${orderInfo.orderNo} ) 订单出库`" :visible.sync="outStockVisible" width="80%">
       <el-table :data="outStockList">
-        <el-table-column property="name" label="产品编号/名称" align="center" width="120" show-overflow-tooltip />
+        <el-table-column property="name" label="产品编号/名称" align="center" width="140" show-overflow-tooltip />
         <el-table-column property="requirement" label="要求" align="center" show-overflow-tooltip />
         <el-table-column property="width" label="宽度" align="center" />
         <el-table-column property="weight" label="克重" align="center" />
-        <el-table-column property="number" label="出库数量" align="center" width="160">
+
+        <el-table-column v-if="orderInfo.orderType === 1" prop="totalWeight" label="出库条数" align="center" width="160">
           <template slot-scope="scope">
-            <div>
-              <el-input-number v-model="scope.row.number" :min="1" size="mini" placeholder="当前出库数量" />
+            <el-input-number v-model="scope.row.productNumber" :min="0" size="mini" />
+          </template>
+        </el-table-column>
+        <el-table-column prop="totalWeight" label="重量(KG)" align="center" width="160">
+          <template slot-scope="scope">
+            <el-input-number v-model="scope.row.totalWeight" :min="0" size="mini" placeholder="请输入重量" />
+          </template>
+        </el-table-column>
+        <el-table-column prop="tareWeight" label="车皮(KG)" align="center" width="160">
+          <template slot-scope="scope">
+            <el-input-number v-model="scope.row.tareWeight" :min="0" size="mini" placeholder="请输入车皮重量" />
+          </template>
+        </el-table-column>
+        <el-table-column prop="price" label="单价(吨)" align="center" />
+        <el-table-column prop="" label="净重(KG)" align="center">
+          <template slot-scope="scope">
+            <div>{{ scope.row.totalWeight - scope.row.tareWeight }}</div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="e" label="金额" align="center" width="100">
+          <template slot-scope="scope">
+            <div v-if="scope.row.price" style="color:#f40;">
+              {{ ((scope.row.totalWeight - scope.row.tareWeight)/1000*scope.row.price).toFixed(2) }} ¥
             </div>
           </template>
         </el-table-column>
-        <el-table-column property="loginName" label="司机/电话" align="center" width="200">
+        <el-table-column property="number" label="出库个数" align="center" width="160">
+          <template slot-scope="scope">
+            <el-input-number v-model="scope.row.number" :min="0" size="mini" placeholder="当前出库个数" />
+          </template>
+        </el-table-column>
+        <el-table-column property="driverLoginName" label="司机/电话" align="center" width="200">
           <template slot-scope="scope">
             <el-select
-              v-model="scope.row.loginName"
+              v-model="scope.row.driverLoginName"
               placeholder="请选择送司机"
               size="mini"
               filterable
@@ -179,7 +233,7 @@
               :remote-method="getUserList"
               :loading="loadingUser"
               clearable
-              @change="setUser(0)"
+              @change="setUser(scope.$index)"
             >
               <el-option v-for="user in userList" :key="user.loginName" :label="`${user.userName} / ${user.phone}`" :value="user.loginName" />
             </el-select>
@@ -188,14 +242,15 @@
       </el-table>
       <div slot="footer" class="dialog-footer">
         <el-button @click="outStockVisible = false">取 消</el-button>
-        <el-button type="primary" @click="saveOutStock">确 定</el-button>
+        <el-button type="primary" icon="el-icon-edit-outline" @click="saveOutStock">保 存</el-button>
+        <el-button type="primary" icon="el-icon-finished" @click="submitOutstock">保存并出库</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { getOrderById, deliveryOrder, confirmOut } from '@/api/order'
+import { getOrderById, saveDeliveryOrder, deleteDeliveryOrder, submitDeliveryOrder, confirmOut } from '@/api/order'
 import { getUsers } from '@/api/user'
 export default {
   data() {
@@ -206,11 +261,13 @@ export default {
       finishVisible: false,
       orderInfo: {},
       outStockList: null,
-      userList: []
+      userList: [],
+      tempProducts: []
     }
   },
   mounted() {
     this.getDetailById(this.$route.params.id)
+    this.getUserList('')
   },
   methods: {
     getDetailById(id) {
@@ -229,33 +286,50 @@ export default {
       })
     },
     // 出库
-    showOutStock(obj) {
-      this.getUserList('')
+    showOutStock(obj, isAdd) {
       this.outStockList = []
       this.outStockList.push({
-        // id: obj.id,
+        id: isAdd ? null : obj.id,
+        orderId: this.orderInfo.orderNo,
         productId: obj.productId,
         name: `${obj.product.productNo} / ${obj.product.name}`,
         requirement: obj.requirement,
         width: obj.width,
         weight: obj.weight,
-        number: null,
-        loginName: '',
-        userName: '',
-        phone: ''
+        price: obj.price,
+        number: isAdd ? 0 : obj.number,
+        productNumber: obj.productNumber || 0,
+        totalWeight: obj.totalWeight || 0,
+        tareWeight: obj.tareWeight || 0,
+        driverLoginName: obj.driverLoginName || '',
+        driverName: obj.driverName || '',
+        driverPhone: obj.driverPhone || ''
       })
       this.outStockVisible = !this.outStockVisible
     },
     saveOutStock() {
-      const row = this.outStockList && this.outStockList[0]
-      console.log(row)
-      deliveryOrder({ ...row, orderId: this.orderInfo.orderNo }).then(res => {
+      saveDeliveryOrder({ orderExpressList: this.outStockList }).then(res => {
         if (res.code === 10000) {
           this.$message({ message: '添加出库成功！', type: 'success' })
           this.getDetailById(this.$route.params.id)
         }
       })
       this.outStockVisible = !this.outStockVisible
+    },
+    submitOutstock() {
+      submitDeliveryOrder({ orderExpressList: this.outStockList }).then(res => {
+        if (res.code === 10000) {
+          this.$message({ message: '提交出库成功！', type: 'success' })
+          this.getDetailById(this.$route.params.id)
+        }
+      })
+      this.outStockVisible = !this.outStockVisible
+    },
+    deleteOutStock(id) {
+      deleteDeliveryOrder(id).then(res => {
+        this.$message({ message: '删除成功！', type: 'success' })
+        this.getDetailById(this.$route.params.id)
+      })
     },
     confirmOutStock() {
       confirmOut(this.$route.params.id).then(res => {
@@ -266,10 +340,42 @@ export default {
       })
     },
     setUser(i) {
-      const loginName = this.outStockList[i].loginName
-      const user = this.userList.find(item => item.loginName === loginName)
-      this.outStockList[i].userName = user.userName
-      this.outStockList[i].phone = user.phone
+      const driverLoginName = this.outStockList[i].driverLoginName
+      const user = this.userList.find(item => item.loginName === driverLoginName)
+      this.outStockList[i].driverName = user.userName
+      this.outStockList[i].driverPhone = user.phone
+    },
+    handleSelectionChange(val) {
+      this.tempProducts = val
+    },
+    batchInit() {
+      if (this.tempProducts.length) {
+        this.outStockList = []
+        this.tempProducts.map(obj => {
+          this.outStockList.push({
+            orderId: this.orderInfo.orderNo,
+            productId: obj.productId,
+            name: `${obj.product.productNo} / ${obj.product.name}`,
+            requirement: obj.requirement,
+            width: obj.width,
+            weight: obj.weight,
+            price: obj.price,
+            number: 0,
+            productNumber: 0,
+            totalWeight: 0,
+            tareWeight: 0,
+            driverLoginName: '',
+            driverName: '',
+            driverPhone: ''
+          })
+        })
+        this.outStockVisible = !this.outStockVisible
+      } else {
+        this.$notify({
+          title: '提示',
+          message: '请选择需要出库的商品'
+        })
+      }
     }
   }
 }
@@ -298,14 +404,7 @@ export default {
     }
     .totalPrice{
       text-align: right;
-      padding-right:16%;
-      font-size: 18px;
-      font-weight: 500;
-      color: #f40;
-    }
-    .totalPrice2{
-      text-align: right;
-      padding-right:4%;
+      padding-right:20px;
       font-size: 18px;
       font-weight: 500;
       color: #f40;

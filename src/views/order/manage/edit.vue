@@ -47,18 +47,25 @@
                 <el-form-item label="宽度">
                   <el-input v-model="orderInfo.orderExts[index].width" placeholder="宽度(cm)" />
                 </el-form-item>
-                <el-form-item label="克重">
-                  <el-input v-model="orderInfo.orderExts[index].weight" placeholder="克重(g)" />
-                </el-form-item>
+
                 <el-form-item v-if="orderInfo.orderType === 2" label="个数">
                   <el-input v-model="orderInfo.orderExts[index].number" placeholder="请输入个数" />
                 </el-form-item>
-                <el-form-item v-else label="长度">
-                  <el-input v-model="orderInfo.orderExts[index].length" placeholder="长度(cm)" />
-                </el-form-item>
+                <div v-else>
+                  <el-form-item label="长度">
+                    <el-input v-model="orderInfo.orderExts[index].length" placeholder="长度(cm)" />
+                  </el-form-item>
+                  <el-form-item label="条数">
+                    <el-input v-model="orderInfo.orderExts[index].number" placeholder="宽度(cm)" />
+                  </el-form-item>
+                </div>
                 <el-form-item label="单价">
                   <el-input v-model="orderInfo.orderExts[index].price" placeholder="单价(元)" />
                 </el-form-item>
+                <el-form-item label="数量">
+                  <el-input-number v-model="orderInfo.orderExts[index].goodsNumber" placeholder="下单数量" style="width:100%" />
+                </el-form-item>
+
               </el-form>
               <div v-if="index > 0" style="text-align: center;"><el-button icon="el-icon-delete" @click="deleteGoods(index)">删除</el-button></div>
             </el-card>
@@ -79,18 +86,22 @@
     <div class="card mt20">
       <div class="title">收货信息</div>
       <div class="content mt20">
-        <el-form label-position="right" label-width="80px" :model="orderInfo">
+        <el-form label-position="right" label-width="100px" :model="orderInfo">
           <el-form-item label="发货方式">
-            <el-select v-model="orderInfo.deliveryType" placeholder="请选择发货方式" filterable style="width:100%;">
+            <!-- <el-select v-model="orderInfo.deliveryType" placeholder="请选择发货方式" filterable style="width:100%;">
               <el-option v-for="expres in expresList" :key="expres.id" :label="expres.name" :value="expres.id" />
-            </el-select>
+            </el-select> -->
+            <el-input v-model="orderInfo.deliveryName" placeholder="请输入发货方式" />
           </el-form-item>
           <el-form-item label="收货地址">
             <el-cascader v-if="orderInfo.pcc" v-model="orderInfo.pcc" :props="props" placeholder="省/市/区" style="width:100%;" clearable />
             <el-input v-model="orderInfo.address" class="mt5" placeholder="请输入详细地址" />
           </el-form-item>
-          <el-form-item label="联系方式">
-            <el-input v-model="orderInfo.phone" placeholder="请输入联系方式" />
+          <el-form-item label="收货人">
+            <el-input v-model="orderInfo.customerName" placeholder="请输入收货人" />
+          </el-form-item>
+          <el-form-item label="收货人电话">
+            <el-input v-model="orderInfo.phone" placeholder="请输入收货人电话" />
           </el-form-item>
           <el-form-item label="备注">
             <el-input
@@ -132,10 +143,10 @@ export default {
           {
             length: null,
             number: null,
-            price: null,
+            price: 0,
             productId: null,
             requirement: null,
-            totalPrice: 0,
+            goodsNumber: 1,
             weight: null,
             width: null
           }
@@ -228,7 +239,7 @@ export default {
       })
     },
     addGoods() {
-      this.orderInfo.orderExts.push({ requirement: null, length: null, number: null, price: null, productId: null, totalPrice: 0, weight: null, width: null })
+      this.orderInfo.orderExts.push({ requirement: null, length: null, number: null, price: 0, productId: null, goodsNumber: 1, weight: null, width: null })
     },
     deleteGoods(index) {
       if (this.orderInfo.orderExts < 2) return
@@ -271,6 +282,7 @@ export default {
       this.orderInfo.orderExts[index].number = product.number
       this.orderInfo.orderExts[index].length = product.length
       this.orderInfo.orderExts[index].price = product.price
+      this.orderInfo.orderExts[index].goodsNumber = product.goodsNumber
     }
   }
 

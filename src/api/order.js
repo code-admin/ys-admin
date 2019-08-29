@@ -102,10 +102,27 @@ export function auditOrder(data) {
   })
 }
 
-// 订单出库
-export function deliveryOrder(data) {
+// 订单出库(草稿)
+export function saveDeliveryOrder(data) {
   return request({
-    url: '/order/deliveryOrder',
+    url: '/order/saveDeliveryOrder',
+    method: 'post',
+    data
+  })
+}
+
+// 删除出库草稿
+export function deleteDeliveryOrder(id) {
+  return request({
+    url: `/order/deleteDeliveryOrder/${id}`,
+    method: 'post'
+  })
+}
+
+// 提交订单出库并更新库存
+export function submitDeliveryOrder(data) {
+  return request({
+    url: '/order/submitDeliveryOrder',
     method: 'post',
     data
   })

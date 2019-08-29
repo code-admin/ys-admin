@@ -59,3 +59,12 @@ export function createProductLog(data) {
     data
   })
 }
+
+// 调换货
+export function exchangeProductStock(data) {
+  return request({
+    url: '/product/exchangeProductStock',
+    method: 'post',
+    data
+  })
+}
