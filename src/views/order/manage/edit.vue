@@ -34,11 +34,14 @@
       <div class="content mt20">
         <el-row :gutter="20">
           <el-col v-for="(goods,index) in orderInfo.orderExts" :key="index" :sm="24" :md="12" :lg="8" :xl="6">
-            <el-card shadow="hover" style="min-height:454px">
+            <el-card shadow="hover" style="min-height:578px">
               <el-form label-position="right" label-width="80px" :model="orderInfo">
-                <el-form-item label="产品/类型">
-                  <el-select v-model="orderInfo.orderExts[index].productId" placeholder="请选择产品类型" filterable clearable style="width:100%;" @change="changeProduct(index)">
-                    <el-option v-for="product in productList" :key="product.id" :label="product.name" :value="product.id" />
+                <el-form-item label="产品编号">
+                  <el-input v-model="orderInfo.orderExts[index].product.productNo" placeholder="产品编号" disabled />
+                </el-form-item>
+                <el-form-item label="产品名称">
+                  <el-select v-model="orderInfo.orderExts[index].productId" placeholder="请选择产品" filterable clearable style="width:100%;" @change="changeProduct(index)">
+                    <el-option v-for="product in productList" :key="product.id" :label="`${product.name}/${product.productNo}`" :value="product.id" />
                   </el-select>
                 </el-form-item>
                 <el-form-item label="要求">
@@ -47,23 +50,27 @@
                 <el-form-item label="宽度">
                   <el-input v-model="orderInfo.orderExts[index].width" placeholder="宽度(cm)" />
                 </el-form-item>
-
-                <el-form-item v-if="orderInfo.orderType === 2" label="个数">
-                  <el-input v-model="orderInfo.orderExts[index].number" placeholder="请输入个数" />
+                <el-form-item label="克重">
+                  <el-input v-model="orderInfo.orderExts[index].weight" placeholder="克重(g)" />
                 </el-form-item>
+                <div v-if="orderInfo.orderType === 2">
+                  <el-form-item label="米数">
+                    <el-input v-model="orderInfo.orderExts[index].length" placeholder="米数(M)/筒" />
+                  </el-form-item>
+                  <el-form-item label="个数">
+                    <el-input-number v-model="orderInfo.orderExts[index].goodsNumber" :min="1" placeholder="下单数量" style="width:100%" />
+                  </el-form-item>
+                </div>
                 <div v-else>
                   <el-form-item label="长度">
-                    <el-input v-model="orderInfo.orderExts[index].length" placeholder="长度(cm)" />
+                    <el-input v-model="orderInfo.orderExts[index].goodsLength" placeholder="长度(cm)/条" />
                   </el-form-item>
                   <el-form-item label="条数">
-                    <el-input v-model="orderInfo.orderExts[index].number" placeholder="宽度(cm)" />
+                    <el-input-number v-model="orderInfo.orderExts[index].goodsNumber" :min="1" placeholder="下单条数" style="width:100%" />
                   </el-form-item>
                 </div>
                 <el-form-item label="单价">
-                  <el-input v-model="orderInfo.orderExts[index].price" placeholder="单价(元)" />
-                </el-form-item>
-                <el-form-item label="数量">
-                  <el-input-number v-model="orderInfo.orderExts[index].goodsNumber" placeholder="下单数量" style="width:100%" />
+                  <el-input v-model="orderInfo.orderExts[index].price" type="number" placeholder="单价(元)" />
                 </el-form-item>
 
               </el-form>
@@ -141,6 +148,8 @@ export default {
         orderType: 2,
         orderExts: [
           {
+            product: {},
+            productNo: null,
             length: null,
             number: null,
             price: 0,
@@ -239,7 +248,7 @@ export default {
       })
     },
     addGoods() {
-      this.orderInfo.orderExts.push({ requirement: null, length: null, number: null, price: 0, productId: null, goodsNumber: 1, weight: null, width: null })
+      this.orderInfo.orderExts.push({ productNo: null, requirement: null, length: null, number: null, price: null, productId: null, goodsLength: 1, goodsNumber: 1, weight: null, width: null })
     },
     deleteGoods(index) {
       if (this.orderInfo.orderExts < 2) return
@@ -276,6 +285,7 @@ export default {
     changeProduct(index) {
       const changeId = this.orderInfo.orderExts[index].productId
       const product = this.productList.find(item => item.id === changeId)
+      this.orderInfo.orderExts[index].product.productNo = product.productNo
       this.orderInfo.orderExts[index].requirement = product.requirement
       this.orderInfo.orderExts[index].width = product.width
       this.orderInfo.orderExts[index].weight = product.weight
@@ -303,8 +313,8 @@ export default {
 
   }
   .plus{
-    min-height: 412px;
-    line-height: 402px;
+    min-height: 535px;
+    line-height: 510px;
     text-align: center;
     font-size: 48px;
     i{cursor:pointer;}

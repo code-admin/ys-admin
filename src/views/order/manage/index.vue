@@ -31,7 +31,13 @@
       </el-table-column> -->
       <el-table-column label="制单人类型" prop="userTypeName" align="center" />
       <el-table-column label="制单人" prop="createBy" align="center" />
-      <el-table-column label="金额(元)" prop="totalPrice" align="center" />
+      <el-table-column label="金额(元)" prop="totalPrice" align="center">
+        <template slot-scope="scope">
+          <div v-if="scope.row.totalPrice" style="color:#f40;">
+            {{ scope.row.totalPrice }} ¥
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label="状态" prop="statusName" align="center">
         <template slot-scope="scope">
           <el-tag :type="scope.row.status == 5 ? 'info': 'success'" size="mini">{{ scope.row.statusName }}</el-tag>
@@ -53,7 +59,7 @@
               <el-button size="mini" type="text" @click="()=>{$refs[scope.row.id].doClose()}">取消</el-button>
               <el-button type="danger" size="mini" plain @click="close(scope.row)">确 定</el-button>
             </div>
-            <el-button slot="reference" type="danger" size="mini">关闭</el-button>
+            <el-button v-if="scope.row.status !== 5" slot="reference" type="danger" size="mini">关闭</el-button>
           </el-popover>
         </template>
       </el-table-column>

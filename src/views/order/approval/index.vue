@@ -14,7 +14,7 @@
       <el-select v-model="filter.status" placeholder="订单状态" style="width: 200px;" class="filter-item" clearable>
         <el-option v-for="(flow,index) in flowList" :key="index" :label="flow.workName" :value="flow.workStatus" />
       </el-select>
-      <el-select v-model="filter.userType" placeholder="审核状态" style="width: 200px;" class="filter-item" clearable>
+      <el-select v-model="filter.auditStatus" placeholder="审核状态" style="width: 200px;" class="filter-item" clearable>
         <el-option label="待审核" :value="1" />
         <el-option label="驳回" :value="2" />
         <el-option label="通过" :value="3" />

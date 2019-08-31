@@ -36,7 +36,13 @@
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
             <el-row :gutter="10">
-              <el-col :span="8"><div class="lable">联系方式:</div></el-col>
+              <el-col :span="8"><div class="lable">收货人:</div></el-col>
+              <el-col :span="16"><div class="val">{{ approval.order && approval.order.customerName }}</div></el-col>
+            </el-row>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
+            <el-row :gutter="10">
+              <el-col :span="8"><div class="lable">收货人电话:</div></el-col>
               <el-col :span="16"><div class="val">{{ approval.order && approval.order.phone }}</div></el-col>
             </el-row>
           </el-col>
@@ -55,17 +61,18 @@
           :data="approval.order.orderExts"
           style="width: 100%"
         >
-          <el-table-column prop="requirement" label="产品/类型" align="center" show-overflow-tooltip>
+          <el-table-column prop="requirement" label="产品编号/名称" align="center" show-overflow-tooltip>
             <template slot-scope="scope">
-              <el-tag type="info" size="mini">{{ `${scope.row.product.name} / ${scope.row.product.typeName}` }}</el-tag>
+              <el-tag type="info" size="mini">{{ `${scope.row.product && scope.row.product.productNo} / ${scope.row.product && scope.row.product.name}` }}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column prop="product.name" label="要求" show-overflow-tooltip align="center" />
+          <el-table-column prop="requirement" label="要求" show-overflow-tooltip align="center" />
           <el-table-column prop="width" label="宽度(cm)" align="center" />
           <el-table-column prop="weight" label="克重(g)" align="center" />
-          <el-table-column v-if="approval.order.orderType === 1" prop="width" label="长度(cm)" align="center" />
-          <el-table-column v-if="approval.order.orderType === 2" prop="number" label="个数" align="center" />
-          <el-table-column prop="price" label="单价(元)" align="center">
+          <el-table-column v-if="approval.order.orderType === 2" prop="goodsNumber" label="个数" align="center" />
+          <el-table-column v-if="approval.order.orderType === 1" prop="goodsLength" label="长度(cm)" align="center" />
+          <el-table-column v-if="approval.order.orderType === 1" prop="goodsNumber" label="条数" align="center" />
+          <el-table-column prop="price" label="单价(吨)" align="center">
             <template slot-scope="scope">
               <div v-if="scope.row.price" style="color:#f40;">
                 {{ scope.row.price }} ¥

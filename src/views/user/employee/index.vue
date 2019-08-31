@@ -83,13 +83,13 @@
           <el-input v-model="user.phone" autocomplete="off" placeholder="请输入手机号码" />
         </el-form-item>
         <el-form-item label="所属部门" :label-width="formLabelWidth">
-          <el-select v-model="user.departmentId" placeholder="请选择部门" style="width:100%">
+          <el-select v-model="user.departmentId" placeholder="请选择部门" style="width:100%" @change="changeDept">
             <el-option v-for="(dept,index) in deptList" :key="index" :label="dept.departmentName" :value="dept.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="所属职位" :label-width="formLabelWidth">
           <el-select v-model="user.jobId" placeholder="请选择职位" style="width:100%">
-            <el-option v-for="(job,index) in jobList" :key="index" :label="job.name" :value="job.id" />
+            <el-option v-for="job in jobList" :key="job.id" :label="job.name" :value="job.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="班次" :label-width="formLabelWidth">
@@ -162,14 +162,6 @@ export default {
       formLabelWidth: '80px'
     }
   },
-  watch: {
-    'user.departmentId': function(id, val) {
-      id !== undefined && this.getJobListById(id)
-      if (val) {
-        this.user.jobId = ''
-      }
-    }
-  },
   mounted() {
     this.getUserList()
     this.getDeptList()
@@ -201,6 +193,7 @@ export default {
       this.getDeviceList('')
       this.title = '添加员工信息'
       this.user = {
+        jobId: '',
         gender: 1,
         roleId: 2
       }
@@ -236,18 +229,14 @@ export default {
         res.code === 10000 && this.$message({ message: '操作成功！', type: 'success' })
       })
     },
-    handleSizeChange(val) {
-      this.filter.pageSize = val
-      this.getUserList()
-    },
-    handleCurrentChange(val) {
-      this.filter.pageIndex = val
-      this.getUserList()
-    },
     getDeptList() {
       fetchDeptList({ pageIndex: 1, pageSize: 100000 }).then(res => {
         if (res.code === 10000) this.deptList = res.data
       })
+    },
+    changeDept() {
+      this.user.jobId = ''
+      this.getJobListById(this.user.departmentId)
     },
     getJobListById(deptId) {
       getJobListByDeptId(deptId).then(res => {
@@ -265,6 +254,14 @@ export default {
         this.loading = !this.loading
         if (res.code === 10000) this.deviceList = res.data
       })
+    },
+    handleSizeChange(val) {
+      this.filter.pageSize = val
+      this.getUserList()
+    },
+    handleCurrentChange(val) {
+      this.filter.pageIndex = val
+      this.getUserList()
     }
   }
 }

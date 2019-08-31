@@ -21,9 +21,16 @@
       <el-table-column label="要求" prop="requirement" align="center" show-overflow-tooltip width="120" />
       <el-table-column label="宽度(CM)" prop="width" align="center" />
       <el-table-column label="克重(G)" prop="weight" align="center" />
-      <el-table-column label="个数" prop="number" align="center" />
-      <el-table-column label="库存(个)" prop="stockNumber" align="center" />
+      <el-table-column label="米数(M)" prop="length" align="center" />
       <el-table-column label="重量(KG)" prop="netWeight" align="center" />
+      <el-table-column label="库存(个)" prop="stockNumber" align="center" />
+      <el-table-column label="价格" prop="price" align="center">
+        <template slot-scope="scope">
+          <div v-if="scope.row.price" style="color:#f40;">
+            {{ scope.row.price }} ¥
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label="今日入库" prop="todayStockNumber" align="center" />
       <el-table-column label="今日出库" prop="todaySaledNumber" align="center" />
       <el-table-column label="预售" prop="preSaledNumber" align="center" />
@@ -71,14 +78,11 @@
           <el-form-item label="克重" :label-width="formLabelWidth">
             <el-input v-model="product.weight" placeholder="克重(g)" />
           </el-form-item>
-          <el-form-item label="长度" :label-width="formLabelWidth">
-            <el-input v-model="product.length" placeholder="长度(cm)" />
-          </el-form-item>
-          <el-form-item label="个数(条)" :label-width="formLabelWidth">
-            <el-input v-model="product.number" placeholder="(条)" />
+          <el-form-item label="米数" :label-width="formLabelWidth">
+            <el-input v-model="product.length" placeholder="米数(M)" />
           </el-form-item>
           <el-form-item label="价格" :label-width="formLabelWidth">
-            <el-input v-model="product.price" placeholder="请输入基准价" />
+            <el-input v-model="product.price" placeholder="请输入基准价(元/吨)" />
           </el-form-item>
           <!--<el-form-item label="库存" :label-width="formLabelWidth">
             <el-input v-model="product.stockNumber" placeholder="请输入库存数" />
