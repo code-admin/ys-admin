@@ -193,9 +193,9 @@ export default {
             type: 'success'
           })
           this.getProductList()
+          this.dialogFormVisible = !this.dialogFormVisible
         }
       })
-      this.dialogFormVisible = !this.dialogFormVisible
     },
     handleSizeChange(val) {
       this.filter.pageSize = val
