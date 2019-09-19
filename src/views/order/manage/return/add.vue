@@ -3,9 +3,7 @@
     <div class="card">
       <el-steps :active="1" finish-status="success" align-center>
         <el-step title="创建" />
-        <el-step title="审核" />
-        <el-step title="出库" />
-        <el-step title="待签" />
+        <el-step title="入库" />
         <el-step title="确认" />
         <el-step title="完成" />
       </el-steps>
@@ -20,10 +18,13 @@
               <el-option v-for="user in customeList" :key="user.loginName" :label="user.userName" :value="user.loginName" />
             </el-select>
           </el-form-item>
-          <el-form-item label="销售类型">
-            <el-select v-model="orderInfo.orderType" placeholder="销售类型" style="width:100%;">
-              <el-option v-for="(orderType,index) in orderTypeList" :key="index" :label="orderType.name" :value="orderType.id" />
-            </el-select>
+          <el-form-item label="备注">
+            <el-input
+              v-model="orderInfo.remark"
+              placeholder="请输入备注"
+              type="textarea"
+              :rows="2"
+            />
           </el-form-item>
         </el-form>
       </div>
@@ -90,38 +91,6 @@
     </div>
 
     <div class="card mt20">
-      <div class="title">收货信息</div>
-      <div class="content mt20">
-        <el-form label-position="right" label-width="100px" :model="orderInfo">
-          <el-form-item label="发货方式">
-            <!-- <el-select v-model="orderInfo.deliveryType" placeholder="请选择发货方式" filterable style="width:100%;">
-              <el-option v-for="expres in expresList" :key="expres.id" :label="expres.name" :value="expres.id" />
-            </el-select> -->
-            <el-input v-model="orderInfo.deliveryName" placeholder="请输入发货方式" />
-          </el-form-item>
-          <el-form-item label="收货地址">
-            <el-cascader v-model="orderInfo.pcc" :props="props" clearable placeholder="省/市/区" style="width:100%;" />
-            <el-input v-model="orderInfo.address" class="mt5" placeholder="请输入详细地址" />
-          </el-form-item>
-          <el-form-item label="收货人">
-            <el-input v-model="orderInfo.customerName" placeholder="请输入收货人" />
-          </el-form-item>
-          <el-form-item label="收货人电话">
-            <el-input v-model="orderInfo.phone" placeholder="请输入收货人电话" />
-          </el-form-item>
-          <el-form-item label="备注">
-            <el-input
-              v-model="orderInfo.remark"
-              placeholder="请输入备注"
-              type="textarea"
-              :rows="2"
-            />
-          </el-form-item>
-        </el-form>
-      </div>
-    </div>
-
-    <div class="card mt20">
       <el-button type="primary" icon="el-icon-edit-outline" @click="saveOrderInfo">保存</el-button>
       <el-button type="primary" icon="el-icon-position" @click="saveOrSubmitOrderInfo">保存并提交</el-button>
       <el-button icon="el-icon-back" @click="$router.back()">返回</el-button>
@@ -133,73 +102,14 @@
 import { getCustomes } from '@/api/user'
 import { getOrderTypes, getExpress, saveOrder, submitOrder } from '@/api/order'
 import { getValidateProducts } from '@/api/product'
-import { getProvinces, getCitys, getCountrys, getTowns } from '@/api/common'
 export default {
   data() {
     return {
       props: {
-        lazy: true,
-        lazyLoad(node, resolve) {
-          const { level, value } = node
-          if (level === 0) {
-            getProvinces().then(res => {
-              const nodes = []
-              if (res.code === 10000 && res.data.length) {
-                res.data.map(item => {
-                  nodes.push({
-                    value: item.provinceId,
-                    label: item.name
-                  })
-                })
-                resolve(nodes)
-              }
-            })
-          } else if (level === 1) {
-            getCitys(value).then(res => {
-              const nodes = []
-              if (res.code === 10000 && res.data.length) {
-                res.data.map(item => {
-                  nodes.push({
-                    value: item.cityId,
-                    label: item.name
-                  })
-                })
-                resolve(nodes)
-              }
-            })
-          } else if (level === 2) {
-            getCountrys(value).then(res => {
-              const nodes = []
-              if (res.code === 10000 && res.data.length) {
-                res.data.map(item => {
-                  nodes.push({
-                    value: item.countryId,
-                    label: item.name,
-                    leaf: level >= 2
-                  })
-                })
-                resolve(nodes)
-              }
-            })
-          } else if (level === 3) {
-            getTowns(value).then(res => {
-              const nodes = []
-              if (res.code === 10000 && res.data.length) {
-                res.data.map(item => {
-                  nodes.push({
-                    value: item.townId,
-                    label: item.name,
-                    leaf: level >= 3
-                  })
-                })
-                resolve(nodes)
-              }
-            })
-          }
-        }
+        lazy: true
       },
       orderInfo: {
-        makingType: 1,
+        makingType: 2,
         orderType: 2,
         orderExts: [
           {
@@ -258,10 +168,7 @@ export default {
     },
     saveOrderInfo() {
       const params = {
-        ...this.orderInfo,
-        province: this.orderInfo.pcc[0],
-        city: this.orderInfo.pcc[1],
-        district: this.orderInfo.pcc[2]
+        ...this.orderInfo
       }
       saveOrder(params).then(res => {
         if (res.code === 10000) {
@@ -272,10 +179,7 @@ export default {
     },
     saveOrSubmitOrderInfo() {
       const params = {
-        ...this.orderInfo,
-        province: this.orderInfo.pcc[0],
-        city: this.orderInfo.pcc[1],
-        district: this.orderInfo.pcc[2]
+        ...this.orderInfo
       }
       submitOrder(params).then(res => {
         if (res.code === 10000) {

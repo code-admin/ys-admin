@@ -63,11 +63,11 @@
     >
       <div class="demo-drawer__content">
         <el-form :model="product">
-          <el-form-item label="产品编号" :label-width="formLabelWidth">
+          <!-- <el-form-item label="产品编号" :label-width="formLabelWidth">
             <el-input v-model="product.productNo" placeholder="请输入产品编号" />
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="产品名称" :label-width="formLabelWidth">
-            <el-input v-model="product.name" placeholder="请输入产品编号" />
+            <el-input v-model="product.name" placeholder="请输入产品名称" />
           </el-form-item>
           <el-form-item label="要求" :label-width="formLabelWidth">
             <el-input v-model="product.requirement" placeholder="请输入要求" />

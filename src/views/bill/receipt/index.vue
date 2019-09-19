@@ -14,22 +14,21 @@
       <el-select v-model="filter.status" placeholder="订单状态" style="width: 200px;" class="filter-item" clearable>
         <el-option v-for="(flow,index) in flowList" :key="index" :label="flow.workName" :value="flow.workStatus" />
       </el-select>
-      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="filter.pageIndex,getOrderList">查询</el-button>
-      <router-link :to="{ name: 'OrderManageAdd' }"> <el-button class="filter-item" icon="el-icon-plus">创建销售单</el-button> </router-link>
-      <router-link :to="{ name: 'OrderManageReturnAdd'}"><el-button class="filter-item" icon="el-icon-plus">创建退筒单</el-button></router-link>
-
+      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="getOrderList">查询</el-button>
+      <el-button class="filter-item" icon="el-icon-plus" @click="addInit">创建订单</el-button>
     </div>
 
     <el-table :key="tableKey" v-loading="listLoading" :data="orderList" border fit highlight-current-row style="width: 100%;">
       <el-table-column type="selection" align="center" width="55" />
       <el-table-column type="index" width="50" align="center" />
-      <el-table-column label="订单号" prop="orderNo" align="center" width="140" />
+      <el-table-column label="订单号" prop="orderNo" align="center" sortable="custom" />
       <el-table-column label="客户" prop="customerName" align="center" />
-      <el-table-column label="单据类型" prop="makingTypeName" align="center">
+      <el-table-column label="单据类型" prop="makingTypeName" align="center" />
+      <!-- <el-table-column label="销售类型" prop="orderTypeName" align="center">
         <template slot-scope="scope">
-          <el-tag :type=" scope.row.makingType === 1 ? 'primary' : 'danger'" size="mini">{{ scope.row.makingTypeName }}</el-tag>
+          <el-tag type="primary" size="mini">{{ scope.row.orderTypeName }}</el-tag>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="制单人类型" prop="userTypeName" align="center" />
       <el-table-column label="制单人" prop="createBy" align="center" />
       <el-table-column label="金额(元)" prop="totalPrice" align="center">
@@ -41,10 +40,7 @@
       </el-table-column>
       <el-table-column label="状态" prop="statusName" align="center">
         <template slot-scope="scope">
-          <div>
-            <el-tag v-if="scope.row.makingType === 1" :type="scope.row.status == 5 ? 'info': 'success'" size="mini">{{ scope.row.statusName }}</el-tag>
-            <el-tag v-if="scope.row.makingType === 2" :type="scope.row.status == 3 ? 'info': 'success'" size="mini">{{ scope.row.statusName }}</el-tag>
-          </div>
+          <el-tag :type="scope.row.status == 5 ? 'info': 'success'" size="mini">{{ scope.row.statusName }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="下单时间" prop="orderTime" align="center" sortable="custom" width="180">
@@ -146,19 +142,14 @@ export default {
         if (res.code === 10000) this.flowList = res.data
       })
     },
+    addInit() {
+      this.$router.push({ name: 'OrderManageAdd' })
+    },
     edit(obj) {
-      if (obj.makingType === 1) {
-        this.$router.push({ name: 'OrderManageEdit', params: { id: obj.id }})
-      } else if (obj.makingType === 2) {
-        this.$router.push({ name: 'OrderManageReturnEdit', params: { id: obj.id }})
-      }
+      this.$router.push({ name: 'OrderManageEdit', params: { id: obj.id }})
     },
     detail(obj) {
-      if (obj.makingType === 1) {
-        this.$router.push({ name: 'OrderManageDetail', params: { id: obj.id }})
-      } else if (obj.makingType === 2) {
-        this.$router.push({ name: 'OrderManageReturnDetail', params: { id: obj.id }})
-      }
+      this.$router.push({ name: 'OrderManageDetail', params: { id: obj.id }})
     },
     outStock(obj) {
       this.history.orderId = obj.id

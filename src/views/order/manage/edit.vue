@@ -37,7 +37,7 @@
             <el-card shadow="hover" style="min-height:578px">
               <el-form label-position="right" label-width="80px" :model="orderInfo">
                 <el-form-item label="产品编号">
-                  <el-input v-model="orderInfo.orderExts[index].product.productNo" placeholder="产品编号" disabled />
+                  <el-input v-model="orderInfo.orderExts[index].productNo" placeholder="产品编号" disabled />
                 </el-form-item>
                 <el-form-item label="产品名称">
                   <el-select v-model="orderInfo.orderExts[index].productId" placeholder="请选择产品" filterable clearable style="width:100%;" @change="changeProduct(index)">
@@ -45,17 +45,17 @@
                   </el-select>
                 </el-form-item>
                 <el-form-item label="要求">
-                  <el-input v-model="orderInfo.orderExts[index].requirement" placeholder="请输入要求" />
+                  <el-input v-model="orderInfo.orderExts[index].requirement" placeholder="请输入要求" disabled />
                 </el-form-item>
                 <el-form-item label="宽度">
-                  <el-input v-model="orderInfo.orderExts[index].width" placeholder="宽度(cm)" />
+                  <el-input v-model="orderInfo.orderExts[index].width" placeholder="宽度(cm)" disabled />
                 </el-form-item>
                 <el-form-item label="克重">
-                  <el-input v-model="orderInfo.orderExts[index].weight" placeholder="克重(g)" />
+                  <el-input v-model="orderInfo.orderExts[index].weight" placeholder="克重(g)" disabled />
                 </el-form-item>
                 <div v-if="orderInfo.orderType === 2">
                   <el-form-item label="米数">
-                    <el-input v-model="orderInfo.orderExts[index].length" placeholder="米数(M)/筒" />
+                    <el-input v-model="orderInfo.orderExts[index].length" placeholder="米数(M)/筒" disabled />
                   </el-form-item>
                   <el-form-item label="个数">
                     <el-input-number v-model="orderInfo.orderExts[index].goodsNumber" :min="1" placeholder="下单数量" style="width:100%" />
@@ -285,7 +285,7 @@ export default {
     changeProduct(index) {
       const changeId = this.orderInfo.orderExts[index].productId
       const product = this.productList.find(item => item.id === changeId)
-      this.orderInfo.orderExts[index].product.productNo = product.productNo
+      this.orderInfo.orderExts[index].productNo = product.productNo
       this.orderInfo.orderExts[index].requirement = product.requirement
       this.orderInfo.orderExts[index].width = product.width
       this.orderInfo.orderExts[index].weight = product.weight

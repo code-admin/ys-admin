@@ -81,7 +81,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="产品名称" :label-width="formLabelWidth">
-            <el-input v-model="history.name" placeholder="请输入产品编号" disabled />
+            <el-input v-model="history.name" placeholder="请输入产品名称" disabled />
           </el-form-item>
           <el-form-item label="要求" :label-width="formLabelWidth">
             <el-input v-model="history.requirement" placeholder="请输入要求" disabled />

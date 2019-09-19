@@ -49,21 +49,42 @@ export const constantRoutes = [
         name: 'OrderManageAdd',
         component: () => import('@/views/order/manage/add'),
         hidden: true,
-        meta: { title: '创建订单' }
+        meta: { title: '新建销售单' }
+      },
+      {
+        path: '/order/manage/return/add',
+        name: 'OrderManageReturnAdd',
+        component: () => import('@/views/order/manage/return/add'),
+        hidden: true,
+        meta: { title: '新建退筒单' }
       },
       {
         path: '/order/manage/edit/:id',
         name: 'OrderManageEdit',
         component: () => import('@/views/order/manage/edit'),
         hidden: true,
-        meta: { title: '编辑订单' }
+        meta: { title: '编辑销售单' }
+      },
+      {
+        path: '/order/manage/return/edit/:id',
+        name: 'OrderManageReturnEdit',
+        component: () => import('@/views/order/manage/return/edit'),
+        hidden: true,
+        meta: { title: '编辑退筒单' }
       },
       {
         path: '/order/manage/detail/:id',
         name: 'OrderManageDetail',
         component: () => import('@/views/order/manage/detail'),
         hidden: true,
-        meta: { title: '订单详情' }
+        meta: { title: '销售单详情' }
+      },
+      {
+        path: '/order/manage/return/detail/:id',
+        name: 'OrderManageReturnDetail',
+        component: () => import('@/views/order/manage/return/detail'),
+        hidden: true,
+        meta: { title: '退筒单详情' }
       },
 
       {
@@ -80,6 +101,22 @@ export const constantRoutes = [
         meta: { title: '审核详情' }
       }
     ]
+  },
+
+  {
+    path: '/bill',
+    component: Layout,
+    redirect: '/bill/receipt',
+    name: 'Bill',
+    meta: { title: '账单管理', icon: 'cashier' },
+    alwaysShow: true,
+    children: [
+      {
+        path: '/bill/receipt',
+        name: 'BillReceipt',
+        component: () => import('@/views/bill/receipt/index'),
+        meta: { title: '收款管理' }
+      }]
   },
 
   {
@@ -154,6 +191,7 @@ export const constantRoutes = [
     redirect: '/feedback/list',
     name: 'Feedback',
     meta: { title: '反馈管理', icon: 'feed_back' },
+    alwaysShow: true,
     children: [
       {
         path: '/feedback/list',
@@ -167,13 +205,13 @@ export const constantRoutes = [
         component: () => import('@/views/feedback/detail'),
         hidden: true,
         meta: { title: '反馈详情' }
-      },
-      {
-        path: '/feedback/report',
-        name: 'FeedbackReport',
-        component: () => import('@/views/feedback/index'),
-        meta: { title: '反馈报表' }
       }
+      // {
+      //   path: '/feedback/report',
+      //   name: 'FeedbackReport',
+      //   component: () => import('@/views/feedback/index'),
+      //   meta: { title: '反馈报表' }
+      // }
     ]
   },
   {

@@ -135,3 +135,21 @@ export function confirmOut(id) {
     method: 'post'
   })
 }
+
+// 退筒入库(草稿)
+export function saveWarehousingOrder(data) {
+  return request({
+    url: '/order/saveWarehousingOrder  ',
+    method: 'post',
+    data
+  })
+}
+
+// 提交退筒入库并更新库存
+export function submitWarehousingOrder(data) {
+  return request({
+    url: '/order/submitWarehousingOrder',
+    method: 'post',
+    data
+  })
+}

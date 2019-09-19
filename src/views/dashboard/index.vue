@@ -12,7 +12,7 @@
               <div class="right">
                 <div class="box">
                   <p>当前待审核订单</p>
-                  <span>{{ ringData && ringData.totalAuditOrder ? ringData.totalAuditOrder : 0 }}</span>
+                  <router-link :to="{name:'OrderApproval'}"> <span>{{ ringData && ringData.totalAuditOrder ? ringData.totalAuditOrder : 0 }}</span></router-link>
                 </div>
               </div>
             </div>
@@ -24,7 +24,9 @@
               <div class="right">
                 <div class="box">
                   <p>当前待回馈</p>
-                  <span>{{ ringData && ringData.totalFeedback ? ringData.totalFeedback : 0 }}</span>
+                  <router-link :to="{name:'FeedbackList'}">
+                    <span>{{ ringData && ringData.totalFeedback ? ringData.totalFeedback : 0 }}</span>
+                  </router-link>
                 </div>
               </div>
             </div>

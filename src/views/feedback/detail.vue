@@ -60,7 +60,9 @@
               </el-col>
               <el-col :span="16">
                 <div class="value">
-                  {{ feedback.orderNo }}
+                  <router-link v-if=" feedback.orderId" :to="{name: 'OrderManageDetail', params: { id: feedback.orderId } }">
+                    <el-button size="mini" type="text">{{ `${feedback.orderNo}` }}</el-button>
+                  </router-link>
                 </div>
               </el-col>
             </el-row>
@@ -197,37 +199,52 @@
         </el-row>
 
         <el-row :gutter="20">
-          <el-col :sm="12" :md="8" :lg="6">
-            <el-row :gutter="20">
-              <el-col :span="8">
-                <div class="lable">
-                  具体说明:
-                </div>
-              </el-col>
-              <el-col :span="16">
-                <div class="value">
-                  {{ feedback.description }}
-                </div>
-              </el-col>
-            </el-row>
+          <el-col :sm="4" :md="2" :lg="2">
+            <div class="lable">
+              具体说明:
+            </div>
+          </el-col>
+          <el-col :sm="20" :md="22" :lg="22">
+            <div class="value">
+              {{ feedback.description }}
+            </div>
           </el-col>
         </el-row>
+
         <el-row :gutter="20">
-          <el-col :sm="12" :md="8" :lg="6">
-            <el-row :gutter="20">
-              <el-col :span="8">
-                <div class="lable">
-                  备注:
-                </div>
-              </el-col>
-              <el-col :span="16">
-                <div class="value">
-                  {{ feedback.remark }}
-                </div>
-              </el-col>
-            </el-row>
+          <el-col :sm="4" :md="2" :lg="2">
+            <div class="lable">
+              备注:
+            </div>
+          </el-col>
+          <el-col :sm="20" :md="22" :lg="22">
+            <div class="value">
+              {{ feedback.remark }}
+            </div>
           </el-col>
         </el-row>
+
+        <el-row :gutter="20">
+          <el-col :sm="4" :md="2" :lg="2">
+            <div class="lable">
+              <i class="el-icon-paperclip" />附件:
+            </div>
+          </el-col>
+          <el-col :sm="20" :md="22" :lg="22">
+            <div class="value img-list mt20">
+              <el-upload
+                list-type="picture-card"
+                action="#"
+                :on-preview="handlePictureCardPreview"
+                :disabled="true"
+                :limit="4"
+                :file-list="feedback.files"
+              />
+            </div>
+          </el-col>
+
+        </el-row>
+
       </div>
     </div>
 
@@ -242,7 +259,7 @@
           <el-timeline>
             <el-timeline-item v-for="(item,index) in remarkList" :key="item.id" :icon="index ? '' : 'el-icon-more' " :type="index ? '' : 'primary' " :timestamp="item.createBy+'  '+item.createTime" placement="top">
               <el-card>
-                <p>{{ item.description }}</p>
+                {{ item.description }}
               </el-card>
             </el-timeline-item>
           </el-timeline>
@@ -275,6 +292,11 @@
         <el-button type="primary" @click="saveRemark">确 定</el-button>
       </div>
     </el-dialog>
+
+    <!-- 图片预览 -->
+    <el-dialog :visible.sync="dialogPreviewer">
+      <img width="100%" :src="dialogImageUrl" alt="">
+    </el-dialog>
   </div>
 </template>
 
@@ -285,6 +307,8 @@ export default {
     return {
       updateRemarkVisible: false,
       addRemarkVisible: false,
+      dialogPreviewer: false,
+      dialogImageUrl: '',
       id: this.$route.params.id,
       feedback: {},
       updateRemark: '',
@@ -333,12 +357,16 @@ export default {
         }
         this.addRemarkVisible = !this.addRemarkVisible
       })
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url
+      this.dialogPreviewer = true
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .page{
   padding: 20px;
   background: #f2f2f2;
@@ -374,5 +402,13 @@ export default {
 }
 .justify-between{
   justify-content: space-between;
+}
+
+.img-list .el-upload--picture-card {
+    display: none;
+}
+
+.img-list .el-upload-list li .el-upload-list__item-status-label {
+    display: none;
 }
 </style>
