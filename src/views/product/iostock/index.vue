@@ -15,7 +15,7 @@
       <el-table-column type="index" width="50" align="center" />
       <el-table-column label="订单编号" prop="productNo" align="center" show-overflow-tooltip width="120">
         <template slot-scope="scope">
-          <router-link v-if=" scope.row.orderId" :to="{name: 'OrderManageDetail', params: { id: scope.row.orderId } }">
+          <router-link v-if=" scope.row.orderId" :to="{name: scope.row.makingType === 1 ? 'OrderManageDetail' : 'OrderManageReturnDetail', params: { id: scope.row.orderId } }">
             <el-button size="mini" type="text">{{ `${scope.row.orderNo}` }}</el-button>
           </router-link>
         </template>

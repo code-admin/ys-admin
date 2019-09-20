@@ -86,7 +86,13 @@ export const constantRoutes = [
         hidden: true,
         meta: { title: '退筒单详情' }
       },
-
+      {
+        path: '/order/printing/checkout/:id',
+        name: 'OrderCheckout',
+        component: () => import('@/views/order/manage/printing'),
+        hidden: true,
+        meta: { title: '打印预览' }
+      },
       {
         path: '/order/approval',
         name: 'OrderApproval',
@@ -116,7 +122,20 @@ export const constantRoutes = [
         name: 'BillReceipt',
         component: () => import('@/views/bill/receipt/index'),
         meta: { title: '收款管理' }
-      }]
+      },
+      {
+        path: '/bill/detail',
+        name: 'BillDetail',
+        component: () => import('@/views/bill/detail/index'),
+        meta: { title: '账目明细' }
+      },
+      {
+        path: '/bill/total',
+        name: 'BillTotal',
+        component: () => import('@/views/bill/total/index'),
+        meta: { title: '账目汇总' }
+      }
+    ]
   },
 
   {

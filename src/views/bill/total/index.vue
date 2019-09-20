@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="filter.orderNo" placeholder="流水号号" style="width: 200px;" class="filter-item" clearable />
+      <el-input v-model="filter.orderNo" placeholder="订单编号" style="width: 200px;" class="filter-item" clearable />
       <el-input v-model="filter.customerName" placeholder="客户名称" style="width: 200px;" class="filter-item" clearable />
       <el-input v-model="filter.createName" placeholder="制单人" style="width: 200px;" class="filter-item" clearable />
       <el-select v-model="filter.orderType" placeholder="收款类型" style="width: 200px;" class="filter-item" clearable>
@@ -11,17 +11,13 @@
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="queryData">查询</el-button>
       <el-button class="filter-item" icon="el-icon-plus" @click="editInit">新增收款</el-button>
     </div>
+
     <el-table v-loading="listLoading" :data="billList" border>
       <el-table-column type="index" width="50" align="center" />
       <el-table-column label="流水号" prop="billNo" align="center" />
-      <el-table-column label="付款人(客户)" prop="userName" align="center" />
-      <el-table-column label="单据类型" prop="feeTypeName" align="center">
-        <template slot-scope="scope">
-          <div>
-            <el-tag size="mini" :type="scope.row.feeType === 1 ? null :'success'">{{ scope.row.feeTypeName }}</el-tag>
-          </div>
-        </template>
-      </el-table-column>
+      <el-table-column label="订单号" prop="orderNo" align="center" />
+      <el-table-column label="客户" prop="userName" align="center" />
+      <el-table-column label="单据类型" prop="feeTypeName" align="center" />
       <el-table-column label="金额(元)" prop="amount" align="center">
         <template slot-scope="scope">
           <div v-if="scope.row.amount" style="color:#f40;">
@@ -30,12 +26,13 @@
         </template>
       </el-table-column>
       <el-table-column label="制单人" prop="createBy" align="center" />
+      <el-table-column label="备注" prop="remark" align="center" show-overflow-tooltip />
       <el-table-column label="时间" prop="createTime" align="center" width="180">
         <template slot-scope="scope">
           <i class="el-icon-time" /> {{ scope.row.createTime }}
         </template>
       </el-table-column>
-      <el-table-column label="备注" prop="remark" align="center" show-overflow-tooltip />
+
       <el-table-column label="操作" prop="id" align="center">
         <template slot-scope="scope">
           <!-- <el-button v-if="scope.row.status == 0" type="primary" size="mini" @click="edit(scope.row)">编辑</el-button> -->

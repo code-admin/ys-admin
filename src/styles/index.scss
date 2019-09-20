@@ -73,3 +73,15 @@ div:focus {
     margin-bottom: 10px;
   }
 }
+
+.printHideCss{
+  display: none;
+}
+.clearCss{
+  margin-left: 0px!important;
+}
+.clearShadow{
+  -webkit-box-shadow: 0px!important;
+  box-shadow: 0px!important;
+
+}

@@ -84,7 +84,7 @@
           placement="top"
           width="160"
         >
-          <p>确认要完成出库吗</p>
+          <p>确认要完成入库吗</p>
           <div style="text-align: right; margin: 0">
             <el-button size="mini" type="text" @click="finishVisible = false">取消</el-button>
             <el-button type="primary" size="mini" @click="confirmOutStock">确定</el-button>
@@ -93,7 +93,7 @@
         </el-popover>
       </div>
       <el-divider />
-      <el-table :data="orderInfo.orderExpressList" style="width: 100%">
+      <el-table show-summary :data="orderInfo.orderExpressList" style="width: 100%">
         <el-table-column prop="productNo" label="产品编号/名称" align="center" width="140" show-overflow-tooltip>
           <template slot-scope="scope">
             <el-tag type="info" size="mini">{{ `${scope.row.productNo} / ${scope.row.productName}` }}</el-tag>
@@ -109,7 +109,7 @@
         <el-table-column prop="price" label="单价(吨)" align="center" />
         <el-table-column prop="netWeight" label="净重" align="center" />
         <el-table-column prop="totalPrice" label="金额" align="center" />
-        <el-table-column prop="number" label="出库个数" align="center" show-overflow-tooltip />
+        <el-table-column prop="number" label="入库个数" align="center" show-overflow-tooltip />
         <el-table-column prop="createBy" label="记录人/时间" align="center" width="180" show-overflow-tooltip>
           <template slot-scope="scope">
             <div>
@@ -126,9 +126,9 @@
           </template>
         </el-table-column>
       </el-table>
-      <div class="totalPrice">
+      <!-- <div class="totalPrice">
         <p>已入库总金额: {{ orderInfo.totalPrice ? orderInfo.totalPrice : '--' }} ¥</p>
-      </div>
+      </div> -->
     </div>
 
     <div class="card mt20">
@@ -157,7 +157,7 @@
         <el-table-column property="weight" label="克重" align="center" />
         <el-table-column property="number" label="入库个数" align="center" width="160">
           <template slot-scope="scope">
-            <el-input-number v-model="scope.row.number" :min="0" size="mini" placeholder="当前出库入数" />
+            <el-input-number v-model="scope.row.number" :min="0" size="mini" placeholder="当前入库数" />
           </template>
         </el-table-column>
         <el-table-column prop="totalWeight" label="重量(KG)" align="center" width="160">

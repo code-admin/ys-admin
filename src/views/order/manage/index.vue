@@ -2,8 +2,12 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="filter.orderNo" placeholder="订单编号" style="width: 200px;" class="filter-item" clearable />
-      <el-input v-model="filter.customerName" placeholder="下单人" style="width: 200px;" class="filter-item" clearable />
+      <el-input v-model="filter.customerName" placeholder="下单人(客户)" style="width: 200px;" class="filter-item" clearable />
       <el-input v-model="filter.createName" placeholder="制单人" style="width: 200px;" class="filter-item" clearable />
+      <el-select v-model="filter.makingType" placeholder="单据类型" style="width: 200px;" class="filter-item" clearable>
+        <el-option label="销售单" :value="1" />
+        <el-option label="退筒单" :value="2" />
+      </el-select>
       <el-select v-model="filter.userType" placeholder="制单人类型" style="width: 200px;" class="filter-item" clearable>
         <el-option label="客户" :value="2" />
         <el-option label="员工" :value="1" />
@@ -14,7 +18,7 @@
       <el-select v-model="filter.status" placeholder="订单状态" style="width: 200px;" class="filter-item" clearable>
         <el-option v-for="(flow,index) in flowList" :key="index" :label="flow.workName" :value="flow.workStatus" />
       </el-select>
-      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="filter.pageIndex,getOrderList">查询</el-button>
+      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="queryData">查询</el-button>
       <router-link :to="{ name: 'OrderManageAdd' }"> <el-button class="filter-item" icon="el-icon-plus">创建销售单</el-button> </router-link>
       <router-link :to="{ name: 'OrderManageReturnAdd'}"><el-button class="filter-item" icon="el-icon-plus">创建退筒单</el-button></router-link>
 
@@ -180,6 +184,10 @@ export default {
         }
       })
       this.$refs[obj.id].doClose()
+    },
+    queryData() {
+      this.filter.pageIndex = 1
+      this.getOrderList()
     },
     handleSizeChange(val) {
       this.filter.pageSize = val

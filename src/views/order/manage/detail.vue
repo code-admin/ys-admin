@@ -110,6 +110,9 @@
     <div v-if="orderInfo.status > 1" class="card mt20">
       <div class="flex justify-between">
         <div class="title">出库记录</div>
+        <router-link :to="{name:'OrderCheckout', params:orderInfo.id}">
+          <el-button size="mini" icon="el-icon-printer">打印</el-button>
+        </router-link>
         <el-popover
           v-if="orderInfo.orderExpressList && orderInfo.orderExpressList.length && orderInfo.status === 3"
           v-model="finishVisible"
@@ -295,7 +298,6 @@ export default {
     },
     // 出库
     showOutStock(obj, isAdd) {
-      console.log('?????????', obj)
       this.outStockList = []
       this.outStockList.push({
         id: isAdd ? null : obj.id,
