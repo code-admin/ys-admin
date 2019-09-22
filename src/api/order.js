@@ -153,3 +153,12 @@ export function submitWarehousingOrder(data) {
     data
   })
 }
+
+// 查询打印数据
+export function getOrderPrintInfo(data) {
+  return request({
+    url: 'order/getOrderPrintInfo',
+    method: 'post',
+    data
+  })
+}

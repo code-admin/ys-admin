@@ -1,9 +1,10 @@
 <template>
   <div>
     <div id="print_box" class="print-box">
-      <div style="width:100%;height:100%;" :loading="loading">
+      <div style="width:100%;height:100%;">
+
         <div class="company">浙江亚设塑业有限公司</div>
-        <div class="title">编织袋半成品结算单</div>
+        <div class="title">{{ orderInfo.makingType === 1 ? '编织袋半成品结算单' : ' 编织袋半成品退筒单' }}</div>
 
         <img class="logo" src="../../../assets/imgs/arsh_logo.png">
         <el-button class="print" type="text" size="mini" icon="el-icon-printer" @click="clickPrinting">打印</el-button>
@@ -14,7 +15,7 @@
           <div class="w160" style="text-align:right;"><span>单号:</span><span class="text">&nbsp;&nbsp;{{ orderInfo.orderNo }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
         </div>
 
-        <el-table :data="orderInfo.orderExpressList" border>
+        <el-table :data="orderInfo.orderExpressList" border size="mini">
           <el-table-column prop="productName" label="品名" align="center" />
           <el-table-column prop="requirement" label="要求" align="center" />
           <el-table-column prop="width" label="宽度" align="center" width="40" />
@@ -23,7 +24,7 @@
           <el-table-column prop="totalWeight" label="重量(KG)" align="center" width="80" />
           <el-table-column prop="tareWeight" label="车皮" align="center" width="70" />
           <el-table-column prop="price" label="单价(吨)" align="center" width="50" />
-          <el-table-column prop="price" label="净重" align="center" width="80" />
+          <el-table-column prop="netWeight" label="净重" align="center" width="80" />
           <el-table-column prop="totalPrice" label="金额(元)" align="center" />
           <el-table-column prop="date" label="备注" align="center" />
         </el-table>
@@ -61,7 +62,7 @@
 </template>
 
 <script>
-import { getOrderById } from '@/api/order'
+import { getOrderPrintInfo } from '@/api/order'
 export default {
   data() {
     return {
@@ -73,11 +74,11 @@ export default {
     }
   },
   mounted() {
-    this.getDetailById(this.$route.params.id)
+    this.getDetailById({ orderId: this.$route.params.id, expressIds: this.$route.query.arr })
   },
   methods: {
-    getDetailById(id) {
-      getOrderById(id).then(res => {
+    getDetailById(params) {
+      getOrderPrintInfo(params).then(res => {
         if (res.code === 10000) {
           this.orderInfo = res.data
         }
@@ -109,7 +110,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scope>
+<style lang="scss">
 .flex{
   display: flex;
 }

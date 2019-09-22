@@ -4,7 +4,7 @@
       <el-input v-model="filter.orderNo" placeholder="流水号号" style="width: 200px;" class="filter-item" clearable />
       <el-input v-model="filter.customerName" placeholder="客户名称" style="width: 200px;" class="filter-item" clearable />
       <el-input v-model="filter.createName" placeholder="制单人" style="width: 200px;" class="filter-item" clearable />
-      <el-select v-model="filter.orderType" placeholder="收款类型" style="width: 200px;" class="filter-item" clearable>
+      <el-select v-model="filter.feeType" placeholder="收款类型" style="width: 200px;" class="filter-item" clearable>
         <el-option label="收袋款" :value="1" />
         <el-option label="其他款" :value="2" />
       </el-select>

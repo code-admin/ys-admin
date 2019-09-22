@@ -110,9 +110,7 @@
     <div v-if="orderInfo.status > 1" class="card mt20">
       <div class="flex justify-between">
         <div class="title">出库记录</div>
-        <router-link :to="{name:'OrderCheckout', params:orderInfo.id}">
-          <el-button size="mini" icon="el-icon-printer">打印</el-button>
-        </router-link>
+        <el-button v-if="orderInfo.orderExpressList && orderInfo.orderExpressList.length && orderInfo.status > 2" size="mini" icon="el-icon-printer" @click="handlePrint">打印{{ printArr.length ? `(${printArr.length})` : '' }}</el-button>
         <el-popover
           v-if="orderInfo.orderExpressList && orderInfo.orderExpressList.length && orderInfo.status === 3"
           v-model="finishVisible"
@@ -128,7 +126,8 @@
         </el-popover>
       </div>
       <el-divider />
-      <el-table :data="orderInfo.orderExpressList" style="width: 100%">
+      <el-table :data="orderInfo.orderExpressList" style="width: 100%" @selection-change="changePrint">
+        <el-table-column type="selection" width="60" :selectable="isCheck" />
         <el-table-column prop="productNo" label="产品编号/名称" align="center" width="140" show-overflow-tooltip>
           <template slot-scope="scope">
             <el-tag type="info" size="mini">{{ `${scope.row.productNo} / ${scope.row.productName}` }}</el-tag>
@@ -271,7 +270,8 @@ export default {
       outStockList: null,
       userList: [],
       tempProducts: [],
-      spanArr: []
+      spanArr: [],
+      printArr: []
     }
   },
   mounted() {
@@ -447,6 +447,37 @@ export default {
           rowspan: _row,
           colspan: _col
         }
+      }
+    },
+    isCheck(row) {
+      return row.status
+    },
+    changePrint(arr) {
+      this.printArr = []
+      arr.forEach(item => {
+        this.printArr.push(item.id)
+      })
+    },
+    handlePrint() {
+      const length = this.printArr.length
+      if (!length) {
+        this.$notify({
+          title: '提示',
+          message: '请选择需要打印的商品！'
+        })
+        return
+      } else if (length > 5) {
+        this.$notify({
+          title: '提示',
+          message: '超过了最大打印5个商品的范围！'
+        })
+        return
+      } else {
+        this.$router.push({
+          name: 'OrderPrinting',
+          params: { id: this.orderInfo.id },
+          query: { arr: this.printArr }
+        })
       }
     }
   }

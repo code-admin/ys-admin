@@ -88,7 +88,7 @@ export const constantRoutes = [
       },
       {
         path: '/order/printing/checkout/:id',
-        name: 'OrderCheckout',
+        name: 'OrderPrinting',
         component: () => import('@/views/order/manage/printing'),
         hidden: true,
         meta: { title: '打印预览' }

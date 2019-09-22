@@ -78,6 +78,7 @@
     <div v-if="orderInfo.status > 0" class="card mt20">
       <div class="flex justify-between">
         <div class="title">入库记录</div>
+        <el-button v-if="orderInfo.status && orderInfo.orderExpressList && orderInfo.orderExpressList.length" size="mini" icon="el-icon-printer" @click="handlePrint">打印{{ printArr.length ? `(${printArr.length})` : '' }}</el-button>
         <el-popover
           v-if="orderInfo.orderExpressList && orderInfo.orderExpressList.length && orderInfo.status === 1"
           v-model="finishVisible"
@@ -93,7 +94,8 @@
         </el-popover>
       </div>
       <el-divider />
-      <el-table show-summary :data="orderInfo.orderExpressList" style="width: 100%">
+      <el-table show-summary :data="orderInfo.orderExpressList" style="width: 100%" @selection-change="changePrint">
+        <el-table-column type="selection" width="60" :selectable="isCheck" />
         <el-table-column prop="productNo" label="产品编号/名称" align="center" width="140" show-overflow-tooltip>
           <template slot-scope="scope">
             <el-tag type="info" size="mini">{{ `${scope.row.productNo} / ${scope.row.productName}` }}</el-tag>
@@ -126,9 +128,6 @@
           </template>
         </el-table-column>
       </el-table>
-      <!-- <div class="totalPrice">
-        <p>已入库总金额: {{ orderInfo.totalPrice ? orderInfo.totalPrice : '--' }} ¥</p>
-      </div> -->
     </div>
 
     <div class="card mt20">
@@ -207,7 +206,8 @@ export default {
       outStockList: null,
       userList: [],
       tempProducts: [],
-      spanArr: []
+      spanArr: [],
+      printArr: []
     }
   },
   mounted() {
@@ -234,7 +234,6 @@ export default {
     },
     // 入库
     showOutStock(obj, isAdd) {
-      console.log('?????????', obj)
       this.outStockList = []
       this.outStockList.push({
         id: isAdd ? null : obj.id,
@@ -385,12 +384,43 @@ export default {
           colspan: _col
         }
       }
+    },
+    isCheck(row) {
+      return row.status
+    },
+    changePrint(arr) {
+      this.printArr = []
+      arr.forEach(item => {
+        this.printArr.push(item.id)
+      })
+    },
+    handlePrint() {
+      const length = this.printArr.length
+      if (!length) {
+        this.$notify({
+          title: '提示',
+          message: '请选择需要打印的商品！'
+        })
+        return
+      } else if (length > 5) {
+        this.$notify({
+          title: '提示',
+          message: '超过了最大打印5个商品的范围！'
+        })
+        return
+      } else {
+        this.$router.push({
+          name: 'OrderPrinting',
+          params: { id: this.orderInfo.id },
+          query: { arr: this.printArr }
+        })
+      }
     }
   }
 }
 </script>
 
-<style  lang="scss" scoped>
+<style lang="scss" scoped>
 .page{
   padding: 20px;
   background: #f2f2f2;
@@ -417,6 +447,7 @@ export default {
       font-size: 18px;
       font-weight: 500;
       color: #f40;
+
     }
    }
 }
@@ -428,5 +459,6 @@ export default {
 }
 .justify-between{
   justify-content: space-between
+
 }
 </style>
