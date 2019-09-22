@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="print_box" class="print-box">
+    <div id="print_box" v-loading="loading" class="print-box">
       <div style="width:100%;height:100%;">
 
         <div class="company">浙江亚设塑业有限公司</div>
@@ -15,47 +15,53 @@
           <div class="w160" style="text-align:right;"><span>单号:</span><span class="text">&nbsp;&nbsp;{{ orderInfo.orderNo }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
         </div>
 
-        <el-table :data="orderInfo.orderExpressList" border size="mini">
-          <el-table-column prop="productName" label="品名" align="center" />
-          <el-table-column prop="requirement" label="要求" align="center" />
-          <el-table-column prop="width" label="宽度" align="center" width="40" />
-          <el-table-column prop="weight" label="克重" align="center" width="40" />
-          <el-table-column prop="number" label="数量" align="center" width="40" />
-          <el-table-column prop="totalWeight" label="重量(KG)" align="center" width="80" />
-          <el-table-column prop="tareWeight" label="车皮" align="center" width="70" />
-          <el-table-column prop="price" label="单价(吨)" align="center" width="50" />
-          <el-table-column prop="netWeight" label="净重" align="center" width="80" />
-          <el-table-column prop="totalPrice" label="金额(元)" align="center" />
-          <el-table-column prop="date" label="备注" align="center" />
-        </el-table>
+        <table style="border-collapse:collapse;border:none;" width="758">
+          <tr class="tr">
+            <th>品名</th><th>要求</th><th>宽度</th><th>克重</th><th>数量</th><th>重量(KG)</th><th>车皮</th><th>单价(吨)</th><th>净重</th><th>金额(元)</th><th>备注</th>
+          </tr>
 
-        <table cellspacing="0">
+          <tr v-for="(order,index) in orderInfo.orderExpressList" :key="index" class="tr">
+            <td class="lab">{{ order.productName }}</td>
+            <td class="lab">{{ order.requirement }}</td>
+            <td class="lab">{{ order.width }}</td>
+            <td class="lab">{{ order.weight }}</td>
+            <td class="lab">{{ order.number }}</td>
+            <td class="lab">{{ order.totalWeight }}</td>
+            <td class="lab">{{ order.tareWeight }}</td>
+            <td class="lab">{{ order.price }}</td>
+            <td class="lab">{{ order.netWeight }}</td>
+            <td class="lab">{{ order.totalPrice }}</td>
+            <td class="lab">{{ order.remark }}</td>
+          </tr>
+
           <tr class="tr">
-            <td class="lab" style="width:98px">地址:</td>
-            <td class="text" colspan="11" style="width:688px;">{{ orderInfo.provinceName && orderInfo.cityName && orderInfo.districtName ? `${orderInfo.provinceName}${orderInfo.cityName}${orderInfo.districtName}${orderInfo.address}` : orderInfo.address }}</td>
+            <td class="lab">地址:</td>
+            <td class="text" colspan="10">{{ orderInfo.provinceName && orderInfo.cityName && orderInfo.districtName ? `${orderInfo.provinceName}${orderInfo.cityName}${orderInfo.districtName}${orderInfo.address}` : orderInfo.address }}</td>
           </tr>
           <tr class="tr">
-            <td class="lab" style="width:98px">欠款:</td>
-            <td class="text" colspan="6" style="width:366px">{{ orderInfo.totalPriceChineseView }}</td>
-            <td class="lab" style="width:50px;border-left:0px;">净重</td>
-            <td class="text" style="width:80px;text-align:center;">{{ orderInfo.totalNetWeight }}</td>
-            <td class="lab" style="width:96px;border-left:0px;">金额</td>
-            <td class="text" style="width:96px;text-align:center;">{{ orderInfo.totalPrice }}</td>
+            <td class="lab">欠款:</td>
+            <td class="text" colspan="6">{{ orderInfo.totalPriceChineseView }}</td>
+            <td class="lab">净重</td>
+            <td class="text">{{ orderInfo.totalNetWeight }}</td>
+            <td class="lab">金额</td>
+            <td class="text">{{ orderInfo.totalPrice }}</td>
           </tr>
           <tr class="tr">
-            <td class="lab" style="width:98px">制单:</td>
-            <td class="text" colspan="3" style="width:176px">{{ orderInfo.createBy }}</td>
-            <td class="lab" style="width:50px;border-left:0px;">司机:</td>
-            <td class="text" style="width:80px;">&nbsp;</td>
-            <td class="lab" style="width:70px;border-left:0px;">签收:</td>
-            <td class="text" style="width:50px">&nbsp;</td>
-            <td class="lab" colspan="2" style="width:176px;border-left:0px;">客户(欠款人):</td>
-            <td class="text" style="width:96px">&nbsp;</td>
+            <td class="lab">制单:</td>
+            <td class="text" colspan="3">{{ orderInfo.createBy }}</td>
+            <td class="lab">司机:</td>
+            <td class="text">&nbsp;</td>
+            <td class="lab">签收:</td>
+            <td class="text">&nbsp;</td>
+            <td class="lab" colspan="2">客户(欠款人):</td>
+            <td class="text">&nbsp;</td>
+          </tr>
+          <tr class="tr">
+            <td class="foot" colspan="11">
+              注：请客户仔细核对货物数量、重量、金额等信息再签字 销售电话：18868270138  传真电话：0577-80818808
+            </td>
           </tr>
         </table>
-
-        <div class="foot">注：请客户仔细核对货物数量、重量、金额等信息再签字 销售电话：18868270138  传真电话：0577-80818808</div>
-
       </div>
     </div>
   </div>
@@ -93,7 +99,7 @@ export default {
       const sidebarContainer = document.getElementsByClassName('sidebar-container')[0]
       const mainContainer = document.getElementsByClassName('main-container')[0]
 
-      // const elCard = document.getElementsByClassName('is-always-shadow')[0]
+      const print_box = document.getElementById('print_box')
 
       //  给对应DOM添加class
       head.classList.add('printHideCss')
@@ -101,7 +107,8 @@ export default {
       leftNav.classList.add('printHideCss')
       sidebarContainer.classList.add('printHideCss')
       mainContainer.classList.add('clearCss')
-      // elCard.classList.add('clearShadow')
+
+      print_box.style.cssText = 'border: 0px;margin-top:-20px;'
 
       window.print() //  调用打印功能
       window.location.reload() //  点击取消打印后刷新页面，恢复点击打印按钮之前的原始数据
@@ -110,7 +117,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .flex{
   display: flex;
 }
@@ -120,41 +127,27 @@ export default {
 .w160{
   width: 220px;
 }
-.el-card__body{
-  padding: 10px;
-}
-.el-table__header-wrapper{
-  font-size: 12px;
-}
-.el-table td, .el-table th {
-  padding: 0;
-}
-.el-table .cell, .el-table th div {
-  padding: 0;
-}
-.el-table .cell, .el-table th div, .el-table--border td:first-child .cell, .el-table--border th:first-child .cell {
-    padding-left: 0;
-}
+
 .print-box{
   width: 780px;
   height: 562px;
-  margin: 10px auto;
+  margin: 20px auto;
+  padding: 65px 10px;
+  border: 1px dashed #f2f2f2;
   position: relative;
-  box-sizing: border-box;
   .company{
     text-align: center;
-    font-size: 24px;
+    font-size: 28px;
     line-height: 30px;
   }
   .title{
     text-align: center;
-    font-size: 16px;
-    line-height: 26px;
+    font-size: 18px;
+    line-height: 30px;
   }
   .bar{
     height: 26px;
     line-height: 26px;
-    // margin: 5px;
     font-size: 14px;
     .text{
       font-size: 10px;
@@ -163,23 +156,23 @@ export default {
   }
   .tr{
     width: 100%;
-    font-size: 14px;
-    line-height: 24px;
+    font-size: 15px;
+    line-height: 28px;
+    font-weight: 500;
+    th{
+      border: 1px solid #909399;
+    }
     td{
       padding-left: 5px;
-      color: #606266;
+      color: #444444;
+      border: 1px solid #909399;
     }
     .lab{
-      border-left: 1px solid #EBEEF5;
-      border-right: 1px solid #EBEEF5;
-      border-bottom: 1px solid #EBEEF5;
       text-align: center;
     }
     .text{
-      font-size: 10px;
-      font-weight: 500;
-      border-right: 1px solid #EBEEF5;
-      border-bottom: 1px solid #EBEEF5;
+      font-size: 14px;
+      font-weight: 600;
     }
   }
   .foot{
@@ -187,16 +180,13 @@ export default {
     line-height: 44px;
     text-align: center;
     font-size: 10px;
-    font-weight: 500;
-    border: 1px solid #EBEEF5;
-    border-top: 0px;
-
+    font-weight: 700;
   }
   .logo{
     widows: 65px;
     height: 56px;
     position: absolute;
-    top: 5px;
+    top: 60px;
     left: 100px;
   }
   .print{
