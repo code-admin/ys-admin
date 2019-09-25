@@ -7,7 +7,11 @@
         <div class="title">{{ orderInfo.makingType === 1 ? '编织袋半成品结算单' : ' 编织袋半成品退筒单' }}</div>
 
         <img class="logo" src="../../../assets/imgs/arsh_logo.png">
-        <el-button class="print" type="text" size="mini" icon="el-icon-printer" @click="clickPrinting">打印</el-button>
+
+        <div class="print">
+          <el-button type="text" size="mini" icon="el-icon-close" style="color:#F56C6C" @click="$router.back()">关闭</el-button>
+          <el-button type="text" size="mini" icon="el-icon-printer" @click="clickPrinting">打印</el-button>
+        </div>
 
         <div class="bar flex justify-between">
           <div class="w160"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;客户:</span><span class="text">&nbsp;&nbsp;{{ orderInfo.customerName }}</span></div>
@@ -15,7 +19,7 @@
           <div class="w160" style="text-align:right;"><span>单号:</span><span class="text">&nbsp;&nbsp;{{ orderInfo.orderNo }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
         </div>
 
-        <table style="border-collapse:collapse;border:none;" width="758">
+        <table style="border-collapse:collapse;border:none;" width="746">
           <tr class="tr">
             <th>品名</th><th>要求</th><th>宽度</th><th>克重</th><th>数量</th><th>重量(KG)</th><th>车皮</th><th>单价(吨)</th><th>净重</th><th>金额(元)</th><th>备注</th>
           </tr>
@@ -129,11 +133,12 @@ export default {
 }
 
 .print-box{
-  width: 780px;
+  width: 768px;
   height: 562px;
-  margin: 20px auto;
-  padding: 65px 10px;
+  margin: 2px auto 0px;
+  padding: 60px 10px 0px;
   border: 1px dashed #f2f2f2;
+  box-sizing: border-box;
   position: relative;
   .company{
     text-align: center;
@@ -146,16 +151,15 @@ export default {
     line-height: 30px;
   }
   .bar{
-    height: 26px;
-    line-height: 26px;
-    font-size: 14px;
+    height: 28px;
+    line-height: 28px;
+    font-size: 15px;
     .text{
       font-size: 10px;
       font-weight: 500
     }
   }
   .tr{
-    width: 100%;
     font-size: 15px;
     line-height: 28px;
     font-weight: 500;

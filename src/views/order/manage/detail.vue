@@ -478,6 +478,12 @@ export default {
           params: { id: this.orderInfo.id },
           query: { arr: this.printArr }
         })
+        // const routeData = this.$router.resolve({
+        //   name: 'OrderPrinting',
+        //   params: { id: this.orderInfo.id },
+        //   query: { arr: this.printArr }
+        // })
+        // window.open(routeData.href, '_blank')
       }
     }
   }

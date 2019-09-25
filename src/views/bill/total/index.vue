@@ -1,103 +1,80 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="filter.orderNo" placeholder="订单编号" style="width: 200px;" class="filter-item" clearable />
-      <el-input v-model="filter.customerName" placeholder="客户名称" style="width: 200px;" class="filter-item" clearable />
-      <el-input v-model="filter.createName" placeholder="制单人" style="width: 200px;" class="filter-item" clearable />
-      <el-select v-model="filter.orderType" placeholder="收款类型" style="width: 200px;" class="filter-item" clearable>
-        <el-option label="收袋款" :value="1" />
-        <el-option label="其他款" :value="2" />
+      <!-- <el-input v-model="filter.customerName" placeholder="客户名称" style="width: 200px;" class="filter-item" clearable /> -->
+      <el-select v-model="filter.userId" filterable placeholder="请选择付款人" style="width: 200px;" class="filter-item" clearable>
+        <el-option v-for="user in customeList" :key="user.loginName" :label="user.userName" :value="user.id" />
       </el-select>
+      <el-date-picker
+        v-model="filter.querDate"
+        clearable
+        class="filter-item"
+        value-format="yyyy-MM-dd"
+        :format="'yyyy-MM-dd'"
+        type="daterange"
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+      />
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="queryData">查询</el-button>
-      <el-button class="filter-item" icon="el-icon-plus" @click="editInit">新增收款</el-button>
     </div>
 
-    <el-table v-loading="listLoading" :data="billList" border>
-      <el-table-column type="index" width="50" align="center" />
-      <el-table-column label="流水号" prop="billNo" align="center" />
-      <el-table-column label="订单号" prop="orderNo" align="center" />
-      <el-table-column label="客户" prop="userName" align="center" />
-      <el-table-column label="单据类型" prop="feeTypeName" align="center" />
-      <el-table-column label="金额(元)" prop="amount" align="center">
+    <el-table v-loading="listLoading" :data="billList" border show-summary>
+      <el-table-column label="客户名称" prop="customerName" align="center" width="120" />
+      <el-table-column label="销售重量" prop="totalWeight" align="center" />
+      <el-table-column label="欠款余额" prop="debtAmount" align="center" />
+      <el-table-column label="上年结余" prop="lastYearBalanceAmount" align="center" />
+      <el-table-column label="销售金额" prop="totalAmount" align="center" />
+      <el-table-column label="收款" prop="receivablesAmount" align="center" />
+      <el-table-column label="退筒" prop="returnAmount" align="center">
         <template slot-scope="scope">
-          <div v-if="scope.row.amount" style="color:#f40;">
-            {{ scope.row.amount }} ¥
+          <div>
+            <span v-if="scope.row.returnAmount > 0" class="f40"> {{ `-${scope.row.returnAmount}` }}</span>
+            <span v-else> {{ scope.row.returnAmount }}</span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="制单人" prop="createBy" align="center" />
-      <el-table-column label="备注" prop="remark" align="center" show-overflow-tooltip />
-      <el-table-column label="时间" prop="createTime" align="center" width="180">
+      <el-table-column label="销售个数" prop="totalNumber" align="center" />
+      <el-table-column label="退筒个数" prop="returnNumber" align="center">
         <template slot-scope="scope">
-          <i class="el-icon-time" /> {{ scope.row.createTime }}
+          <div>
+            <span v-if="scope.row.returnNumber > 0" class="f40"> {{ `-${scope.row.returnNumber}` }}</span>
+            <span v-else> {{ scope.row.returnNumber }}</span>
+          </div>
         </template>
       </el-table-column>
-
-      <el-table-column label="操作" prop="id" align="center">
+      <el-table-column label="差值" prop="differentAmount" align="center" />
+      <el-table-column label="其他款" prop="otherAmount" align="center">
         <template slot-scope="scope">
-          <!-- <el-button v-if="scope.row.status == 0" type="primary" size="mini" @click="edit(scope.row)">编辑</el-button> -->
-          <el-popover :ref="scope.row.id" placement="top" width="300" trigger="click">
-            <p>确定要删除该笔收款吗！！？</p>
-            <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="text" @click="()=>{$refs[scope.row.id].doClose()}">取消</el-button>
-              <el-button type="danger" size="mini" plain @click="deleteBill(scope.row)">确 定</el-button>
-            </div>
-            <el-button v-if="scope.row.status !== 5" slot="reference" type="danger" size="mini">删除</el-button>
-          </el-popover>
+          <div>
+            <span v-if="scope.row.otherAmount > 0" class="f40"> {{ `-${scope.row.otherAmount}` }}</span>
+            <span v-else> {{ scope.row.otherAmount }}</span>
+          </div>
         </template>
       </el-table-column>
-
+      <el-table-column label="余额" prop="balanceAmount" align="center" />
     </el-table>
     <div class="block">
       <el-pagination v-show="total>0" :current-page="filter.pageIndex" :page-sizes="[10, 20, 50, 100]" :page-size="filter.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
     </div>
-
-    <el-dialog title="添加收款" :visible.sync="dialogFormVisible">
-      <el-form :model="bill">
-        <el-form-item label="收款类型" :label-width="formLabelWidth">
-          <el-select v-model="bill.feeType" placeholder="请选择活动区域">
-            <el-option label="收袋款" :value="1" />
-            <el-option label="其他款" :value="2" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="付款人" :label-width="formLabelWidth">
-          <el-select v-model="bill.userId" placeholder="请选择付款人">
-            <el-option v-for="user in customeList" :key="user.loginName" :label="user.userName" :value="user.id" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="收款金额" :label-width="formLabelWidth">
-          <el-input v-model="bill.amount" min="0" />
-        </el-form-item>
-        <el-form-item label="备注" :label-width="formLabelWidth">
-          <el-input v-model="bill.remark" type="textarea" placeholder="请输入备注" maxlength="100" show-word-limit />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="saveBill">确 定</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
 <script>
 import { getCustomes } from '@/api/user'
-import { getOrderBillList, submitOrderBill, deleteOrderBillById } from '@/api/bill'
+import { getCustomerBillReport } from '@/api/bill'
 export default {
   data() {
     return {
       listLoading: true,
-      dialogFormVisible: false,
       total: 0,
       filter: {
+        querDate: [],
         pageIndex: 1,
         pageSize: 10
       },
       billList: [],
-      customeList: [],
-      bill: {},
-      formLabelWidth: '80px'
-
+      customeList: []
     }
   },
   mounted() {
@@ -107,7 +84,7 @@ export default {
   methods: {
     getBillList() {
       this.listLoading = true
-      getOrderBillList(this.filter).then(res => {
+      getCustomerBillReport({ ...this.filter, startTime: this.filter.querDate[0], endTime: this.filter.querDate[1] }).then(res => {
         if (res.code === 10000) {
           this.billList = res.data
           this.total = res.total
@@ -119,30 +96,6 @@ export default {
       getCustomes().then(res => {
         if (res.code === 10000) this.customeList = res.data
       })
-    },
-
-    editInit() {
-      this.bill = {}
-      this.dialogFormVisible = !this.dialogFormVisible
-    },
-    saveBill() {
-      submitOrderBill(this.bill).then(res => {
-        this.dialogFormVisible = !this.dialogFormVisible
-        if (res.code === 10000) {
-          this.$message({ message: '保存成功！', type: 'success' })
-          this.getBillList()
-        }
-      })
-    },
-    deleteBill(obj) {
-      console.log(obj)
-      deleteOrderBillById(obj.id).then(res => {
-        if (res.code === 10000) {
-          this.$message({ message: '操作成功！', type: 'success' })
-          this.getBillList()
-        }
-      })
-      this.$refs[obj.id].doClose()
     },
     queryData() {
       this.filter.pageIndex = 1
@@ -164,5 +117,8 @@ export default {
 <style lang="scss" scoped>
 .block{
   padding-top: 15px;
+}
+.f40{
+  color: #ff4400;
 }
 </style>

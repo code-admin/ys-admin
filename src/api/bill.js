@@ -34,3 +34,13 @@ export function getOrderBillSummaryList(data) {
     data
   })
 }
+
+// 账目汇总
+export function getCustomerBillReport(data) {
+  return request({
+    url: '/bill/getCustomerBillReport',
+    method: 'post',
+    data
+  })
+}
+

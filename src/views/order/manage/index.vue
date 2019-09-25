@@ -39,7 +39,7 @@
       <el-table-column label="金额(元)" prop="totalPrice" align="center">
         <template slot-scope="scope">
           <div v-if="scope.row.totalPrice" style="color:#f40;">
-            {{ scope.row.totalPrice }} ¥
+            {{ scope.row.makingType === 2 ? `-${ scope.row.totalPrice}` : scope.row.totalPrice }} ¥
           </div>
         </template>
       </el-table-column>
@@ -61,13 +61,13 @@
         <template slot-scope="scope">
           <el-button size="mini" @click="detail(scope.row)">查看</el-button>
           <el-button v-if="scope.row.status == 0" type="primary" size="mini" @click="edit(scope.row)">编辑</el-button>
-          <el-popover :ref="scope.row.id" placement="top" width="300" trigger="click">
+          <el-popover v-if="(scope.row.makingType === 1 && scope.row.status !== 5) || ( scope.row.makingType === 2 && scope.row.status !== 3)" :ref="scope.row.id" placement="top" width="300" trigger="click">
             <p>确定要关闭该订单吗？关闭后，该订单将不再可操作!!</p>
             <div style="text-align: right; margin: 0">
               <el-button size="mini" type="text" @click="()=>{$refs[scope.row.id].doClose()}">取消</el-button>
               <el-button type="danger" size="mini" plain @click="close(scope.row)">确 定</el-button>
             </div>
-            <el-button v-if="scope.row.status !== 5" slot="reference" type="danger" size="mini">关闭</el-button>
+            <el-button slot="reference" type="danger" size="mini">关闭</el-button>
           </el-popover>
         </template>
       </el-table-column>
