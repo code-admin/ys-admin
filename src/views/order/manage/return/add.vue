@@ -18,6 +18,9 @@
               <el-option v-for="user in customeList" :key="user.loginName" :label="user.userName" :value="user.loginName" />
             </el-select>
           </el-form-item>
+          <el-form-item label="下单日期">
+            <el-date-picker v-model="orderInfo.orderTime" type="date" value-format="yyyy-MM-dd" placeholder="请选择下单日期" style="width:100%;" />
+          </el-form-item>
           <el-form-item label="备注">
             <el-input
               v-model="orderInfo.remark"

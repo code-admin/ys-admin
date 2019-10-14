@@ -101,7 +101,7 @@
             <el-input v-model="orderInfo.deliveryName" placeholder="请输入发货方式" />
           </el-form-item>
           <el-form-item label="收货地址">
-            <el-cascader v-if="orderInfo.pcc" v-model="orderInfo.pcc" :props="props" placeholder="省/市/区" style="width:100%;" clearable />
+            <!-- <el-cascader v-if="orderInfo.pcc" v-model="orderInfo.pcc" :props="props" placeholder="省/市/区" style="width:100%;" clearable /> -->
             <el-input v-model="orderInfo.address" class="mt5" placeholder="请输入详细地址" />
           </el-form-item>
           <el-form-item label="收货人">

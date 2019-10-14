@@ -16,11 +16,16 @@
         <el-option v-for="(orderType,index) in orderTypeList" :key="index" :label="orderType.name" :value="orderType.id" />
       </el-select>
       <el-select v-model="filter.status" placeholder="订单状态" style="width: 200px;" class="filter-item" clearable>
+        <el-option label="全部" :value="null" />
         <el-option v-for="(flow,index) in flowList" :key="index" :label="flow.workName" :value="flow.workStatus" />
       </el-select>
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="queryData">查询</el-button>
-      <router-link :to="{ name: 'OrderManageAdd' }"> <el-button class="filter-item" icon="el-icon-plus">创建销售单</el-button> </router-link>
-      <router-link :to="{ name: 'OrderManageReturnAdd'}"><el-button class="filter-item" icon="el-icon-plus">创建退筒单</el-button></router-link>
+      <router-link :to="{ name: 'OrderManageAdd' }">
+        <el-button class="filter-item" icon="el-icon-plus">创建销售单</el-button>
+      </router-link>
+      <router-link :to="{ name: 'OrderManageReturnAdd'}">
+        <el-button class="filter-item" icon="el-icon-plus">创建退筒单</el-button>
+      </router-link>
 
     </div>
 
@@ -34,7 +39,7 @@
           <el-tag :type=" scope.row.makingType === 1 ? 'primary' : 'danger'" size="mini">{{ scope.row.makingTypeName }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="制单人类型" prop="userTypeName" align="center" />
+      <el-table-column label="制单人类型" prop="userTypeName" align="center" width="100" />
       <el-table-column label="制单人" prop="createBy" align="center" />
       <el-table-column label="金额(元)" prop="totalPrice" align="center">
         <template slot-scope="scope">
@@ -51,9 +56,9 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="下单时间" prop="orderTime" align="center" sortable="custom" width="180">
+      <el-table-column label="下单时间" prop="orderTime" align="center" sortable="custom" width="120">
         <template slot-scope="scope">
-          <i class="el-icon-time" /> {{ scope.row.orderTime }}
+          <i class="el-icon-time" /> {{ scope.row.orderTime | moment('YYYY-MM-DD') }}
         </template>
       </el-table-column>
 
@@ -80,14 +85,7 @@
     <el-dialog title="添加出库记录" :visible.sync="showOutStock">
       <el-form :model="history">
         <el-form-item label="出库备注" :label-width="formLabelWidth">
-          <el-input
-            v-model="history.remark"
-            autocomplete="off"
-            placeholder="请输入出库备注"
-            type="textarea"
-            maxlength="500"
-            show-word-limit
-          />
+          <el-input v-model="history.remark" autocomplete="off" placeholder="请输入出库备注" type="textarea" maxlength="500" show-word-limit />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -99,7 +97,13 @@
 </template>
 
 <script>
-import { getOrders, getOrderTypes, getOrderFlowNodes, closeOrder, addRemark } from '@/api/order'
+import {
+  getOrders,
+  getOrderTypes,
+  getOrderFlowNodes,
+  closeOrder,
+  addRemark
+} from '@/api/order'
 export default {
   data() {
     return {
@@ -152,16 +156,36 @@ export default {
     },
     edit(obj) {
       if (obj.makingType === 1) {
-        this.$router.push({ name: 'OrderManageEdit', params: { id: obj.id }})
+        this.$router.push({
+          name: 'OrderManageEdit',
+          params: {
+            id: obj.id
+          }
+        })
       } else if (obj.makingType === 2) {
-        this.$router.push({ name: 'OrderManageReturnEdit', params: { id: obj.id }})
+        this.$router.push({
+          name: 'OrderManageReturnEdit',
+          params: {
+            id: obj.id
+          }
+        })
       }
     },
     detail(obj) {
       if (obj.makingType === 1) {
-        this.$router.push({ name: 'OrderManageDetail', params: { id: obj.id }})
+        this.$router.push({
+          name: 'OrderManageDetail',
+          params: {
+            id: obj.id
+          }
+        })
       } else if (obj.makingType === 2) {
-        this.$router.push({ name: 'OrderManageReturnDetail', params: { id: obj.id }})
+        this.$router.push({
+          name: 'OrderManageReturnDetail',
+          params: {
+            id: obj.id
+          }
+        })
       }
     },
     outStock(obj) {
@@ -171,7 +195,10 @@ export default {
     saveHistory() {
       addRemark(this.history).then(res => {
         if (res.code === 10000) {
-          this.$message({ message: '添加出库成功！', type: 'success' })
+          this.$message({
+            message: '添加出库成功！',
+            type: 'success'
+          })
         }
         this.showOutStock = !this.showOutStock
       })
@@ -179,7 +206,10 @@ export default {
     close(obj) {
       closeOrder(obj.id).then(res => {
         if (res.code === 10000) {
-          this.$message({ message: '操作成功！', type: 'success' })
+          this.$message({
+            message: '操作成功！',
+            type: 'success'
+          })
           this.getOrderList()
         }
       })
@@ -203,7 +233,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.block{
-  padding-top: 15px;
+.block {
+    padding-top: 15px;
 }
 </style>

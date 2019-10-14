@@ -13,7 +13,7 @@
     <div class="card mt20 ">
       <div class="flex justify-between">
         <div class="title">订单号: {{ orderInfo.orderNo }}</div>
-        <div class="value"> <i class="el-icon-time time">&nbsp; {{ orderInfo.orderTime }}</i>
+        <div class="value"> <i class="el-icon-time time">&nbsp; {{ orderInfo.orderTime | moment('YYYY-MM-DD') }}</i>
         </div>
       </div>
       <el-divider />

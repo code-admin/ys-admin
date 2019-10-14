@@ -31,7 +31,7 @@
     <el-table :key="tableKey" v-loading="listLoading" :data="orderList" border fit highlight-current-row style="width: 100%;">
       <el-table-column type="selection" align="center" width="55" />
       <el-table-column type="index" width="50" align="center" />
-      <el-table-column label="订单编号" prop="orderNo" align="center" sortable="custom" />
+      <el-table-column label="订单编号" prop="orderNo" align="center" width="140" />
       <el-table-column label="下单人" prop="customerName" align="center" />
       <el-table-column label="销售类型" prop="orderTypeName" align="center" />
       <el-table-column label="制单人类型" prop="userTypeName" align="center" />
@@ -39,9 +39,14 @@
       <el-table-column label="总价" prop="totalPrice" align="center" />
       <el-table-column label="订单状态" prop="statusName" align="center" />
       <el-table-column label="审核状态" prop="auditStatusName" align="center" />
-      <el-table-column label="更新时间" prop="updateTime" align="center" sortable="custom" width="160" />
-
-      <el-table-column label="操作" prop="id" sortable="custom" align="center" width="160">
+      <el-table-column label="更新时间" prop="updateTime" align="center" width="120">
+        <template slot-scope="scope">
+          <div>
+            {{ scope.row.updateTime | moment('YYYY-MM-DD') }}
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" prop="id" align="center" width="160">
         <template slot-scope="scope">
           <el-button size="mini" @click="detail(scope.row)">查看</el-button>
           <el-button v-if="scope.row.historyFlag === 0" type="primary" size="mini" @click="approval(scope.row)">审核</el-button>
@@ -56,7 +61,11 @@
 </template>
 
 <script>
-import { getOrderApprovals, getOrderTypes, getOrderFlowNodes } from '@/api/order'
+import {
+  getOrderApprovals,
+  getOrderTypes,
+  getOrderFlowNodes
+} from '@/api/order'
 export default {
   data() {
     return {
@@ -106,10 +115,22 @@ export default {
       })
     },
     detail(obj) {
-      this.$router.push({ name: 'OrderApprovalDetail', params: { type: 0, id: obj.auditId }})
+      this.$router.push({
+        name: 'OrderApprovalDetail',
+        params: {
+          type: 0,
+          id: obj.auditId
+        }
+      })
     },
     approval(obj) {
-      this.$router.push({ name: 'OrderApprovalDetail', params: { type: 1, id: obj.auditId }})
+      this.$router.push({
+        name: 'OrderApprovalDetail',
+        params: {
+          type: 1,
+          id: obj.auditId
+        }
+      })
     },
     handleSizeChange(val) {
       this.filter.pageSize = val
@@ -134,7 +155,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.block{
-  padding-top: 15px;
+.block {
+    padding-top: 15px;
 }
 </style>

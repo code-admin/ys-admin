@@ -162,6 +162,21 @@ export const constantRoutes = [
   },
 
   {
+    path: '/produce',
+    component: Layout,
+    redirect: '/produce/log',
+    meta: { title: '生产管理', icon: 'produce' },
+    children: [
+      {
+        path: '/produce/log',
+        name: 'ProduceLog',
+        component: () => import('@/views/produce/log/index'),
+        meta: { title: '生产日志' }
+      }
+    ]
+  },
+
+  {
     path: '/user',
     component: Layout,
     redirect: '/user/employee',

@@ -25,6 +25,9 @@
               <el-option v-for="(orderType,index) in orderTypeList" :key="index" :label="orderType.name" :value="orderType.id" />
             </el-select>
           </el-form-item>
+          <el-form-item label="下单日期">
+            <el-date-picker v-model="orderInfo.orderTime" type="date" placeholder="请选择下单日期" value-format="yyyy-MM-dd" style="width:100%;" />
+          </el-form-item>
         </el-form>
       </div>
     </div>
@@ -100,7 +103,7 @@
             <el-input v-model="orderInfo.deliveryName" placeholder="请输入发货方式" />
           </el-form-item>
           <el-form-item label="收货地址">
-            <el-cascader v-model="orderInfo.pcc" :props="props" clearable placeholder="省/市/区" style="width:100%;" />
+            <!-- <el-cascader v-model="orderInfo.pcc" :props="props" clearable placeholder="省/市/区" style="width:100%;" /> -->
             <el-input v-model="orderInfo.address" class="mt5" placeholder="请输入详细地址" />
           </el-form-item>
           <el-form-item label="收货人">
@@ -258,10 +261,10 @@ export default {
     },
     saveOrderInfo() {
       const params = {
-        ...this.orderInfo,
-        province: this.orderInfo.pcc[0],
-        city: this.orderInfo.pcc[1],
-        district: this.orderInfo.pcc[2]
+        ...this.orderInfo
+        // province: this.orderInfo.pcc[0],
+        // city: this.orderInfo.pcc[1],
+        // district: this.orderInfo.pcc[2]
       }
       saveOrder(params).then(res => {
         if (res.code === 10000) {
@@ -272,10 +275,10 @@ export default {
     },
     saveOrSubmitOrderInfo() {
       const params = {
-        ...this.orderInfo,
-        province: this.orderInfo.pcc[0],
-        city: this.orderInfo.pcc[1],
-        district: this.orderInfo.pcc[2]
+        ...this.orderInfo
+        // province: this.orderInfo.pcc[0],
+        // city: this.orderInfo.pcc[1],
+        // district: this.orderInfo.pcc[2]
       }
       submitOrder(params).then(res => {
         if (res.code === 10000) {

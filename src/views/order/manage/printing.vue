@@ -84,7 +84,7 @@ export default {
     }
   },
   mounted() {
-    this.getDetailById({ orderId: this.$route.params.id, expressIds: this.$route.query.arr })
+    this.getDetailById({ orderId: this.$route.params.id, expressIds: [[this.$route.query.arr]].flat(2) })
   },
   methods: {
     getDetailById(params) {

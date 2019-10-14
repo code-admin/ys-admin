@@ -5,6 +5,7 @@ import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale/lang/zh-CN' // lang i18n
+import moment from 'vue-moment'
 
 // import Echarts from 'echarts'
 import VueECharts from 'vue-echarts' // 在 webpack 环境下指向 components/ECharts.vue
@@ -35,6 +36,8 @@ if (process.env.NODE_ENV === 'production') {
 
 // set ElementUI lang to EN
 Vue.use(ElementUI, { locale })
+
+Vue.use(moment)
 
 // echarts
 // Vue.use(Echarts)
