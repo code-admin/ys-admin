@@ -166,12 +166,27 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/produce/log',
     meta: { title: '生产管理', icon: 'produce' },
+    alwaysShow: true,
     children: [
       {
         path: '/produce/log',
         name: 'ProduceLog',
         component: () => import('@/views/produce/log/index'),
         meta: { title: '生产日志' }
+      },
+      {
+        path: '/produce/log/import',
+        name: 'ProduceLogImport',
+        component: () => import('@/views/produce/log/ImportData'),
+        hidden: true,
+        meta: { title: '导入数据' }
+      },
+      {
+        path: '/produce/log/detail/:id',
+        name: 'ProduceLogDetail',
+        component: () => import('@/views/produce/log/Detail'),
+        hidden: true,
+        meta: { title: '数据详情' }
       }
     ]
   },
