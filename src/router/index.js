@@ -182,7 +182,7 @@ export const constantRoutes = [
         meta: { title: '导入数据' }
       },
       {
-        path: '/produce/log/detail/:id',
+        path: '/produce/log/detail/:id/:reportTime',
         name: 'ProduceLogDetail',
         component: () => import('@/views/produce/log/Detail'),
         hidden: true,

@@ -29,6 +29,7 @@
       <el-table-column prop="className" label="班次" align="center" width="50" />
       <el-table-column prop="productDate" label="日期" align="center" width="100" />
       <el-table-column prop="deviceNo" label="机号" align="center" width="50" />
+      <el-table-column prop="staffNumber" label="员工编号" align="center" width="80" />
       <el-table-column prop="staffName" label="姓名" align="center" width="80" />
       <el-table-column prop="productName" label="名称" align="center" width="100" />
       <el-table-column prop="requirement" label="要求" align="center" width="120" />

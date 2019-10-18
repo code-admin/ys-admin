@@ -15,7 +15,7 @@
 
         <div class="bar flex justify-between">
           <div class="w160"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;客户:</span><span class="text">&nbsp;&nbsp;{{ orderInfo.customerName }}</span></div>
-          <div style="text-align:center;"><span>日期:</span><span class="text">&nbsp;&nbsp;{{ (orderInfo.updateTime).substring(0,10) }}</span></div>
+          <div style="text-align:center;"><span>日期:</span><span class="text">&nbsp;&nbsp;{{ orderInfo.updateTime | moment('YYYY-MM-DD') }}</span></div>
           <div class="w160" style="text-align:right;"><span>单号:</span><span class="text">&nbsp;&nbsp;{{ orderInfo.orderNo }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
         </div>
 
@@ -37,7 +37,6 @@
             <td class="lab">{{ order.totalPrice }}</td>
             <td class="lab">{{ order.remark }}</td>
           </tr>
-
           <tr class="tr">
             <td class="lab">地址:</td>
             <td class="text" colspan="10">{{ orderInfo.provinceName && orderInfo.cityName && orderInfo.districtName ? `${orderInfo.provinceName}${orderInfo.cityName}${orderInfo.districtName}${orderInfo.address}` : orderInfo.address }}</td>

@@ -35,3 +35,10 @@ export function getValidateDeviceList(data) {
   })
 }
 
+// 获取有效设备列表
+export function getDevicesByUserId(userId) {
+  return request({
+    url: `/device/getDevicesByUserId/${userId}`,
+    method: 'post'
+  })
+}

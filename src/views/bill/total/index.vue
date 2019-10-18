@@ -6,7 +6,7 @@
         <el-option v-for="user in customeList" :key="user.loginName" :label="user.userName" :value="user.id" />
       </el-select>
       <el-date-picker
-        v-model="filter.querDate"
+        v-model="filter.queryDate"
         clearable
         class="filter-item"
         value-format="yyyy-MM-dd"
@@ -85,7 +85,7 @@ export default {
       listLoading: true,
       total: 0,
       filter: {
-        querDate: [],
+        queryDate: [],
         pageIndex: 1,
         pageSize: 10
       },
@@ -100,7 +100,7 @@ export default {
   methods: {
     getBillList() {
       this.listLoading = true
-      getCustomerBillReport({ ...this.filter, startTime: this.filter.querDate[0], endTime: this.filter.querDate[1] }).then(res => {
+      getCustomerBillReport({ ...this.filter, startTime: this.filter.queryDate[0], endTime: this.filter.queryDate[1] }).then(res => {
         if (res.code === 10000) {
           this.billList = res.data
           this.total = res.total

@@ -90,3 +90,11 @@ export function getCustomeTypeList() {
     method: 'post'
   })
 }
+
+// 根据班次ID获取员工信息
+export function getStaffsByClassId(classId) {
+  return request({
+    url: `/user/getStaffsByClassId/${classId}`,
+    method: 'post'
+  })
+}

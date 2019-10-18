@@ -9,6 +9,15 @@ export function getFileList(data) {
   })
 }
 
+// 创建日志
+export function submitStaffProductFile(data) {
+  return request({
+    url: '/staffProduct/submitStaffProductFile',
+    method: 'post',
+    data
+  })
+}
+
 // 详情
 export function getStaffProductRecordsByFileId(fileId) {
   return request({
@@ -25,3 +34,22 @@ export function submitStaffProductRecords(data) {
     data
   })
 }
+
+// 录入生产数据
+export function submitOneStaffProductRecord(data) {
+  return request({
+    url: '/staffProduct/submitOneStaffProductRecord',
+    method: 'post',
+    data
+  })
+}
+
+// 初始化准备
+export function getInitStaffDeviceInfo(data) {
+  return request({
+    url: '/staffProduct/getInitStaffDeviceInfo',
+    method: 'post',
+    data
+  })
+}
+
