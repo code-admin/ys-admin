@@ -101,17 +101,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="设备" :label-width="formLabelWidth">
-          <el-select
-            v-model="user.deviceIdList"
-            multiple
-            filterable
-            remote
-            reserve-keyword
-            placeholder="请输入设备名称"
-            :remote-method="getDeviceList"
-            :loading="loading"
-            style="width:100%"
-          >
+          <el-select v-model="user.deviceIdList" multiple filterable remote reserve-keyword placeholder="请输入设备名称" :remote-method="getDeviceList" :loading="loading" style="width:100%">
             <el-option v-for="(device, index) in deviceList" :key="index" :label="`${device.deviceNumber}/${device.deviceName}`" :value="device.id" />
           </el-select>
         </el-form-item>
@@ -132,9 +122,20 @@
 </template>
 
 <script>
-import { fetchDeptList, getJobListByDeptId } from '@/api/department'
-import { getUsers, getRoleList, saveUserInfo, resetPwd, disable } from '@/api/user'
-import { getValidateDeviceList } from '@/api/device'
+import {
+  fetchDeptList,
+  getJobListByDeptId
+} from '@/api/department'
+import {
+  getUsers,
+  getRoleList,
+  saveUserInfo,
+  resetPwd,
+  disable
+} from '@/api/user'
+import {
+  getValidateDeviceList
+} from '@/api/device'
 export default {
   data() {
     return {
@@ -208,15 +209,27 @@ export default {
       this.dialogFormVisible = !this.dialogFormVisible
     },
     saveUser() {
-      saveUserInfo({ ...this.user, userType: '1' }).then(res => {
-        res.code === 10000 && this.$message({ message: '保存成功！', type: 'success' })
-        this.getUserList()
+      saveUserInfo({
+        ...this.user,
+        userType: '1'
+      }).then(res => {
+        if (res.code === 10000) {
+          this.$message({
+            message: '保存成功！',
+            type: 'success'
+          })
+          this.getUserList()
+          this.dialogFormVisible = !this.dialogFormVisible
+        }
       })
-      this.dialogFormVisible = !this.dialogFormVisible
     },
     resetPassword(obj) {
       resetPwd(obj.id).then(res => {
-        res.code === 10000 && this.$notify({ title: '提示', message: res.message, type: 'success' })
+        res.code === 10000 && this.$notify({
+          title: '提示',
+          message: res.message,
+          type: 'success'
+        })
       })
       this.$refs[obj.id].doClose()
     },
@@ -226,11 +239,17 @@ export default {
         enable: obj.enable
       }
       disable(params).then(res => {
-        res.code === 10000 && this.$message({ message: '操作成功！', type: 'success' })
+        res.code === 10000 && this.$message({
+          message: '操作成功！',
+          type: 'success'
+        })
       })
     },
     getDeptList() {
-      fetchDeptList({ pageIndex: 1, pageSize: 100000 }).then(res => {
+      fetchDeptList({
+        pageIndex: 1,
+        pageSize: 100000
+      }).then(res => {
         if (res.code === 10000) this.deptList = res.data
       })
     },
@@ -268,7 +287,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.block{
-  padding-top: 15px;
+.block {
+    padding-top: 15px;
 }
 </style>

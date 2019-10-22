@@ -86,7 +86,14 @@
 </template>
 
 <script>
-import { getUsers, getCustomeTypeList, getRoleList, saveUserInfo, resetPwd, disable } from '@/api/user'
+import {
+  getUsers,
+  getCustomeTypeList,
+  getRoleList,
+  saveUserInfo,
+  resetPwd,
+  disable
+} from '@/api/user'
 export default {
   data() {
     return {
@@ -158,15 +165,28 @@ export default {
       this.dialogFormVisible = !this.dialogFormVisible
     },
     saveUser() {
-      saveUserInfo({ ...this.user, userType: '2', loginName: this.user.phone }).then(res => {
-        res.code === 10000 && this.$message({ message: '保存成功！', type: 'success' })
-        this.getUserList()
+      saveUserInfo({
+        ...this.user,
+        userType: '2',
+        loginName: this.user.phone
+      }).then(res => {
+        if (res.code === 10000) {
+          this.$message({
+            message: '保存成功！',
+            type: 'success'
+          })
+          this.getUserList()
+          this.dialogFormVisible = !this.dialogFormVisible
+        }
       })
-      this.dialogFormVisible = !this.dialogFormVisible
     },
     resetPassword(obj) {
       resetPwd(obj.id).then(res => {
-        res.code === 10000 && this.$notify({ title: '提示', message: res.message, type: 'success' })
+        res.code === 10000 && this.$notify({
+          title: '提示',
+          message: res.message,
+          type: 'success'
+        })
       })
       this.$refs[obj.id].doClose()
     },
@@ -176,7 +196,10 @@ export default {
         enable: obj.enable
       }
       disable(params).then(res => {
-        res.code === 10000 && this.$message({ message: '操作成功！', type: 'success' })
+        res.code === 10000 && this.$message({
+          message: '操作成功！',
+          type: 'success'
+        })
       })
     },
     handleSizeChange(val) {
@@ -192,7 +215,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.block{
-  padding-top: 15px;
+.block {
+    padding-top: 15px;
 }
 </style>
