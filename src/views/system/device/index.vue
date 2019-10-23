@@ -3,7 +3,7 @@
     <div class="filter-container">
       <el-input v-model="filter.deviceNumber" placeholder="设备编号" style="width: 200px;" class="filter-item" clearable />
       <el-input v-model="filter.deviceName" placeholder="设备名称" style="width: 200px;" class="filter-item" clearable />
-      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="getDevices">查询</el-button>
+      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="queryData">查询</el-button>
       <el-button class="filter-item" icon="el-icon-plus" @click="addInit">添加</el-button>
     </div>
     <el-table v-loading="listLoading" :data="deviceList" border fit highlight-current-row style="width: 100%;">
@@ -129,6 +129,10 @@ export default {
         }
       })
       this.$refs[obj.id].doClose()
+    },
+    queryData(val) {
+      this.filter.pageIndex = 1
+      this.getDevices()
     },
     handleSizeChange(val) {
       this.filter.pageSize = val

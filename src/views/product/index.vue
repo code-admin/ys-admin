@@ -6,7 +6,7 @@
       <el-input v-model="filter.requirement" placeholder="要求" style="width: 200px;" class="filter-item" clearable />
       <el-input v-model="filter.width" placeholder="宽度" style="width: 200px;" class="filter-item" clearable />
       <el-input v-model="filter.weight" placeholder="克重" style="width: 200px;" class="filter-item" clearable />
-      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="getProductList">查询</el-button>
+      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="queryData">查询</el-button>
       <el-button class="filter-item" icon="el-icon-plus" @click="addInit">添加</el-button>
     </div>
 
@@ -196,6 +196,10 @@ export default {
           this.dialogFormVisible = !this.dialogFormVisible
         }
       })
+    },
+    queryData() {
+      this.filter.pageIndex = 1
+      this.getProductList()
     },
     handleSizeChange(val) {
       this.filter.pageSize = val

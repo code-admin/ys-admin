@@ -3,7 +3,7 @@
     <div class="filter-container">
       <el-input v-model="filter.jobNo" placeholder="岗位名称" style="width: 200px;" class="filter-item" clearable />
       <el-input v-model="filter.jobName" placeholder="岗位名称" style="width: 200px;" class="filter-item" clearable />
-      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="getJobList">查询</el-button>
+      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="queryData">查询</el-button>
       <el-button class="filter-item" icon="el-icon-plus" @click="addInit">添加</el-button>
     </div>
 
@@ -139,6 +139,10 @@ export default {
         }
       })
       this.$refs[job.id].doClose()
+    },
+    queryData() {
+      this.filter.pageIndex = 1
+      this.getJobList()
     },
     handleSizeChange(val) {
       this.filter.pageSize = val

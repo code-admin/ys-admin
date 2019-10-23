@@ -7,7 +7,7 @@
       <el-select v-model="filter.departmentId" placeholder="请选择部门" style="width: 200px;" class="filter-item" clearable>
         <el-option v-for="(dept,index) in deptList" :key="index" :label="dept.departmentName" :value="dept.id" />
       </el-select>
-      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="getUserList">查询</el-button>
+      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="queryData">查询</el-button>
       <el-button class="filter-item" icon="el-icon-plus" @click="addInit">添加</el-button>
     </div>
 
@@ -273,6 +273,10 @@ export default {
         this.loading = !this.loading
         if (res.code === 10000) this.deviceList = res.data
       })
+    },
+    queryData() {
+      this.filter.pageIndex = 1
+      this.getUserList()
     },
     handleSizeChange(val) {
       this.filter.pageSize = val

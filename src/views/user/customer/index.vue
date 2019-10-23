@@ -7,7 +7,7 @@
       <el-select v-model="filter.customerType" placeholder="请选择客户类型" style="width: 200px;" class="filter-item" clearable>
         <el-option v-for="(customeType,index) in customeTypeList" :key="index" :label="customeType.name" :value="customeType.id" />
       </el-select>
-      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="getUserList">查询</el-button>
+      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="queryData">查询</el-button>
       <el-button class="filter-item" icon="el-icon-plus" @click="addInit">添加</el-button>
     </div>
 
@@ -201,6 +201,10 @@ export default {
           type: 'success'
         })
       })
+    },
+    queryData() {
+      this.filter.pageIndex = 1
+      this.getUserList()
     },
     handleSizeChange(val) {
       this.filter.pageSize = val

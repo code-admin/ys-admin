@@ -13,7 +13,7 @@
         <el-option label="待回馈" :value="0" />
         <el-option label="已回馈" :value="1" />
       </el-select>
-      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="getFeedBacks">查询</el-button>
+      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="queryData">查询</el-button>
     </div>
 
     <el-table :key="tableKey" v-loading="listLoading" :data="feedbackList" border fit highlight-current-row style="width: 100%;">
@@ -117,6 +117,10 @@ export default {
       this.title = '修改部门信息'
       this.department = dept
       this.dialogFormVisible = !this.dialogFormVisible
+    },
+    queryData() {
+      this.filter.pageIndex = 1
+      this.getFeedBacks()
     },
     handleSizeChange(val) {
       this.filter.pageSize = val

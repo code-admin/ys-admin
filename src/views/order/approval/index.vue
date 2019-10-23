@@ -20,7 +20,7 @@
         <el-option label="通过" :value="3" />
         <el-option label="拒绝" :value="4" />
       </el-select>
-      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="getOrderList">查询</el-button>
+      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="queryData">查询</el-button>
     </div>
 
     <el-radio-group v-model="tabPosition" size="mini" @change="switchData">
@@ -131,6 +131,10 @@ export default {
           id: obj.auditId
         }
       })
+    },
+    queryData() {
+      this.filter.pageIndex = 1
+      this.getOrderList()
     },
     handleSizeChange(val) {
       this.filter.pageSize = val
