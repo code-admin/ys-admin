@@ -2,7 +2,7 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="filter.orderNo" placeholder="订单编号" style="width: 200px;" class="filter-item" clearable />
-      <el-input v-model="filter.customerName" placeholder="下单人(客户)" style="width: 200px;" class="filter-item" clearable />
+      <el-input v-model="filter.customerName" placeholder="客户" style="width: 200px;" class="filter-item" clearable />
       <el-input v-model="filter.createName" placeholder="制单人" style="width: 200px;" class="filter-item" clearable />
       <el-select v-model="filter.makingType" placeholder="单据类型" style="width: 200px;" class="filter-item" clearable>
         <el-option label="销售单" :value="1" />

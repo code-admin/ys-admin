@@ -23,7 +23,7 @@
         <el-row :gutter="20">
           <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
             <el-row :gutter="10">
-              <el-col :span="8"><div class="lable">下单人:</div></el-col>
+              <el-col :span="8"><div class="lable">客户:</div></el-col>
               <el-col :span="16"><div class="val">{{ orderInfo.orderUserName }}</div></el-col>
             </el-row>
           </el-col>
@@ -99,6 +99,7 @@
             </div>
           </template>
         </el-table-column>
+        <el-table-column prop="remark" label="备注" align="center" show-overflow-tooltip />
         <el-table-column v-if="orderInfo.status === 2 || orderInfo.status === 3" label="操作" align="center">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="showOutStock(scope.row,true)">出库</el-button>

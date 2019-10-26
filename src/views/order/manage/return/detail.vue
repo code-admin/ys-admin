@@ -21,7 +21,7 @@
         <el-row :gutter="20">
           <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
             <el-row :gutter="10">
-              <el-col :span="8"><div class="lable">下单人:</div></el-col>
+              <el-col :span="8"><div class="lable">客户:</div></el-col>
               <el-col :span="16"><div class="val">{{ orderInfo.orderUserName }}</div></el-col>
             </el-row>
           </el-col>

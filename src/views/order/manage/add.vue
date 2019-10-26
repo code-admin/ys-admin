@@ -15,8 +15,8 @@
       <div class="title">基本信息</div>
       <div class="content mt20">
         <el-form label-position="right" label-width="80px" :model="orderInfo">
-          <el-form-item label="下单人">
-            <el-select v-model="orderInfo.orderUser" placeholder="请选择下单人" filterable style="width:100%;">
+          <el-form-item label="客户">
+            <el-select v-model="orderInfo.orderUser" placeholder="请选择客户" filterable style="width:100%;">
               <el-option v-for="user in customeList" :key="user.loginName" :label="user.userName" :value="user.loginName" />
             </el-select>
           </el-form-item>
@@ -37,7 +37,7 @@
       <div class="content mt20">
         <el-row :gutter="20">
           <el-col v-for="(goods,index) in orderInfo.orderExts" :key="index" :sm="24" :md="12" :lg="8" :xl="6">
-            <el-card shadow="hover" style="min-height:578px">
+            <el-card shadow="hover" style="min-height:600px">
               <el-form label-position="right" label-width="80px" :model="orderInfo">
                 <el-form-item label="产品编号">
                   <el-input v-model="orderInfo.orderExts[index].productNo" placeholder="产品编号" disabled />
@@ -74,6 +74,9 @@
                 </div>
                 <el-form-item label="单价">
                   <el-input v-model="orderInfo.orderExts[index].price" type="number" placeholder="单价(元)" />
+                </el-form-item>
+                <el-form-item label="备注">
+                  <el-input v-model="orderInfo.orderExts[index].remark" placeholder="请输入备注" />
                 </el-form-item>
               </el-form>
               <div v-if="index > 0" style="text-align: center;"><el-button icon="el-icon-delete" @click="deleteGoods(index)">删除</el-button></div>
@@ -214,7 +217,8 @@ export default {
             goodsLength: null,
             goodsNumber: 1,
             weight: null,
-            width: null
+            width: null,
+            remark: null
           }
         ],
         pcc: null
@@ -253,7 +257,7 @@ export default {
       })
     },
     addGoods() {
-      this.orderInfo.orderExts.push({ productNo: null, requirement: null, length: null, number: null, price: null, productId: null, goodsLength: 1, goodsNumber: 1, weight: null, width: null })
+      this.orderInfo.orderExts.push({ productNo: null, requirement: null, length: null, number: null, price: null, productId: null, goodsLength: 1, goodsNumber: 1, weight: null, width: null, remark: null })
     },
     deleteGoods(index) {
       if (this.orderInfo.orderExts < 2) return
@@ -299,6 +303,7 @@ export default {
       this.orderInfo.orderExts[index].weight = product.weight
       this.orderInfo.orderExts[index].length = product.length
       this.orderInfo.orderExts[index].price = product.price
+      this.orderInfo.orderExts[index].remark = product.remark
     }
   }
 }
@@ -318,8 +323,8 @@ export default {
 
   }
   .plus{
-    min-height: 535px;
-    line-height: 510px;
+    min-height: 600px;
+    line-height: 585px;
     text-align: center;
     font-size: 48px;
     i{cursor:pointer;}

@@ -13,8 +13,8 @@
       <div class="title">基本信息</div>
       <div class="content mt20">
         <el-form label-position="right" label-width="80px" :model="orderInfo">
-          <el-form-item label="下单人">
-            <el-select v-model="orderInfo.orderUser" placeholder="请选择下单人" filterable style="width:100%;">
+          <el-form-item label="客户">
+            <el-select v-model="orderInfo.orderUser" placeholder="请选择客户" filterable style="width:100%;">
               <el-option v-for="user in customeList" :key="user.loginName" :label="user.userName" :value="user.loginName" />
             </el-select>
           </el-form-item>

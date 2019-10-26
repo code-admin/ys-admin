@@ -2,7 +2,7 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="filter.orderNo" placeholder="订单编号" style="width: 200px;" class="filter-item" clearable />
-      <el-input v-model="filter.customerName" placeholder="下单人" style="width: 200px;" class="filter-item" clearable />
+      <el-input v-model="filter.customerName" placeholder="客户" style="width: 200px;" class="filter-item" clearable />
       <el-input v-model="filter.createName" placeholder="制单人" style="width: 200px;" class="filter-item" clearable />
       <el-select v-model="filter.userType" placeholder="制单人类型" style="width: 200px;" class="filter-item" clearable>
         <el-option label="客户" :value="2" />
@@ -32,7 +32,7 @@
       <el-table-column type="selection" align="center" width="55" />
       <el-table-column type="index" width="50" align="center" />
       <el-table-column label="订单编号" prop="orderNo" align="center" width="140" />
-      <el-table-column label="下单人" prop="customerName" align="center" />
+      <el-table-column label="客户" prop="customerName" align="center" />
       <el-table-column label="销售类型" prop="orderTypeName" align="center" />
       <el-table-column label="制单人类型" prop="userTypeName" align="center" />
       <el-table-column label="制单人" prop="createBy" align="center" />

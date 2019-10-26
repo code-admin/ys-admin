@@ -65,8 +65,8 @@
             <el-option label="其他款" :value="2" />
           </el-select>
         </el-form-item>
-        <el-form-item label="付款人" :label-width="formLabelWidth">
-          <el-select v-model="bill.userId" placeholder="请选择付款人">
+        <el-form-item label="付款人(客户)" :label-width="formLabelWidth">
+          <el-select v-model="bill.userId" placeholder="请选择付款人(客户)" filterable>
             <el-option v-for="user in customeList" :key="user.loginName" :label="user.userName" :value="user.id" />
           </el-select>
         </el-form-item>
