@@ -30,7 +30,6 @@
     </div>
 
     <el-table :key="tableKey" v-loading="listLoading" :data="orderList" border fit highlight-current-row style="width: 100%;">
-      <el-table-column type="selection" align="center" width="55" />
       <el-table-column type="index" width="50" align="center" />
       <el-table-column label="订单号" prop="orderNo" align="center" width="140" />
       <el-table-column label="客户" prop="customerName" align="center" />
@@ -56,12 +55,12 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="下单时间" prop="orderTime" align="center" sortable="custom" width="120">
+      <el-table-column label="下单日期" prop="orderTime" align="center" sortable="custom" width="120">
         <template slot-scope="scope">
           <i class="el-icon-time" /> {{ scope.row.orderTime | moment('YYYY-MM-DD') }}
         </template>
       </el-table-column>
-
+      <el-table-column label="更新时间" prop="updateTime" align="center" width="160" />
       <el-table-column label="操作" prop="id" sortable="custom" align="left" width="210">
         <template slot-scope="scope">
           <el-button size="mini" @click="detail(scope.row)">查看</el-button>

@@ -31,10 +31,14 @@
           </div>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="制单人" prop="createBy" align="center" /> -->
-      <el-table-column label="日期" prop="createTime" align="center" width="120">
+      <el-table-column label="收款日期" prop="collectionTime" align="center" width="120">
         <template slot-scope="scope">
-          <i class="el-icon-time" /> {{ scope.row.createTime | moment('YYYY-MM-DD') }}
+          {{ scope.row.collectionTime | moment('YYYY-MM-DD') }}
+        </template>
+      </el-table-column>
+      <el-table-column label="记录时间" prop="createTime" align="center" width="180">
+        <template slot-scope="scope">
+          <i class="el-icon-time" /> {{ scope.row.createTime }}
         </template>
       </el-table-column>
       <el-table-column label="备注" prop="remark" align="center" show-overflow-tooltip />
@@ -59,6 +63,9 @@
 
     <el-dialog title="添加收款" :visible.sync="dialogFormVisible">
       <el-form :model="bill">
+        <el-form-item label="收款日期" :label-width="formLabelWidth">
+          <el-date-picker v-model="bill.collectionTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="选择收款日期" />
+        </el-form-item>
         <el-form-item label="收款类型" :label-width="formLabelWidth">
           <el-select v-model="bill.feeType" placeholder="请选择活动区域" @change="bill.amount = null">
             <el-option label="收袋款" :value="1" />
@@ -106,7 +113,9 @@ export default {
       },
       billList: [],
       customeList: [],
-      bill: {},
+      bill: {
+        collectionTime: null
+      },
       formLabelWidth: '100px'
 
     }
@@ -133,20 +142,22 @@ export default {
     },
 
     editInit() {
+      const date = new Date()
       this.bill = {
-        feeType: 1
+        feeType: 1,
+        collectionTime: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
       }
       this.dialogFormVisible = !this.dialogFormVisible
     },
     saveBill() {
       submitOrderBill(this.bill).then(res => {
-        this.dialogFormVisible = !this.dialogFormVisible
         if (res.code === 10000) {
           this.$message({
             message: '保存成功！',
             type: 'success'
           })
           this.getBillList()
+          this.dialogFormVisible = !this.dialogFormVisible
         }
       })
     },
@@ -184,10 +195,12 @@ export default {
 .block {
     padding-top: 15px;
 }
-.increase{
-  color: #67C23A;
+
+.increase {
+    color: #67C23A;
 }
-.decrease{
-  color: #f40;
+
+.decrease {
+    color: #f40;
 }
 </style>

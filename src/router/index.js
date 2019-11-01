@@ -87,6 +87,13 @@ export const constantRoutes = [
         meta: { title: '退筒单详情' }
       },
       {
+        path: '/order/printing/extracted/:id',
+        name: 'ExtractedPrint',
+        component: () => import('@/views/order/manage/extractedPrint'),
+        hidden: true,
+        meta: { title: '打印提货单' }
+      },
+      {
         path: '/order/printing/checkout/:id',
         name: 'OrderPrinting',
         component: () => import('@/views/order/manage/printing'),
@@ -134,6 +141,46 @@ export const constantRoutes = [
         name: 'BillTotal',
         component: () => import('@/views/bill/total/index'),
         meta: { title: '账目汇总' }
+      }
+    ]
+  },
+  {
+    path: '/analysis',
+    component: Layout,
+    redirect: '/analysis/produce',
+    name: 'Analysis',
+    meta: { title: '数据分析', icon: 'analysis' },
+    alwaysShow: true,
+    children: [
+      {
+        path: '/analysis/produce',
+        name: 'AnalysisProduce',
+        component: () => import('@/views/analysis/produce/index'),
+        meta: { title: '生产数据' }
+      },
+      {
+        path: '/analysis/month',
+        name: 'AnalysisMonth',
+        component: () => import('@/views/analysis/month/index'),
+        meta: { title: '月汇产总' }
+      },
+      {
+        path: '/analysis/day',
+        name: 'AnalysisDay',
+        component: () => import('@/views/analysis/day/index'),
+        meta: { title: '日汇产总' }
+      },
+      {
+        path: '/analysis/year',
+        name: 'AnalysisYear',
+        component: () => import('@/views/analysis/year/index'),
+        meta: { title: '年汇产总' }
+      },
+      {
+        path: '/analysis/passrate',
+        name: 'AnalysisPassrate',
+        component: () => import('@/views/analysis/passrate/index'),
+        meta: { title: '员工合格率' }
       }
     ]
   },

@@ -1,7 +1,9 @@
 <template>
   <div v-loading="loading" class="page">
     <div class="card ">
-      <div style="text-align: right"> <el-button icon="el-icon-back" size="mini" @click="$router.back()">返回</el-button> </div>
+      <div style="text-align: right">
+        <el-button icon="el-icon-back" size="mini" @click="$router.back()">返回</el-button>
+      </div>
       <el-steps :active="orderInfo.status+1" finish-status="success" align-center>
         <el-step title="创建" />
         <el-step title="待审核" />
@@ -23,43 +25,71 @@
         <el-row :gutter="20">
           <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
             <el-row :gutter="10">
-              <el-col :span="8"><div class="lable">客户:</div></el-col>
-              <el-col :span="16"><div class="val">{{ orderInfo.orderUserName }}</div></el-col>
+              <el-col :span="8">
+                <div class="lable">客户:</div>
+              </el-col>
+              <el-col :span="16">
+                <div class="val">{{ orderInfo.orderUserName }}</div>
+              </el-col>
             </el-row>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
             <el-row :gutter="10">
-              <el-col :span="8"><div class="lable">制单人类型:</div></el-col>
-              <el-col :span="16"><div class="val"><el-button type="text" size="mini">{{ orderInfo.userTypeName }}</el-button> </div></el-col>
+              <el-col :span="8">
+                <div class="lable">制单人类型:</div>
+              </el-col>
+              <el-col :span="16">
+                <div class="val">
+                  <el-button type="text" size="mini">{{ orderInfo.userTypeName }}</el-button>
+                </div>
+              </el-col>
             </el-row>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
             <el-row :gutter="10">
-              <el-col :span="8"><div class="lable">制单人:</div></el-col>
-              <el-col :span="16"><div class="val">{{ orderInfo.createBy }}</div></el-col>
+              <el-col :span="8">
+                <div class="lable">制单人:</div>
+              </el-col>
+              <el-col :span="16">
+                <div class="val">{{ orderInfo.createBy }}</div>
+              </el-col>
             </el-row>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
             <el-row :gutter="10">
-              <el-col :span="8"><div class="lable">发货方式:</div></el-col>
-              <el-col :span="16"><div class="val">{{ orderInfo.deliveryName }}</div></el-col>
+              <el-col :span="8">
+                <div class="lable">发货方式:</div>
+              </el-col>
+              <el-col :span="16">
+                <div class="val">{{ orderInfo.deliveryName }}</div>
+              </el-col>
             </el-row>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
             <el-row :gutter="10">
-              <el-col :span="8"><div class="lable">收货人:</div></el-col>
-              <el-col :span="16"><div class="val">{{ orderInfo.customerName }}</div></el-col>
+              <el-col :span="8">
+                <div class="lable">收货人:</div>
+              </el-col>
+              <el-col :span="16">
+                <div class="val">{{ orderInfo.customerName }}</div>
+              </el-col>
             </el-row>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
             <el-row :gutter="10">
-              <el-col :span="8"><div class="lable">收货人电话:</div></el-col>
-              <el-col :span="16"><div class="val">{{ orderInfo.phone }}</div></el-col>
+              <el-col :span="8">
+                <div class="lable">收货人电话:</div>
+              </el-col>
+              <el-col :span="16">
+                <div class="val">{{ orderInfo.phone }}</div>
+              </el-col>
             </el-row>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
             <el-row :gutter="10">
-              <el-col :span="8"><div class="lable">收货地址:</div></el-col>
+              <el-col :span="8">
+                <div class="lable">收货地址:</div>
+              </el-col>
               <el-col :span="16">
                 <div class="val">{{ orderInfo.provinceName && orderInfo.cityName && orderInfo.districtName ? `${orderInfo.provinceName}${orderInfo.cityName}${orderInfo.districtName}${orderInfo.address}` : orderInfo.address }}</div>
               </el-col>
@@ -71,7 +101,9 @@
 
     <div class="card mt20">
       <div class="flex justify-between">
-        <div class="title">下单类型: <el-tag type="primary" size="mini">{{ orderInfo.orderTypeName }}</el-tag> </div>
+        <div class="title">下单类型: <el-tag type="primary" size="mini">{{ orderInfo.orderTypeName }}</el-tag>
+        </div>
+        <el-button @click="extractedGoods">打印提货单</el-button>
         <el-button v-if="orderInfo.status === 2 || orderInfo.status === 3" type="primary" plain size="mini" @click="batchInit">批量出库</el-button>
       </div>
 
@@ -112,12 +144,7 @@
       <div class="flex justify-between">
         <div class="title">出库记录</div>
         <el-button v-if="orderInfo.orderExpressList && orderInfo.orderExpressList.length && orderInfo.status > 2" size="mini" icon="el-icon-printer" @click="handlePrint">打印{{ printArr.length ? `(${printArr.length})` : '' }}</el-button>
-        <el-popover
-          v-if="orderInfo.orderExpressList && orderInfo.orderExpressList.length && orderInfo.status === 3"
-          v-model="finishVisible"
-          placement="top"
-          width="160"
-        >
+        <el-popover v-if="orderInfo.orderExpressList && orderInfo.orderExpressList.length && orderInfo.status === 3" v-model="finishVisible" placement="top" width="160">
           <p>确认要完成出库吗</p>
           <div style="text-align: right; margin: 0">
             <el-button size="mini" type="text" @click="finishVisible = false">取消</el-button>
@@ -229,24 +256,6 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column property="driverLoginName" label="司机/电话" align="center" width="200">
-          <template slot-scope="scope">
-            <el-select
-              v-model="scope.row.driverLoginName"
-              placeholder="请选择送司机"
-              size="mini"
-              filterable
-              remote
-              reserve-keyword
-              :remote-method="getUserList"
-              :loading="loadingUser"
-              clearable
-              @change="setUser(scope.$index)"
-            >
-              <el-option v-for="user in userList" :key="user.loginName" :label="`${user.userName} / ${user.phone}`" :value="user.loginName" />
-            </el-select>
-          </template>
-        </el-table-column>
       </el-table>
       <div slot="footer" class="dialog-footer">
         <el-button @click="outStockVisible = false">取 消</el-button>
@@ -258,8 +267,16 @@
 </template>
 
 <script>
-import { getOrderById, saveDeliveryOrder, deleteDeliveryOrder, submitDeliveryOrder, confirmOut } from '@/api/order'
-import { getUsers } from '@/api/user'
+import {
+  getOrderById,
+  saveDeliveryOrder,
+  deleteDeliveryOrder,
+  submitDeliveryOrder,
+  confirmOut
+} from '@/api/order'
+import {
+  getUsers
+} from '@/api/user'
 export default {
   data() {
     return {
@@ -292,7 +309,12 @@ export default {
     // 出库用户数据
     getUserList(userName) {
       this.loadingUser = !this.loadingUser
-      getUsers({ userName: `${userName}`.trim(), userType: '1', pageIndex: 1, pageSize: 100000 }).then(res => {
+      getUsers({
+        userName: `${userName}`.trim(),
+        userType: '1',
+        pageIndex: 1,
+        pageSize: 100000
+      }).then(res => {
         this.loadingUser = !this.loadingUser
         if (res.code === 10000) this.userList = res.data
       })
@@ -322,18 +344,28 @@ export default {
       this.outStockVisible = !this.outStockVisible
     },
     saveOutStock() {
-      saveDeliveryOrder({ orderExpressList: this.outStockList }).then(res => {
+      saveDeliveryOrder({
+        orderExpressList: this.outStockList
+      }).then(res => {
         if (res.code === 10000) {
-          this.$message({ message: '添加出库成功！', type: 'success' })
+          this.$message({
+            message: '添加出库成功！',
+            type: 'success'
+          })
           this.getDetailById(this.$route.params.id)
           this.outStockVisible = !this.outStockVisible
         }
       })
     },
     submitOutstock() {
-      submitDeliveryOrder({ orderExpressList: this.outStockList }).then(res => {
+      submitDeliveryOrder({
+        orderExpressList: this.outStockList
+      }).then(res => {
         if (res.code === 10000) {
-          this.$message({ message: '提交出库成功！', type: 'success' })
+          this.$message({
+            message: '提交出库成功！',
+            type: 'success'
+          })
           this.getDetailById(this.$route.params.id)
           this.outStockVisible = !this.outStockVisible
         }
@@ -341,14 +373,20 @@ export default {
     },
     deleteOutStock(id) {
       deleteDeliveryOrder(id).then(res => {
-        this.$message({ message: '删除成功！', type: 'success' })
+        this.$message({
+          message: '删除成功！',
+          type: 'success'
+        })
         this.getDetailById(this.$route.params.id)
       })
     },
     confirmOutStock() {
       confirmOut(this.$route.params.id).then(res => {
         if (res.code === 10000) {
-          this.$message({ message: '出库已完成！', type: 'success' })
+          this.$message({
+            message: '出库已完成！',
+            type: 'success'
+          })
           this.getDetailById(this.$route.params.id)
         }
       })
@@ -416,7 +454,12 @@ export default {
     },
 
     // 合并
-    objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+    objectSpanMethod({
+      row,
+      column,
+      rowIndex,
+      columnIndex
+    }) {
       if (columnIndex === 4) {
         const _row = this.spanArr[rowIndex]
         const _col = _row > 0 ? 1 : 0
@@ -459,6 +502,14 @@ export default {
         this.printArr.push(item.id)
       })
     },
+    extractedGoods() {
+      this.$router.push({
+        name: 'ExtractedPrint',
+        params: {
+          id: this.orderInfo.id
+        }
+      })
+    },
     handlePrint() {
       const length = this.printArr.length
       if (!length) {
@@ -476,8 +527,12 @@ export default {
       } else {
         this.$router.push({
           name: 'OrderPrinting',
-          params: { id: this.orderInfo.id },
-          query: { arr: this.printArr }
+          params: {
+            id: this.orderInfo.id
+          },
+          query: {
+            arr: this.printArr
+          }
         })
         // const routeData = this.$router.resolve({
         //   name: 'OrderPrinting',
@@ -491,43 +546,51 @@ export default {
 }
 </script>
 
-<style  lang="scss" scoped>
-.page{
-  padding: 20px;
-  background: #f2f2f2;
-   .card{
+<style lang="scss" scoped>
+.page {
     padding: 20px;
-    background: #ffffff;
-    border-radius: 4px;
-    font-size: 12px;
-    line-height: 30px;
-     .title{
-      font-size:14px;
-      font-weight: 500;
+    background: #f2f2f2;
+
+    .card {
+        padding: 20px;
+        background: #ffffff;
+        border-radius: 4px;
+        font-size: 12px;
+        line-height: 30px;
+
+        .title {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .lable {
+            color: #777777;
+            text-align: right;
+        }
+
+        .value {
+            color: #555555;
+        }
+
+        .totalPrice {
+            text-align: right;
+            padding-right: 20px;
+            font-size: 18px;
+            font-weight: 500;
+            color: #f40;
+        }
     }
-    .lable{
-      color: #777777;
-      text-align: right;
-    }
-    .value{
-      color: #555555;
-    }
-    .totalPrice{
-      text-align: right;
-      padding-right:20px;
-      font-size: 18px;
-      font-weight: 500;
-      color: #f40;
-    }
-   }
 }
-.mt20{
-  margin-top: 20px;
+
+.mt20 {
+    margin-top: 20px;
 }
-.flex{
-  display: flex;
+
+.flex {
+    display: flex;
 }
-.justify-between{
-  justify-content: space-between
+
+.justify-between {
+    justify-content: space-between
 }
 </style>
