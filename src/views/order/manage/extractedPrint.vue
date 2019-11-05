@@ -2,39 +2,45 @@
   <div>
     <div id="print_box" v-loading="loading" class="print-box">
       <div style="width:100%;height:100%;">
+        <div class="company">浙江亚设塑业有限公司</div>
         <div class="title">提货单</div>
+
+        <img class="logo" src="../../../assets/imgs/arsh_logo.png">
+
         <div class="print">
           <el-button type="text" size="mini" icon="el-icon-close" style="color:#F56C6C" @click="$router.back()">关闭</el-button>
           <el-button type="text" size="mini" icon="el-icon-printer" @click="clickPrinting">打印</el-button>
         </div>
 
         <div class="bar flex justify-between">
-          <div class="w160"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;客户:</span><span class="text">&nbsp;&nbsp;{{ orderInfo.orderUserName }}</span></div>
-          <div style="text-align:center;"><span>日期:</span><span class="text">&nbsp;&nbsp;{{ orderInfo.updateTime | moment('YYYY-MM-DD') }}</span></div>
-          <div class="w160" style="text-align:right;"><span>单号:</span><span class="text">&nbsp;&nbsp;{{ orderInfo.orderNo }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+          <div class="tac"><span>客户:</span><span class="text">{{ orderInfo.customerName }}</span></div>
+          <div class="tac"><span>日期:</span><span class="text">{{ orderInfo.updateTime | moment('YYYY-MM-DD') }}</span></div>
+          <div class="tac"><span>单号:</span><span class="text">{{ orderInfo.orderNo }}</span></div>
         </div>
 
-        <table style="border-collapse:collapse;border:none;" width="746">
+        <table style="border-collapse:collapse;border:none;" width="100%">
           <tr class="tr">
-            <th>产品名称</th>
-            <th>要求</th>
-            <th>宽度</th>
-            <th>克重</th>
-            <th>个数</th>
-            <th>备注</th>
+            <td>产品名称</td>
+            <td>要求</td>
+            <td>宽度</td>
+            <td>克重</td>
+            <td>个数</td>
+            <td>单价</td>
+            <td>备注</td>
           </tr>
 
           <tr v-for="(order,index) in orderInfo.orderExts" :key="index" class="tr">
-            <td class="lab col1">{{ order.product.name }}</td>
-            <td class="lab col2">{{ order.requirement }}</td>
-            <td class="lab col3">{{ order.width }}</td>
-            <td class="lab col4">{{ order.weight }}</td>
-            <td class="lab col5">{{ order.goodsNumber }}</td>
-            <td class="lab">{{ order.remark }}</td>
+            <td class="lab">{{ order.product.name }}</td>
+            <td class="lab">{{ order.requirement }}</td>
+            <td class="lab">{{ order.width }}</td>
+            <td class="lab">{{ order.weight }}</td>
+            <td class="lab">{{ order.goodsNumber }}</td>
+            <td class="lab">{{ order.price }}</td>
+            <td class="lab" style="width:180px;">{{ order.remark }}</td>
           </tr>
           <tr class="tr">
             <td class="lab col1">地址:</td>
-            <td class="text" colspan="10">{{ orderInfo.provinceName && orderInfo.cityName && orderInfo.districtName ? `${orderInfo.provinceName}${orderInfo.cityName}${orderInfo.districtName}${orderInfo.address}` : orderInfo.address }}</td>
+            <td class="text" colspan="10" style="text-align:left;padding-left: 15px;">{{ orderInfo.provinceName && orderInfo.cityName && orderInfo.districtName ? `${orderInfo.provinceName}${orderInfo.cityName}${orderInfo.districtName}${orderInfo.address}` : orderInfo.address }}</td>
           </tr>
         </table>
       </div>
@@ -103,83 +109,50 @@ export default {
     justify-content: space-between;
 }
 
-.w160 {
-    width: 220px;
+.tac {
+    width: 200px;
+    text-align: center;
 }
 
 .print-box {
-    width: 768px;
-    height: 342px;
-    margin: 2px auto 0px;
-    padding: 15px 10px 0px;
+    width: 760px;
+    height: 352px;
+    margin: 0px auto;
+    padding: 30px 0px 0px;
     border: 1px dashed #f2f2f2;
     box-sizing: border-box;
     position: relative;
 
     .company {
         text-align: center;
-        font-size: 28px;
+        font-size: 26px;
         line-height: 30px;
     }
 
     .title {
         text-align: center;
-        font-size: 18px;
+        font-size: 17px;
         line-height: 30px;
     }
 
     .bar {
         height: 28px;
         line-height: 28px;
+        font-size: 15px;
+
         .text {
-            font-size: 16px;
+            padding: 0 10px;
         }
     }
 
     .tr {
         font-size: 15px;
+        height: 28px;
         line-height: 28px;
-        font-weight: 500;
-
-        th {
-            border: 1px solid #909399;
-        }
 
         td {
-            padding-left: 5px;
-            color: #444444;
-            border: 1px solid #909399;
-        }
-
-        .lab {
+            border: 1px solid #000000;
             text-align: center;
-            font-size: 15px;
-            font-weight: 800;
-        }
-
-        .col1 {
-            width: 130px;
-        }
-
-        .col2 {
-            width: 130px;
-        }
-
-        .col3 {
-            width: 70px;
-        }
-
-        .col4 {
-            width: 70px;
-        }
-
-        .col5 {
-            width: 70px;
-        }
-
-        .text {
-            font-size: 15px;
-            font-weight: 800;
         }
     }
 
@@ -187,15 +160,15 @@ export default {
         height: 44px;
         line-height: 44px;
         text-align: center;
-        font-size: 10px;
-        font-weight: 700;
+        font-size: 12px;
+        font-weight: 500;
     }
 
     .logo {
         widows: 65px;
         height: 56px;
         position: absolute;
-        top: 60px;
+        top: 20px;
         left: 100px;
     }
 

@@ -40,6 +40,73 @@
       </el-table-column>
       <el-table-column label="制单人类型" prop="userTypeName" align="center" width="100" />
       <el-table-column label="制单人" prop="createBy" align="center" />
+      <el-table-column label="订购产品" prop="createBy" align="center">
+        <template slot-scope="scope">
+          <el-popover placement="right" width="300px" trigger="click" @show="getDetailById(scope.row.id)">
+            <div v-loading="!orderInfo.orderExts">
+              <el-table v-if="!!orderInfo.orderExts" :data="orderInfo.orderExts">
+                <el-table-column prop="requirement" label="产品编号/名称" align="center" show-overflow-tooltip width="150">
+                  <template slot-scope="scoped">
+                    <el-tag type="info" size="mini">{{ `${scoped.row.product && scoped.row.product.productNo} / ${scoped.row.product && scoped.row.product.name}` }}</el-tag>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="requirement" label="要求" show-overflow-tooltip align="center" />
+                <el-table-column prop="width" label="宽度(cm)" align="center" />
+                <el-table-column prop="weight" label="克重(g)" align="center" />
+                <el-table-column v-if="orderInfo && orderInfo.orderType === 2" prop="goodsNumber" label="个数" align="center" />
+                <el-table-column v-if="orderInfo && orderInfo.orderType === 1" prop="goodsLength" label="长度(cm)" align="center" />
+                <el-table-column v-if="orderInfo && orderInfo.orderType === 1" prop="goodsNumber" label="条数" align="center" />
+                <el-table-column prop="totalDeliveryNumber" label="已出库" align="center" />
+
+                <el-table-column prop="price" label="单价(吨)" align="center">
+                  <template slot-scope="scoped">
+                    <div v-if="scoped.row.price" style="color:#f40;">
+                      {{ scoped.row.price }} ¥
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="remark" label="备注" align="center" show-overflow-tooltip />
+              </el-table>
+            </div>
+            <el-button slot="reference" type="text" size="mini">{{ scope.row.orderExtNumber }}</el-button>
+          </el-popover>
+        </template>
+      </el-table-column>
+      <el-table-column label="出库记录" prop="createBy" align="center">
+        <template slot-scope="scope">
+          <el-popover placement="right" width="300px" trigger="click" @show="getDetailById(scope.row.id)">
+            <div v-loading="!orderInfo.orderExpressList">
+              <el-table v-if="!!orderInfo.orderExpressList" :data="orderInfo.orderExpressList">
+                <el-table-column prop="productNo" label="产品编号/名称" align="center" width="140" show-overflow-tooltip>
+                  <template slot-scope="scoped">
+                    <el-tag type="info" size="mini">{{ `${scoped.row.productNo} / ${scoped.row.productName}` }}</el-tag>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="requirement" label="要求" show-overflow-tooltip align="center" />
+                <el-table-column prop="width" label="宽度(CM)" align="center" />
+                <el-table-column prop="weight" label="克重(G)" align="center" />
+                <el-table-column v-if="orderInfo.orderType === 1" prop="goodsLength" label="长度" align="center" />
+                <el-table-column v-if="orderInfo.orderType === 1" prop="productNumber" label="条数" align="center" />
+                <el-table-column prop="totalWeight" label="重量(KG)" align="center" />
+                <el-table-column prop="tareWeight" label="车皮" align="center" />
+                <el-table-column prop="price" label="单价(吨)" align="center" />
+                <el-table-column prop="netWeight" label="净重" align="center" />
+                <el-table-column prop="totalPrice" label="金额" align="center" />
+                <el-table-column prop="number" label="出库个数" align="center" show-overflow-tooltip />
+                <el-table-column prop="createBy" label="记录人/时间" align="center" width="180" show-overflow-tooltip>
+                  <template slot-scope="scoped">
+                    <div>
+                      {{ `${scoped.row.createBy}/${scoped.row.createTime}` }}
+                    </div>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
+            <el-button slot="reference" type="text" size="mini">{{ scope.row.orderExpressNumber }}</el-button>
+          </el-popover>
+        </template>
+      </el-table-column>
+
       <el-table-column label="金额(元)" prop="totalPrice" align="center">
         <template slot-scope="scope">
           <div v-if="scope.row.totalPrice" style="color:#f40;">
@@ -77,6 +144,7 @@
       </el-table-column>
 
     </el-table>
+
     <div class="block">
       <el-pagination v-show="total>0" :current-page="filter.pageIndex" :page-sizes="[10, 20, 50, 100]" :page-size="filter.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
     </div>
@@ -101,7 +169,8 @@ import {
   getOrderTypes,
   getOrderFlowNodes,
   closeOrder,
-  addRemark
+  addRemark,
+  getOrderById
 } from '@/api/order'
 export default {
   data() {
@@ -109,10 +178,7 @@ export default {
       listLoading: true,
       tableKey: 0,
       total: 0,
-      filter: {
-        pageIndex: 1,
-        pageSize: 10
-      },
+      filter: this.$store.state.filter.queryData,
       orderList: [],
       orderTypeList: [],
       flowList: [],
@@ -121,7 +187,8 @@ export default {
       history: {
         orderId: '',
         remark: ''
-      }
+      },
+      orderInfo: {}
     }
   },
   mounted() {
@@ -135,6 +202,7 @@ export default {
       const params = {
         ...this.filter
       }
+      this.$store.dispatch('filter/setFilter', this.filter)
       getOrders(params).then(res => {
         if (res.code === 10000) {
           this.orderList = res.data
@@ -213,6 +281,19 @@ export default {
         }
       })
       this.$refs[obj.id].doClose()
+    },
+    getDetailById(orderId) {
+      this.orderInfo = {}
+      getOrderById(orderId).then(res => {
+        if (res.code === 10000) {
+          this.orderInfo = res.data
+        }
+      }).catch(err => {
+        this.$message({
+          type: 'error',
+          message: err.message
+        })
+      })
     },
     queryData() {
       this.filter.pageIndex = 1

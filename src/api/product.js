@@ -68,3 +68,20 @@ export function exchangeProductStock(data) {
     data
   })
 }
+
+// 获取产品列表
+export function getProductReportList(data) {
+  return request({
+    url: '/product/getProductReportList',
+    method: 'post',
+    data
+  })
+}
+// 导出报表
+export function exportProductReport(data) {
+  return request({
+    url: '/product/exportProductReport',
+    method: 'post',
+    data
+  })
+}

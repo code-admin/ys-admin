@@ -100,7 +100,7 @@ export default {
   methods: {
     getBillList() {
       this.listLoading = true
-      getCustomerBillReport({ ...this.filter, startTime: this.filter.queryDate[0], endTime: this.filter.queryDate[1] }).then(res => {
+      getCustomerBillReport(this.filter).then(res => {
         if (res.code === 10000) {
           this.billList = res.data
           this.total = res.total

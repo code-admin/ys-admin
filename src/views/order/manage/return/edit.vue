@@ -42,7 +42,7 @@
                 </el-form-item>
                 <el-form-item label="产品名称">
                   <el-select v-model="orderInfo.orderExts[index].productId" placeholder="请选择产品" filterable clearable style="width:100%;" @change="changeProduct(index)">
-                    <el-option v-for="product in productList" :key="product.id" :label="`${product.name}/${product.productNo}`" :value="product.id" />
+                    <el-option v-for="product in productList" :key="product.id" :label="`${product.name}${product.width}${product.weight}(${product.productNo})`" :value="product.id" />
                   </el-select>
                 </el-form-item>
                 <el-form-item label="要求">

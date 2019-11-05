@@ -204,6 +204,12 @@ export const constantRoutes = [
         name: 'IOStock',
         component: () => import('@/views/product/iostock/index'),
         meta: { title: '产品出入库' }
+      },
+      {
+        path: '/product/report',
+        name: 'ProductReport',
+        component: () => import('@/views/product/report/index'),
+        meta: { title: '产品报表' }
       }
     ]
   },

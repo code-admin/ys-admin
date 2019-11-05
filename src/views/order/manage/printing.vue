@@ -14,14 +14,24 @@
         </div>
 
         <div class="bar flex justify-between">
-          <div class="w160"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;客户:</span><span class="text">&nbsp;&nbsp;{{ orderInfo.customerName }}</span></div>
-          <div style="text-align:center;"><span>日期:</span><span class="text">&nbsp;&nbsp;{{ orderInfo.updateTime | moment('YYYY-MM-DD') }}</span></div>
-          <div class="w160" style="text-align:right;"><span>单号:</span><span class="text">&nbsp;&nbsp;{{ orderInfo.orderNo }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+          <div class="tac"><span>客户:</span><span class="text">{{ orderInfo.customerName }}</span></div>
+          <div class="tac"><span>日期:</span><span class="text">{{ orderInfo.updateTime | moment('YYYY-MM-DD') }}</span></div>
+          <div class="tac"><span>单号:</span><span class="text">{{ orderInfo.orderNo }}</span></div>
         </div>
 
-        <table style="border-collapse:collapse;border:none;" width="746">
+        <table style="border-collapse:collapse;border:none;" width="100%">
           <tr class="tr">
-            <th>品名</th><th>要求</th><th>宽度</th><th>克重</th><th>数量</th><th>重量(KG)</th><th>车皮</th><th>单价(吨)</th><th>净重</th><th>金额(元)</th><th>备注</th>
+            <td>品名</td>
+            <td>要求</td>
+            <td>宽度</td>
+            <td>克重</td>
+            <td>数量</td>
+            <td>重量(KG)</td>
+            <td>车皮</td>
+            <td>单价(吨)</td>
+            <td>净重</td>
+            <td>金额(元)</td>
+            <td style="width:100px">备注</td>
           </tr>
 
           <tr v-for="(order,index) in orderInfo.orderExpressList" :key="index" class="tr">
@@ -39,11 +49,11 @@
           </tr>
           <tr class="tr">
             <td class="lab">地址:</td>
-            <td class="text" colspan="10">{{ orderInfo.provinceName && orderInfo.cityName && orderInfo.districtName ? `${orderInfo.provinceName}${orderInfo.cityName}${orderInfo.districtName}${orderInfo.address}` : orderInfo.address }}</td>
+            <td class="text" style="text-align:left;padding-left: 15px;" colspan="10">{{ orderInfo.provinceName && orderInfo.cityName && orderInfo.districtName ? `${orderInfo.provinceName}${orderInfo.cityName}${orderInfo.districtName}${orderInfo.address}` : orderInfo.address }}</td>
           </tr>
           <tr class="tr">
             <td class="lab">欠款:</td>
-            <td class="text" colspan="6">{{ orderInfo.totalPriceChineseView }}</td>
+            <td class="text" style="text-align:left;padding-left: 15px" colspan="6">{{ orderInfo.totalPriceChineseView }}</td>
             <td class="lab">净重</td>
             <td class="text">{{ orderInfo.totalNetWeight }}</td>
             <td class="lab">金额</td>
@@ -51,7 +61,7 @@
           </tr>
           <tr class="tr">
             <td class="lab">制单:</td>
-            <td class="text" colspan="3">{{ orderInfo.createBy }}</td>
+            <td class="text" style="text-align:left;padding-left: 15px;" colspan="3">{{ orderInfo.createBy }}</td>
             <td class="lab">司机:</td>
             <td class="text">&nbsp;</td>
             <td class="lab">签收:</td>
@@ -61,7 +71,7 @@
           </tr>
           <tr class="tr">
             <td class="foot" colspan="11">
-              注：请客户仔细核对货物数量、重量、金额等信息再签字 销售电话：18868270138  传真电话：0577-80818808
+              注：请客户仔细核对货物数量、重量、金额等信息再签字 销售电话：18868270138 传真电话：0577-80818808
             </td>
           </tr>
         </table>
@@ -71,7 +81,9 @@
 </template>
 
 <script>
-import { getOrderPrintInfo } from '@/api/order'
+import {
+  getOrderPrintInfo
+} from '@/api/order'
 export default {
   data() {
     return {
@@ -83,7 +95,13 @@ export default {
     }
   },
   mounted() {
-    this.getDetailById({ orderId: this.$route.params.id, expressIds: [[this.$route.query.arr]].flat(2) })
+    // console.log('?????????????????????', [[this.$route.query.arr]].flat(2))
+    // console.log('----', [...[...this.$route.query.arr]])
+
+    this.getDetailById({
+      orderId: this.$route.params.id,
+      expressIds: [...[...this.$route.query.arr]]
+    })
   },
   methods: {
     getDetailById(params) {
@@ -111,7 +129,7 @@ export default {
       sidebarContainer.classList.add('printHideCss')
       mainContainer.classList.add('clearCss')
 
-      print_box.style.cssText = 'border: 0px;margin-top:-20px;'
+      print_box.style.cssText = 'border: 0px;'
 
       window.print() //  调用打印功能
       window.location.reload() //  点击取消打印后刷新页面，恢复点击打印按钮之前的原始数据
@@ -121,81 +139,81 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.flex{
-  display: flex;
-}
-.justify-between{
-  justify-content: space-between;
-}
-.w160{
-  width: 220px;
+.flex {
+    display: flex;
 }
 
-.print-box{
-  width: 768px;
-  height: 562px;
-  margin: 2px auto 0px;
-  padding: 60px 10px 0px;
-  border: 1px dashed #f2f2f2;
-  box-sizing: border-box;
-  position: relative;
-  .company{
+.justify-between {
+    justify-content: space-between;
+}
+
+.tac {
+    width: 200px;
     text-align: center;
-    font-size: 28px;
-    line-height: 30px;
-  }
-  .title{
-    text-align: center;
-    font-size: 18px;
-    line-height: 30px;
-  }
-  .bar{
-    height: 28px;
-    line-height: 28px;
-    font-size: 15px;
-    .text{
-      font-size: 10px;
-      font-weight: 500
+}
+
+.print-box {
+    width: 760px;
+    height: 562px;
+    margin: 0px auto;
+    padding: 30px 0px 0px;
+    border: 1px dashed #f2f2f2;
+    box-sizing: border-box;
+    position: relative;
+
+    .company {
+        text-align: center;
+        font-size: 26px;
+        line-height: 30px;
     }
-  }
-  .tr{
-    font-size: 15px;
-    line-height: 28px;
-    font-weight: 500;
-    th{
-      border: 1px solid #909399;
+
+    .title {
+        text-align: center;
+        font-size: 17px;
+        line-height: 30px;
     }
-    td{
-      padding-left: 5px;
-      color: #444444;
-      border: 1px solid #909399;
+
+    .bar {
+        height: 28px;
+        line-height: 28px;
+        font-size: 15px;
+
+        .text {
+            padding: 0 10px;
+        }
     }
-    .lab{
-      text-align: center;
+
+    .tr {
+        font-size: 15px;
+        height: 28px;
+        line-height: 28px;
+
+        td {
+            border: 1px solid #000000;
+            text-align: center;
+        }
     }
-    .text{
-      font-size: 14px;
-      font-weight: 600;
+
+    .foot {
+        height: 44px;
+        line-height: 44px;
+        text-align: center;
+        font-size: 12px;
+        font-weight: 500;
     }
-  }
-  .foot{
-    height: 44px;
-    line-height: 44px;
-    text-align: center;
-    font-size: 10px;
-    font-weight: 700;
-  }
-  .logo{
-    widows: 65px;
-    height: 56px;
-    position: absolute;
-    top: 60px;
-    left: 100px;
-  }
-  .print{
-    position: absolute;
-    top: 10px;
-    right: 20px;
-  }
+
+    .logo {
+        widows: 65px;
+        height: 56px;
+        position: absolute;
+        top: 20px;
+        left: 100px;
+    }
+
+    .print {
+        position: absolute;
+        top: 10px;
+        right: 20px;
+    }
 }
 </style>

@@ -22,3 +22,12 @@ export function getOrderReport(data) {
     data
   })
 }
+
+export function weightRepor(data) {
+  return request({
+    url: '/dashboard/weightReport',
+    method: 'post',
+    data
+  })
+}
+

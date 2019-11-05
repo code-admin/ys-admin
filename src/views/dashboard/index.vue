@@ -1,10 +1,36 @@
 <template>
   <div v-loading="loading" class="dashboard-content">
     <el-row :gutter="20">
+      <el-col :sm="24" :md="6">
+        <div class="total-card">
+          <span>本年销重量: </span>
+          <span>{{ totalData && totalData.year ? (totalData.year/1000).toFixed(3) : 0 }} </span>
+          <span>(吨)</span>
+        </div>
+      </el-col>
+      <el-col :sm="24" :md="6">
+        <div class="total-card">
+          <span>本月销售总重量: </span>
+          <span>{{ totalData && totalData.month ? (totalData.month/1000).toFixed(3) : 0 }} </span>
+          <span>(吨)</span></div>
+      </el-col>
+      <el-col :sm="24" :md="6">
+        <div class="total-card">
+          <span>今日销售总重量: </span>
+          <span>{{ totalData && totalData.dayWeight ? (totalData.dayWeight/1000).toFixed(3) : 0 }}</span>
+          <span>(吨)</span>
+        </div>
+      </el-col>
+      <el-col :sm="24" :md="6">
+        <div class="total-card">
+          <span>今日销售数量: </span>
+          <span>{{ totalData && totalData.dayNumber ? totalData.dayNumber : 0 }} </span>
+          <span> (个)</span>
+        </div>
+      </el-col>
       <el-col :sm="24" :md="8">
         <div class="card">
           <div class="box">
-
             <div class="number-card flex justify-between">
               <div class="content" style="background:	#87CEFA;color:#ffffff;">
                 <svg-icon icon-class="order" class="icon" />
@@ -59,7 +85,12 @@
 import RingChart from './RingChart'
 import PillarChart from './PillarChart'
 import LineChart from './LineChart'
-import { getTotalReport, getFeedbackReport, getOrderReport } from '@/api/dashboard'
+import {
+  weightRepor,
+  getTotalReport,
+  getFeedbackReport,
+  getOrderReport
+} from '@/api/dashboard'
 export default {
   name: 'Dashboard',
   components: {
@@ -73,15 +104,24 @@ export default {
       ringData: null,
       reportData: null,
       pillarData: null,
-      lineData: null
+      lineData: null,
+      totalData: null
     }
   },
   mounted() {
     this.getRingData()
     this.getPillarData()
     this.getLineData()
+    this.getTotalData()
   },
   methods: {
+    getTotalData() {
+      weightRepor({}).then(res => {
+        if (res.code === 10000) {
+          this.totalData = res.data
+        }
+      })
+    },
     getRingData() {
       this.loading = !this.loading
       getTotalReport().then(res => {
@@ -110,73 +150,110 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.dashboard-content{
-  width: 100%;
-  background:#f2f2f2f2;
-  padding: 10px 20px;
-  box-sizing: border-box;
-  .card{
-    height:  calc(50vh - 55px);
-    background: #ffffff;
-    border-radius: 4px;
-    margin: 10px 0;
-    .box{
-      height: 100%;
-      background:#f2f2f2f2;
-      .number-card{
-        height: calc(50% - 10px);
+.dashboard-content {
+    width: 100%;
+    background: #f2f2f2f2;
+    padding: 10px 20px;
+    box-sizing: border-box;
+
+    .total-card {
+        height: 100px;
+        line-height: 100px;
         background: #ffffff;
         border-radius: 4px;
-        .content{
-          width: 240px;
-          height: 100%;
-          line-height: 100%;
-          border-radius: 4px;
-          font-size: 50px;
-          position: relative;
-          .icon{
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            margin: -25px 0 0 -25px;
-          }
+        text-align: center;
+        margin: 10px 0;
+
+        span:first-child {
+            font-size: 16px;
+            font-weight: 500;
+            color: #929eaa;
         }
-        .right{
-          width: 100%;
-          height: 100%;
-          line-height: 100%;
-          position: relative;
-          .box{
-            height: 80px;
-            padding: 0 10px;
-            position: absolute;
-            top: 50%;
-            right: 0px;
-            margin-top: -40px;
-            background: #ffffff;
-            text-align: right;
-            p{
-              font-size: 16px;
-              font-weight: 500;
-              color: #929eaa;
-            }
-            span{
-              font-size: 32px;
-              color: #576573;
-            }
-          }
+
+        span:nth-child(2) {
+            font-size: 32px;
+            color: #576573;
         }
-      }
+
+        span:last-child {
+            font-size: 12px;
+            color: #999999;
+        }
     }
-  }
+
+    .card {
+        height: calc(50vh - 115px);
+        background: #ffffff;
+        border-radius: 4px;
+        margin: 10px 0;
+
+        .box {
+            height: 100%;
+            background: #f2f2f2f2;
+
+            .number-card {
+                height: calc(50% - 10px);
+                background: #ffffff;
+                border-radius: 4px;
+
+                .content {
+                    width: 240px;
+                    height: 100%;
+                    line-height: 100%;
+                    border-radius: 4px;
+                    font-size: 50px;
+                    position: relative;
+
+                    .icon {
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        margin: -25px 0 0 -25px;
+                    }
+                }
+
+                .right {
+                    width: 100%;
+                    height: 100%;
+                    line-height: 100%;
+                    position: relative;
+
+                    .box {
+                        height: 80px;
+                        padding: 0 10px;
+                        position: absolute;
+                        top: 50%;
+                        right: 0px;
+                        margin-top: -40px;
+                        background: #ffffff;
+                        text-align: right;
+
+                        p {
+                            font-size: 16px;
+                            font-weight: 500;
+                            color: #929eaa;
+                        }
+
+                        span {
+                            font-size: 32px;
+                            color: #576573;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
-.mt20{
-  margin-top: 20px;
+
+.mt20 {
+    margin-top: 20px;
 }
-.flex{
-  display: flex;
+
+.flex {
+    display: flex;
 }
-.justify-between{
-  justify-content: space-between
+
+.justify-between {
+    justify-content: space-between
 }
 </style>

@@ -84,11 +84,7 @@ export default {
   methods: {
     getFileLogs() {
       this.listLoading = true
-      getFileList({
-        ...this.filter,
-        startTime: this.queryDate[0],
-        endTime: this.queryDate[1]
-      }).then(res => {
+      getFileList(this.filter).then(res => {
         this.listLoading = !this.listLoading
         if (res.code === 10000) {
           this.logData = res.data

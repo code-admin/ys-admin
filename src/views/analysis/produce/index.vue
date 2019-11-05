@@ -60,11 +60,7 @@ export default {
   methods: {
     getData() {
       this.listLoading = true
-      getProduceStaffDetailReport({
-        ...this.filter,
-        startTime: this.filter.queryDate[0],
-        endTime: this.filter.queryDate[1]
-      }).then(res => {
+      getProduceStaffDetailReport(this.filter).then(res => {
         if (res.code === 10000) {
           this.produceList = res.data
           this.total = res.total

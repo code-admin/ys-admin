@@ -103,14 +103,14 @@
       <div class="flex justify-between">
         <div class="title">下单类型: <el-tag type="primary" size="mini">{{ orderInfo.orderTypeName }}</el-tag>
         </div>
-        <el-button @click="extractedGoods">打印提货单</el-button>
+        <el-button size="mini" icon="el-icon-printer" @click="extractedGoods">打印提货单</el-button>
         <el-button v-if="orderInfo.status === 2 || orderInfo.status === 3" type="primary" plain size="mini" @click="batchInit">批量出库</el-button>
       </div>
 
       <el-divider />
 
       <el-table v-if="orderInfo.orderExts" :data="orderInfo.orderExts" style="width: 100%" @selection-change="handleSelectionChange">
-        <el-table-column type="selection" width="30" />
+        <el-table-column type="selection" width="50" />
         <el-table-column prop="requirement" label="产品编号/名称" align="center" show-overflow-tooltip>
           <template slot-scope="scope">
             <el-tag type="info" size="mini">{{ `${scope.row.product && scope.row.product.productNo} / ${scope.row.product && scope.row.product.name}` }}</el-tag>
@@ -143,7 +143,7 @@
     <div v-if="orderInfo.status > 1" class="card mt20">
       <div class="flex justify-between">
         <div class="title">出库记录</div>
-        <el-button v-if="orderInfo.orderExpressList && orderInfo.orderExpressList.length && orderInfo.status > 2" size="mini" icon="el-icon-printer" @click="handlePrint">打印{{ printArr.length ? `(${printArr.length})` : '' }}</el-button>
+        <el-button v-if="orderInfo.orderExpressList && orderInfo.orderExpressList.length && orderInfo.status > 2" size="mini" icon="el-icon-printer" @click="handlePrint">打印出库单{{ printArr.length ? `(${printArr.length})` : '' }}</el-button>
         <el-popover v-if="orderInfo.orderExpressList && orderInfo.orderExpressList.length && orderInfo.status === 3" v-model="finishVisible" placement="top" width="160">
           <p>确认要完成出库吗</p>
           <div style="text-align: right; margin: 0">
@@ -172,11 +172,11 @@
         <el-table-column prop="netWeight" label="净重" align="center" />
         <el-table-column prop="totalPrice" label="金额" align="center" />
         <el-table-column prop="number" label="出库个数" align="center" show-overflow-tooltip />
-        <el-table-column prop="requirement" label="司机/电话" align="center" width="180" show-overflow-tooltip>
+        <!-- <el-table-column prop="requirement" label="司机/电话" align="center" width="180" show-overflow-tooltip>
           <template slot-scope="scope">
             {{ `${scope.row.driverName} / ${scope.row.driverPhone}` }}
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column prop="createBy" label="记录人/时间" align="center" width="180" show-overflow-tooltip>
           <template slot-scope="scope">
             <div>
@@ -294,7 +294,7 @@ export default {
   },
   mounted() {
     this.getDetailById(this.$route.params.id)
-    this.getUserList('')
+    // this.getUserList('')
   },
   methods: {
     getDetailById(id) {

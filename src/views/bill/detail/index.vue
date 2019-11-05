@@ -10,6 +10,17 @@
         <el-option label="收袋款" :value="1" />
         <el-option label="其他款" :value="2" />
       </el-select>
+      <el-date-picker
+        v-model="filter.queryDate"
+        clearable
+        class="filter-item"
+        value-format="yyyy-MM-dd"
+        :format="'yyyy-MM-dd'"
+        type="daterange"
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+      />
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="queryData">查询</el-button>
     </div>
 
@@ -23,9 +34,25 @@
           </router-link>
         </template>
       </el-table-column>
+      <el-table-column label="时间" prop="createTime" align="center" width="120">
+        <template slot-scope="scope">
+          <i class="el-icon-time" /> {{ scope.row.createTime | moment('YYYY-MM-DD') }}
+        </template>
+      </el-table-column>
       <el-table-column label="客户" prop="userName" align="center" width="160" />
       <el-table-column label="单据类型" prop="feeTypeName" align="center" width="100" />
-      <el-table-column label="金额(元)" prop="amount" align="center" width="160">
+
+      <el-table-column label="品名" prop="productName" align="center" />
+      <el-table-column label="要求" prop="requirement" align="center" width="130" show-overflow-tooltip />
+      <el-table-column label="宽度(cm)" prop="width" align="center" />
+      <el-table-column label="克重(g)" prop="weight" align="center" />
+      <el-table-column label="长(cm)" prop="goodsLength" align="center" />
+      <el-table-column label="个" prop="goodsNumber" align="center" />
+      <el-table-column label="条数" prop="productNumber" align="center" />
+      <el-table-column label="单价(元)" prop="price" align="center" />
+      <el-table-column label="重量" prop="netWeight" align="center" />
+      <!-- <el-table-column label="重量" prop="" align="center" /> -->
+      <el-table-column label="金额(元)" prop="amount" align="center">
         <template slot-scope="scope">
           <div v-if="scope.row.amount" :class=" scope.row.amount > 0 ? 'increase' : 'decrease'">
             <span v-if="scope.row.amount > 0"> + </span> {{ scope.row.amount }} ¥
@@ -34,11 +61,7 @@
       </el-table-column>
       <!-- <el-table-column label="制单人" prop="createBy" align="center" /> -->
       <el-table-column label="备注" prop="remark" align="center" show-overflow-tooltip />
-      <el-table-column label="时间" prop="createTime" align="center" width="120">
-        <template slot-scope="scope">
-          <i class="el-icon-time" /> {{ scope.row.createTime | moment('YYYY-MM-DD') }}
-        </template>
-      </el-table-column>
+
     </el-table>
     <div class="block">
       <el-pagination v-show="total>0" :current-page="filter.pageIndex" :page-sizes="[10, 20, 50, 100]" :page-size="filter.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
@@ -47,7 +70,9 @@
 </template>
 
 <script>
-import { getOrderBillSummaryList } from '@/api/bill'
+import {
+  getOrderBillSummaryList
+} from '@/api/bill'
 export default {
   data() {
     return {
@@ -55,6 +80,7 @@ export default {
       dialogFormVisible: false,
       total: 0,
       filter: {
+        queryDate: [],
         pageIndex: 1,
         pageSize: 10
       },
@@ -93,14 +119,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.block{
-  padding-top: 15px;
-}
-.increase{
-  color: #67C23A;
-}
-.decrease{
-  color: #f40;
+.block {
+    padding-top: 15px;
 }
 
+.increase {
+    color: #67C23A;
+}
+
+.decrease {
+    color: #f40;
+}
 </style>
