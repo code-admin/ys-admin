@@ -13,7 +13,7 @@
         </div>
 
         <div class="bar flex justify-between">
-          <div class="tac"><span>客户:</span><span class="text">{{ orderInfo.customerName }}</span></div>
+          <div class="tac"><span>客户:</span><span class="text">{{ orderInfo.orderUserName }}</span></div>
           <div class="tac"><span>日期:</span><span class="text">{{ orderInfo.updateTime | moment('YYYY-MM-DD') }}</span></div>
           <div class="tac"><span>单号:</span><span class="text">{{ orderInfo.orderNo }}</span></div>
         </div>
@@ -25,22 +25,34 @@
             <td>宽度</td>
             <td>克重</td>
             <td>个数</td>
+            <td>长度</td>
+            <td>条数</td>
             <td>单价</td>
             <td>备注</td>
           </tr>
 
           <tr v-for="(order,index) in orderInfo.orderExts" :key="index" class="tr">
-            <td class="lab">{{ order.product.name }}</td>
-            <td class="lab">{{ order.requirement }}</td>
-            <td class="lab">{{ order.width }}</td>
-            <td class="lab">{{ order.weight }}</td>
-            <td class="lab">{{ order.goodsNumber }}</td>
-            <td class="lab">{{ order.price }}</td>
-            <td class="lab" style="width:180px;">{{ order.remark }}</td>
+            <td class="lab">{{ order && order.product && order.product.name }}</td>
+            <td class="lab">{{ order && order.requirement }}</td>
+            <td class="lab">{{ order && order.width }}</td>
+            <td class="lab">{{ order && order.weight }}</td>
+            <td class="lab">{{ order && order.goodsNumber ? order.goodsNumber : '' }}</td>
+            <td class="lab">{{ order && order.goodsLength ? order.goodsLength : '' }}</td>
+            <td class="lab">{{ order && order.number }}</td>
+            <td class="lab">{{ order && order.price }}</td>
+            <td class="lab" style="width:180px;">{{ order && order.remark }}</td>
           </tr>
           <tr class="tr">
+            <td class="lab col1">发货方式</td>
+            <td class="text" colspan="3" style="text-align:left;padding-left: 15px;">{{ orderInfo.deliveryName }}</td>
             <td class="lab col1">地址:</td>
-            <td class="text" colspan="10" style="text-align:left;padding-left: 15px;">{{ orderInfo.provinceName && orderInfo.cityName && orderInfo.districtName ? `${orderInfo.provinceName}${orderInfo.cityName}${orderInfo.districtName}${orderInfo.address}` : orderInfo.address }}</td>
+            <td class="text" colspan="4" style="text-align:left;padding-left: 15px;">{{ orderInfo.provinceName && orderInfo.cityName && orderInfo.districtName ? `${orderInfo.provinceName}${orderInfo.cityName}${orderInfo.districtName}${orderInfo.address}` : orderInfo.address }}</td>
+          </tr>
+          <tr class="tr">
+            <td class="lab col1">联系人:</td>
+            <td class="text" colspan="4" style="text-align:left;padding-left: 15px;">{{ orderInfo.customerName }} /{{ orderInfo.phone }} </td>
+            <td class="lab col1">销售员:</td>
+            <td class="text" colspan="3" style="text-align:left;padding-left: 15px;">{{ orderInfo.salesMan }}</td>
           </tr>
         </table>
       </div>
@@ -58,7 +70,7 @@ export default {
       loading: true,
       orderInfo: {
         updateTime: '',
-        orderExpressList: [{}]
+        orderExts: [{}, {}, {}, {}, {}]
       }
     }
   },
@@ -70,6 +82,12 @@ export default {
       getOrderById(params).then(res => {
         if (res.code === 10000) {
           this.orderInfo = res.data
+          var i = res.data.orderExts.length
+          if (i <= 5) {
+            for (i; i < 5; i++) {
+              this.orderInfo.orderExts[i] = {}
+            }
+          }
         }
         this.loading = !this.loading
       })
@@ -136,9 +154,9 @@ export default {
     }
 
     .bar {
-        height: 28px;
-        line-height: 28px;
-        font-size: 15px;
+        height: 25px;
+        line-height: 25px;
+        font-size: 16px;
 
         .text {
             padding: 0 10px;
@@ -146,9 +164,9 @@ export default {
     }
 
     .tr {
-        font-size: 15px;
-        height: 28px;
-        line-height: 28px;
+        font-size: 16px;
+        height: 25px;
+        line-height: 25px;
 
         td {
             border: 1px solid #000000;
@@ -168,7 +186,7 @@ export default {
         widows: 65px;
         height: 56px;
         position: absolute;
-        top: 20px;
+        top: 30px;
         left: 100px;
     }
 

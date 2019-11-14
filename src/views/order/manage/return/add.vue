@@ -163,7 +163,7 @@ export default {
       })
     },
     addGoods() {
-      this.orderInfo.orderExts.push({ productNo: null, requirement: null, length: null, number: null, price: null, productId: null, goodsLength: 1, goodsNumber: 1, weight: null, width: null })
+      this.orderInfo.orderExts.push({ productNo: null, requirement: null, length: null, number: null, price: null, productId: null, goodsLength: null, goodsNumber: 1, weight: null, width: null })
     },
     deleteGoods(index) {
       if (this.orderInfo.orderExts < 2) return

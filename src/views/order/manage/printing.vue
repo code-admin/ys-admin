@@ -25,7 +25,9 @@
             <td>要求</td>
             <td>宽度</td>
             <td>克重</td>
-            <td>数量</td>
+            <td>个数</td>
+            <td>条数</td>
+            <td>长度</td>
             <td>重量(KG)</td>
             <td>车皮</td>
             <td>单价(吨)</td>
@@ -33,13 +35,14 @@
             <td>金额(元)</td>
             <td style="width:100px">备注</td>
           </tr>
-
           <tr v-for="(order,index) in orderInfo.orderExpressList" :key="index" class="tr">
             <td class="lab">{{ order.productName }}</td>
             <td class="lab">{{ order.requirement }}</td>
             <td class="lab">{{ order.width }}</td>
             <td class="lab">{{ order.weight }}</td>
             <td class="lab">{{ order.number }}</td>
+            <td class="lab">{{ order.productNumber ? order.productNumber : '' }}</td>
+            <td class="lab">{{ order. goodsLength ? order.goodsLength : '' }}</td>
             <td class="lab">{{ order.totalWeight }}</td>
             <td class="lab">{{ order.tareWeight }}</td>
             <td class="lab">{{ order.price }}</td>
@@ -49,28 +52,28 @@
           </tr>
           <tr class="tr">
             <td class="lab">地址:</td>
-            <td class="text" style="text-align:left;padding-left: 15px;" colspan="10">{{ orderInfo.provinceName && orderInfo.cityName && orderInfo.districtName ? `${orderInfo.provinceName}${orderInfo.cityName}${orderInfo.districtName}${orderInfo.address}` : orderInfo.address }}</td>
+            <td class="text" style="text-align:left;padding-left: 15px;" colspan="12">{{ orderInfo.provinceName && orderInfo.cityName && orderInfo.districtName ? `${orderInfo.provinceName}${orderInfo.cityName}${orderInfo.districtName}${orderInfo.address}` : orderInfo.address }}</td>
           </tr>
           <tr class="tr">
             <td class="lab">欠款:</td>
-            <td class="text" style="text-align:left;padding-left: 15px" colspan="6">{{ orderInfo.totalPriceChineseView }}</td>
+            <td class="text" style="text-align:left;padding-left: 15px" colspan="5">{{ orderInfo.totalPriceChineseView }}</td>
             <td class="lab">净重</td>
-            <td class="text">{{ orderInfo.totalNetWeight }}</td>
+            <td class="text" colspan="3">{{ orderInfo.totalNetWeight }}</td>
             <td class="lab">金额</td>
-            <td class="text">{{ orderInfo.totalPrice }}</td>
+            <td class="text" colspan="2">{{ orderInfo.totalPrice }}</td>
           </tr>
           <tr class="tr">
             <td class="lab">制单:</td>
-            <td class="text" style="text-align:left;padding-left: 15px;" colspan="3">{{ orderInfo.createBy }}</td>
+            <td class="text" style="text-align:left;padding-left: 15px;" colspan="3">{{ name }}</td>
             <td class="lab">司机:</td>
-            <td class="text">&nbsp;</td>
+            <td class="text" colspan="2">&nbsp;</td>
             <td class="lab">签收:</td>
-            <td class="text">&nbsp;</td>
+            <td class="text" colspan="2">&nbsp;</td>
             <td class="lab" colspan="2">客户(欠款人):</td>
-            <td class="text">&nbsp;</td>
+            <td class="text" colspan="3">&nbsp;</td>
           </tr>
           <tr class="tr">
-            <td class="foot" colspan="11">
+            <td class="foot" colspan="13">
               注：请客户仔细核对货物数量、重量、金额等信息再签字 销售电话：18868270138 传真电话：0577-80818808
             </td>
           </tr>
@@ -82,9 +85,17 @@
 
 <script>
 import {
+  mapGetters
+} from 'vuex'
+import {
   getOrderPrintInfo
 } from '@/api/order'
 export default {
+  computed: {
+    ...mapGetters([
+      'name'
+    ])
+  },
   data() {
     return {
       loading: true,
@@ -176,7 +187,7 @@ export default {
     .bar {
         height: 28px;
         line-height: 28px;
-        font-size: 15px;
+        font-size: 16px;
 
         .text {
             padding: 0 10px;
@@ -184,7 +195,7 @@ export default {
     }
 
     .tr {
-        font-size: 15px;
+        font-size: 16px;
         height: 28px;
         line-height: 28px;
 
@@ -198,7 +209,7 @@ export default {
         height: 44px;
         line-height: 44px;
         text-align: center;
-        font-size: 12px;
+        font-size: 13px;
         font-weight: 500;
     }
 

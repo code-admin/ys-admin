@@ -5,17 +5,7 @@
       <el-select v-model="filter.userId" filterable placeholder="请选择付款人" style="width: 200px;" class="filter-item" clearable>
         <el-option v-for="user in customeList" :key="user.loginName" :label="user.userName" :value="user.id" />
       </el-select>
-      <el-date-picker
-        v-model="filter.queryDate"
-        clearable
-        class="filter-item"
-        value-format="yyyy-MM-dd"
-        :format="'yyyy-MM-dd'"
-        type="daterange"
-        range-separator="至"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
-      />
+      <el-date-picker v-model="filter.queryDate" clearable class="filter-item" value-format="yyyy-MM-dd" :format="'yyyy-MM-dd'" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" />
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="queryData">查询</el-button>
     </div>
 
@@ -27,45 +17,38 @@
       <el-table-column label="销售金额" prop="totalAmount" align="center">
         <template slot-scope="scope">
           <div v-if="scope.row.totalAmount" :class=" scope.row.totalAmount > 0 ? 'increase' : 'decrease'">
-            <span v-if="scope.row.totalAmount > 0"> + </span> {{ scope.row.totalAmount }} ¥
+            {{ scope.row.totalAmount }}
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="收款" prop="receivablesAmount" align="center">
+      <el-table-column label="收款金额" prop="receivablesAmount" align="center">
         <template slot-scope="scope">
           <div v-if="scope.row.receivablesAmount" :class=" scope.row.receivablesAmount > 0 ? 'increase' : 'decrease'">
-            <span v-if="scope.row.receivablesAmount > 0"> + </span> {{ scope.row.receivablesAmount }} ¥
+            <span v-if="scope.row.receivablesAmount > 0"> + </span> {{ scope.row.receivablesAmount }}
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="退筒" prop="returnAmount" align="center">
+      <el-table-column label="退筒金额" prop="returnAmount" align="center">
         <template slot-scope="scope">
           <div>
-            <span v-if="scope.row.returnAmount " class="f40"> {{ `-${scope.row.returnAmount}` }} ¥</span>
+            <span v-if="scope.row.returnAmount " class="f40"> {{ `-${scope.row.returnAmount}` }}</span>
           </div>
         </template>
       </el-table-column>
       <el-table-column label="销售个数" prop="totalNumber" align="center" />
-      <el-table-column label="退筒个数" prop="returnNumber" align="center">
-        <template slot-scope="scope">
-          <div>
-            <span v-if="scope.row.returnNumber > 0" class="f40"> {{ `-${scope.row.returnNumber}` }}</span>
-            <span v-else> {{ scope.row.returnNumber }}</span>
-          </div>
-        </template>
-      </el-table-column>
+      <el-table-column label="退筒个数" prop="returnNumber" align="center" />
       <el-table-column label="差值" prop="differentAmount" align="center" />
       <el-table-column label="其他款" prop="otherAmount" align="center">
         <template slot-scope="scope">
           <div v-if="scope.row.otherAmount" :class=" scope.row.otherAmount > 0 ? 'increase' : 'decrease'">
-            <span v-if="scope.row.otherAmount > 0"> + </span> {{ scope.row.otherAmount }} ¥
+            {{ scope.row.otherAmount }}
           </div>
         </template>
       </el-table-column>
       <el-table-column label="余额" prop="balanceAmount" align="center" width="150">
         <template slot-scope="scope">
           <div v-if="scope.row.balanceAmount" :class=" scope.row.balanceAmount > 0 ? 'increase' : 'decrease'">
-            <span v-if="scope.row.balanceAmount > 0"> + </span> {{ scope.row.balanceAmount }} ¥
+            {{ scope.row.balanceAmount }}
           </div>
         </template>
       </el-table-column>
@@ -77,8 +60,12 @@
 </template>
 
 <script>
-import { getCustomes } from '@/api/user'
-import { getCustomerBillReport } from '@/api/bill'
+import {
+  getCustomes
+} from '@/api/user'
+import {
+  getCustomerBillReport
+} from '@/api/bill'
 export default {
   data() {
     return {
@@ -131,16 +118,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.block{
-  padding-top: 15px;
+.block {
+    padding-top: 15px;
 }
-.f40{
-  color: #ff4400;
+
+.f40 {
+    color: #ff4400;
 }
-.increase{
-  color: #67C23A;
+
+.increase {
+    color: #67C23A;
 }
-.decrease{
-  color: #f40;
+
+.decrease {
+    color: #f40;
 }
 </style>

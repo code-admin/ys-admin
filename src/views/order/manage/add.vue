@@ -43,35 +43,64 @@
                   <el-input v-model="orderInfo.orderExts[index].productNo" placeholder="产品编号" disabled />
                 </el-form-item>
                 <el-form-item label="产品名称">
-                  <el-select v-model="orderInfo.orderExts[index].productId" placeholder="请选择产品" filterable clearable style="width:100%;" @change="changeProduct(index)">
+                  <el-select v-model="orderInfo.orderExts[index].productId" placeholder="请选择产品" filterable style="width:100%;" @change="changeProduct(index)">
                     <el-option v-for="product in productList" :key="product.id" :label="`${product.name}${product.width}${product.weight}(${product.productNo})`" :value="product.id" />
                   </el-select>
                 </el-form-item>
-                <el-form-item label="要求">
-                  <el-input v-model="orderInfo.orderExts[index].requirement" placeholder="请输入要求" disabled />
-                </el-form-item>
-                <el-form-item label="宽度">
-                  <el-input v-model="orderInfo.orderExts[index].width" placeholder="宽度(cm)" disabled />
-                </el-form-item>
-                <el-form-item label="克重">
-                  <el-input v-model="orderInfo.orderExts[index].weight" placeholder="克重(g)" disabled />
-                </el-form-item>
-                <div v-if="orderInfo.orderType === 2">
-                  <el-form-item label="米数">
-                    <el-input v-model="orderInfo.orderExts[index].length" placeholder="米数(M)/筒" disabled />
-                  </el-form-item>
-                  <el-form-item label="个数">
-                    <el-input-number v-model="orderInfo.orderExts[index].goodsNumber" :min="1" placeholder="下单数量" style="width:100%" />
-                  </el-form-item>
+
+                <div v-if="orderInfo.orderExts[index].productId" class="poros-box">
+                  <el-row :gutter="2">
+                    <el-col :span="3">
+                      <div class="lab">要求:</div>
+                    </el-col>
+                    <el-col :span="15">
+                      <div class="val">{{ orderInfo.orderExts[index].requirement }}</div>
+                    </el-col>
+                    <el-col :span="6">
+                      <div class="val">
+                        <el-button type="text" size="mini" @click="changeNumber(index,orderInfo.orderExts[index])">调换货</el-button>
+                      </div>
+                    </el-col>
+                    <el-col :span="3">
+                      <div class="lab">宽度:</div>
+                    </el-col>
+                    <el-col :span="5">
+                      <div class="val">{{ orderInfo.orderExts[index].width }} cm</div>
+                    </el-col>
+                    <el-col :span="3">
+                      <div class="lab">克重:</div>
+                    </el-col>
+                    <el-col :span="5">
+                      <div class="val">{{ orderInfo.orderExts[index].weight }} g</div>
+                    </el-col>
+                    <div v-if="orderInfo.orderType === 2">
+                      <el-col :span="3">
+                        <div class="lab">米数:</div>
+                      </el-col>
+                      <el-col :span="5">
+                        <div class="val">{{ orderInfo.orderExts[index].length }} 米</div>
+                      </el-col>
+                    </div>
+                    <el-col :span="3">
+                      <div class="lab">库存:</div>
+                    </el-col>
+                    <el-col :span="5">
+                      <div class="val">{{ orderInfo.orderExts[index].stockNumber }} 个</div>
+                    </el-col>
+                  </el-row>
                 </div>
-                <div v-else>
+
+                <div v-if="orderInfo.orderType === 1">
                   <el-form-item label="长度">
                     <el-input v-model="orderInfo.orderExts[index].goodsLength" placeholder="长度(cm)/条" />
                   </el-form-item>
                   <el-form-item label="条数">
-                    <el-input-number v-model="orderInfo.orderExts[index].goodsNumber" :min="1" placeholder="下单条数" style="width:100%" />
+                    <el-input-number v-model="orderInfo.orderExts[index].number" :min="1" placeholder="下单条数" style="width:100%" />
                   </el-form-item>
                 </div>
+                <el-form-item label="个数">
+                  <el-input-number v-model="orderInfo.orderExts[index].goodsNumber" :min="1" :max="orderInfo.orderExts[index].stockNumber ? orderInfo.orderExts[index].stockNumber : 1" placeholder="下单数量" style="width:100%" />
+                </el-form-item>
                 <el-form-item label="单价">
                   <el-input v-model="orderInfo.orderExts[index].price" type="number" placeholder="单价(元)" />
                 </el-form-item>
@@ -79,7 +108,9 @@
                   <el-input v-model="orderInfo.orderExts[index].remark" placeholder="请输入备注" />
                 </el-form-item>
               </el-form>
-              <div v-if="index > 0" style="text-align: center;"><el-button icon="el-icon-delete" @click="deleteGoods(index)">删除</el-button></div>
+              <div v-if="index > 0" style="text-align: center;">
+                <el-button icon="el-icon-delete" @click="deleteGoods(index)">删除</el-button>
+              </div>
             </el-card>
           </el-col>
           <el-col :sm="24" :md="12" :lg="8" :xl="6">
@@ -116,12 +147,7 @@
             <el-input v-model="orderInfo.phone" placeholder="请输入收货人电话" />
           </el-form-item>
           <el-form-item label="备注">
-            <el-input
-              v-model="orderInfo.remark"
-              placeholder="请输入备注"
-              type="textarea"
-              :rows="2"
-            />
+            <el-input v-model="orderInfo.remark" placeholder="请输入备注" type="textarea" :rows="2" />
           </el-form-item>
         </el-form>
       </div>
@@ -132,21 +158,68 @@
       <el-button type="primary" icon="el-icon-position" @click="saveOrSubmitOrderInfo">保存并提交</el-button>
       <el-button icon="el-icon-back" @click="$router.back()">返回</el-button>
     </div>
+
+    <el-dialog ref="drawer2" title="产品调换货" :visible.sync="showExchange" direction="ltr" custom-class="demo-drawer">
+      <div style="padding:20px">
+        <el-form :model="exchange">
+          <el-form-item label="入库产品" :label-width="formLabelWidth">
+            <el-select v-model="exchange.plusStockProductId" filterable disabled placeholder="请选择入库产品" style="width:100%">
+              <el-option v-for="product in productList" :key="product.id" :label="`${product.name}${product.width}${product.weight}(${product.productNo})`" :value="product.id" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="出库商品" :label-width="formLabelWidth">
+            <el-select v-model="exchange.reduceStockProductId" filterable placeholder="请选择入库产品" style="width:100%">
+              <el-option v-for="product in productList" :key="product.id" :label="`${product.name}${product.width}${product.weight}(${product.productNo})`" :value="product.id" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="重量" :label-width="formLabelWidth">
+            <el-input-number v-model="exchange.netWeight" :min="1" placeholder="重量(KG)" />
+          </el-form-item>
+          <el-form-item label="数量" :label-width="formLabelWidth">
+            <el-input-number v-model="exchange.stockNumber" :min="1" placeholder="克重(个)" />
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="showExchange = false">取 消</el-button>
+          <el-button type="primary" @click="saveExchange">保 存</el-button>
+        </span>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getCustomes } from '@/api/user'
-import { getOrderTypes, getExpress, saveOrder, submitOrder } from '@/api/order'
-import { getValidateProducts } from '@/api/product'
-import { getProvinces, getCitys, getCountrys, getTowns } from '@/api/common'
+import {
+  getCustomes
+} from '@/api/user'
+import {
+  getOrderTypes,
+  getExpress,
+  saveOrder,
+  submitOrder
+} from '@/api/order'
+import {
+  getValidateProducts
+} from '@/api/product'
+import {
+  getProvinces,
+  getCitys,
+  getCountrys,
+  getTowns
+} from '@/api/common'
+import {
+  exchangeProductStock
+} from '@/api/product'
 export default {
   data() {
     return {
       props: {
         lazy: true,
         lazyLoad(node, resolve) {
-          const { level, value } = node
+          const {
+            level,
+            value
+          } = node
           if (level === 0) {
             getProvinces().then(res => {
               const nodes = []
@@ -207,26 +280,29 @@ export default {
       orderInfo: {
         makingType: 1,
         orderType: 2,
-        orderExts: [
-          {
-            length: null,
-            number: null,
-            price: null,
-            productId: null,
-            requirement: null,
-            goodsLength: null,
-            goodsNumber: 1,
-            weight: null,
-            width: null,
-            remark: null
-          }
-        ],
+        orderExts: [{
+          length: null,
+          number: null,
+          price: null,
+          productId: null,
+          requirement: null,
+          goodsLength: null,
+          goodsNumber: 1,
+          weight: null,
+          width: null,
+          remark: null,
+          stockNumber: null
+        }],
         pcc: null
       },
       customeList: [],
       orderTypeList: [],
       productList: [],
-      expresList: []
+      expresList: [],
+      showExchange: false,
+      formLabelWidth: '90px',
+      exchange: {},
+      tempIndex: null
     }
   },
   mounted() {
@@ -247,8 +323,17 @@ export default {
       })
     },
     getValidateProductList() {
+      const loading = this.$loading({
+        lock: true,
+        text: '正在加载产品数据……',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
       getValidateProducts().then(res => {
-        if (res.code === 10000) this.productList = res.data
+        if (res.code === 10000) {
+          this.productList = res.data
+        }
+        loading.close()
       })
     },
     getExpresList() {
@@ -257,7 +342,20 @@ export default {
       })
     },
     addGoods() {
-      this.orderInfo.orderExts.push({ productNo: null, requirement: null, length: null, number: null, price: null, productId: null, goodsLength: 1, goodsNumber: 1, weight: null, width: null, remark: null })
+      this.orderInfo.orderExts.push({
+        productNo: null,
+        requirement: null,
+        length: null,
+        number: null,
+        price: null,
+        productId: null,
+        goodsLength: 1,
+        goodsNumber: 1,
+        weight: null,
+        width: null,
+        remark: null,
+        stockNumber: null
+      })
     },
     deleteGoods(index) {
       if (this.orderInfo.orderExts < 2) return
@@ -272,7 +370,10 @@ export default {
       }
       saveOrder(params).then(res => {
         if (res.code === 10000) {
-          this.$message({ message: '保存成功！', type: 'success' })
+          this.$message({
+            message: '保存成功！',
+            type: 'success'
+          })
           this.$router.back()
         }
       })
@@ -286,7 +387,10 @@ export default {
       }
       submitOrder(params).then(res => {
         if (res.code === 10000) {
-          this.$message({ message: '保存成功！', type: 'success' })
+          this.$message({
+            message: '保存成功！',
+            type: 'success'
+          })
           this.$router.back()
         }
       })
@@ -302,38 +406,97 @@ export default {
       this.orderInfo.orderExts[index].width = product.width
       this.orderInfo.orderExts[index].weight = product.weight
       this.orderInfo.orderExts[index].length = product.length
+      this.orderInfo.orderExts[index].goodsLength = null
+      this.orderInfo.orderExts[index].number = null
+      this.orderInfo.orderExts[index].goodsNumber = 1
       this.orderInfo.orderExts[index].price = product.price
-      this.orderInfo.orderExts[index].remark = product.remark
+      this.orderInfo.orderExts[index].remark = null
+      this.orderInfo.orderExts[index].stockNumber = product.stockNumber
+    },
+    changeNumber(index, obj) {
+      this.exchange = {
+        plusStockProductId: obj.productId,
+        reduceStockProductId: null,
+        netWeight: 1,
+        stockNumber: 1
+      }
+      this.tempIndex = index
+      this.showExchange = !this.showExchange
+    },
+    saveExchange() {
+      exchangeProductStock(this.exchange).then(res => {
+        if (res.code === 10000) {
+          const i = this.tempIndex
+          this.orderInfo.orderExts[i].stockNumber = this.orderInfo.orderExts[i].stockNumber + this.exchange.stockNumber
+          this.getValidateProductList()
+          this.$message({
+            message: '操作成功！',
+            type: 'success'
+          })
+          // todo
+          this.showExchange = !this.showExchange
+        }
+      })
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.page{
-  padding: 20px;
-  background: #f2f2f2;
-  .card{
+.page {
     padding: 20px;
-    background: #ffffff;
-    border-radius: 4px;
-    .title{
-      font-weight: 500;
+    background: #f2f2f2;
+
+    .card {
+        padding: 20px;
+        background: #ffffff;
+        border-radius: 4px;
+
+        .title {
+            font-weight: 500;
+        }
+
+        .poros-box {
+            margin-bottom: 20px;
+            padding-left: 10px;
+            font-size: 13px;
+            background: #f2f2f2;
+            border-radius: 4px;
+
+            .lab {
+                text-align: right;
+                height: 30px;
+                line-height: 30px;
+                color: #888888;
+            }
+
+            .val {
+                text-align: left;
+                height: 30px;
+                line-height: 30px;
+                color: #444444;
+            }
+        }
+
     }
 
-  }
-  .plus{
-    min-height: 600px;
-    line-height: 585px;
-    text-align: center;
-    font-size: 48px;
-    i{cursor:pointer;}
-  }
+    .plus {
+        min-height: 560px;
+        line-height: 525px;
+        text-align: center;
+        font-size: 48px;
+
+        i {
+            cursor: pointer;
+        }
+    }
 }
-.mt5{
-  margin-top: 5px;
+
+.mt5 {
+    margin-top: 5px;
 }
-.mt20{
-  margin-top: 20px;
+
+.mt20 {
+    margin-top: 20px;
 }
 </style>

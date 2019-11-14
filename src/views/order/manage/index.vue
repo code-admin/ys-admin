@@ -40,7 +40,7 @@
       </el-table-column>
       <el-table-column label="制单人类型" prop="userTypeName" align="center" width="100" />
       <el-table-column label="制单人" prop="createBy" align="center" />
-      <el-table-column label="订购产品" prop="createBy" align="center">
+      <el-table-column label="订/退 购产品" prop="createBy" align="center">
         <template slot-scope="scope">
           <el-popover placement="right" width="300px" trigger="click" @show="getDetailById(scope.row.id)">
             <div v-loading="!orderInfo.orderExts">
@@ -72,7 +72,7 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column label="出库记录" prop="createBy" align="center">
+      <el-table-column label="出/入 库记录" prop="createBy" align="center">
         <template slot-scope="scope">
           <el-popover placement="right" width="300px" trigger="click" @show="getDetailById(scope.row.id)">
             <div v-loading="!orderInfo.orderExpressList">
@@ -110,7 +110,7 @@
       <el-table-column label="金额(元)" prop="totalPrice" align="center">
         <template slot-scope="scope">
           <div v-if="scope.row.totalPrice" style="color:#f40;">
-            {{ scope.row.makingType === 2 ? `-${ scope.row.totalPrice}` : scope.row.totalPrice }} ¥
+            {{ scope.row.makingType === 2 ? `-${ scope.row.totalPrice}` : scope.row.totalPrice }}
           </div>
         </template>
       </el-table-column>

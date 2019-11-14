@@ -57,9 +57,6 @@
                   <el-form-item label="米数">
                     <el-input v-model="orderInfo.orderExts[index].length" placeholder="米数(M)/筒" disabled />
                   </el-form-item>
-                  <el-form-item label="个数">
-                    <el-input-number v-model="orderInfo.orderExts[index].goodsNumber" :min="1" placeholder="下单数量" style="width:100%" />
-                  </el-form-item>
                 </div>
                 <div v-else>
                   <el-form-item label="长度">
@@ -69,6 +66,9 @@
                     <el-input-number v-model="orderInfo.orderExts[index].goodsNumber" :min="1" placeholder="下单条数" style="width:100%" />
                   </el-form-item>
                 </div>
+                <el-form-item label="个数">
+                  <el-input-number v-model="orderInfo.orderExts[index].number" :min="1" placeholder="下单数量" style="width:100%" />
+                </el-form-item>
                 <el-form-item label="单价">
                   <el-input v-model="orderInfo.orderExts[index].price" type="number" placeholder="单价(元)" />
                 </el-form-item>
@@ -153,7 +153,7 @@ export default {
             product: {},
             productNo: null,
             length: null,
-            number: null,
+            number: 1,
             price: 0,
             productId: null,
             requirement: null,
@@ -251,7 +251,7 @@ export default {
       })
     },
     addGoods() {
-      this.orderInfo.orderExts.push({ productNo: null, requirement: null, length: null, number: null, price: null, productId: null, goodsLength: 1, goodsNumber: 1, weight: null, width: null, remark: null })
+      this.orderInfo.orderExts.push({ productNo: null, requirement: null, length: null, number: 1, price: null, productId: null, goodsLength: 1, goodsNumber: 1, weight: null, width: null, remark: null })
     },
     deleteGoods(index) {
       if (this.orderInfo.orderExts < 2) return

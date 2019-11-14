@@ -36,10 +36,9 @@
       <el-table-column label="销售类型" prop="orderTypeName" align="center" />
       <el-table-column label="制单人类型" prop="userTypeName" align="center" />
       <el-table-column label="制单人" prop="createBy" align="center" />
-      <el-table-column label="总价" prop="totalPrice" align="center" />
       <el-table-column label="订单状态" prop="statusName" align="center" />
       <el-table-column label="审核状态" prop="auditStatusName" align="center" />
-      <el-table-column label="更新时间" prop="updateTime" align="center" width="120">
+      <el-table-column label="时间" prop="createTime" align="center" width="120">
         <template slot-scope="scope">
           <div>
             {{ scope.row.updateTime | moment('YYYY-MM-DD') }}

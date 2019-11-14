@@ -119,9 +119,9 @@
         <el-table-column prop="requirement" label="要求" show-overflow-tooltip align="center" />
         <el-table-column prop="width" label="宽度(cm)" align="center" />
         <el-table-column prop="weight" label="克重(g)" align="center" />
-        <el-table-column v-if="orderInfo.orderType === 2" prop="goodsNumber" label="个数" align="center" />
+        <el-table-column prop="goodsNumber" label="个数" align="center" />
         <el-table-column v-if="orderInfo.orderType === 1" prop="goodsLength" label="长度(cm)" align="center" />
-        <el-table-column v-if="orderInfo.orderType === 1" prop="goodsNumber" label="条数" align="center" />
+        <el-table-column v-if="orderInfo.orderType === 1" prop="number" label="条数" align="center" />
         <el-table-column prop="totalDeliveryNumber" label="已出库" align="center" />
 
         <el-table-column prop="price" label="单价(吨)" align="center">
@@ -164,7 +164,7 @@
         <el-table-column prop="requirement" label="要求" show-overflow-tooltip align="center" />
         <el-table-column prop="width" label="宽度(CM)" align="center" />
         <el-table-column prop="weight" label="克重(G)" align="center" />
-        <el-table-column v-if="orderInfo.orderType === 1" prop="goodsLength" label="长度" align="center" />
+        <el-table-column v-if="orderInfo.orderType === 1" prop="goodsLength" label="长度(cm)" align="center" />
         <el-table-column v-if="orderInfo.orderType === 1" prop="productNumber" label="条数" align="center" />
         <el-table-column prop="totalWeight" label="重量(KG)" align="center" />
         <el-table-column prop="tareWeight" label="车皮" align="center" />

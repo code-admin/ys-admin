@@ -9,6 +9,7 @@
         <el-option label="收袋款" :value="1" />
         <el-option label="其他款" :value="2" />
       </el-select>
+      <el-date-picker v-model="filter.queryDate" clearable class="filter-item" value-format="yyyy-MM-dd" :format="'yyyy-MM-dd'" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" />
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="queryData">查询</el-button>
       <el-button class="filter-item" icon="el-icon-plus" @click="editInit">新增收款</el-button>
     </div>
@@ -27,7 +28,7 @@
       <el-table-column label="金额(元)" prop="amount" align="center" width="150">
         <template slot-scope="scope">
           <div v-if="scope.row.amount" :class=" scope.row.amount > 0 ? 'increase' : 'decrease'">
-            <span v-if="scope.row.amount > 0"> + </span> {{ scope.row.amount }} ¥
+            {{ scope.row.amount }}
           </div>
         </template>
       </el-table-column>
@@ -108,6 +109,7 @@ export default {
       dialogFormVisible: false,
       total: 0,
       filter: {
+        queryDate: [],
         pageIndex: 1,
         pageSize: 10
       },

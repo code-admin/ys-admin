@@ -41,7 +41,7 @@ module.exports = {
       // detail: https://cli.vuejs.org/config/#devserver-proxy
       '^/yase-backend': {
         // target: 'http://192.168.2.192:8090',
-        target: 'http://39.108.166.248:8096',
+        target: 'http://47.106.178.212:8096',
         changeOrigin: true
       },
       [process.env.VUE_APP_BASE_API]: {
