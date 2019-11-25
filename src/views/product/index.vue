@@ -9,7 +9,11 @@
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="queryData">查询</el-button>
       <el-button class="filter-item" icon="el-icon-plus" @click="addInit">添加</el-button>
     </div>
-
+    <div class="tool-bar">
+      <el-checkbox v-model="filter.hasStock" label="显示0库存" border size="small" @change="queryData" />
+      <el-checkbox v-model="filter.hasCheckOut" label="显示0出库" border size="small" @change="queryData" />
+      <el-checkbox v-model="filter.hasSaledProduct" label="显示0预售" border size="small" @change="queryData" />
+    </div>
     <el-table :key="tableKey" v-loading="listLoading" :data="productList" border fit highlight-current-row style="width: 100%;">
       <el-table-column type="index" width="50" align="center" />
       <el-table-column label="产品编号" prop="productNo" align="center" show-overflow-tooltip width="120" />
@@ -53,14 +57,7 @@
       <el-pagination v-show="total>0" :current-page="filter.pageIndex" :page-sizes="[10, 20, 50, 100]" :page-size="filter.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
     </div>
 
-    <el-drawer
-      ref="drawer"
-      :title="title"
-      size="30%"
-      :visible.sync="dialogFormVisible"
-      direction="rtl"
-      custom-class="demo-drawer"
-    >
+    <el-drawer ref="drawer" :title="title" size="30%" :visible.sync="dialogFormVisible" direction="rtl" custom-class="demo-drawer">
       <div class="demo-drawer__content">
         <el-form :model="product">
           <!-- <el-form-item label="产品编号" :label-width="formLabelWidth">
@@ -118,7 +115,12 @@
 </template>
 
 <script>
-import { getProducts, getProductTypes, disable, saveProductInfo } from '@/api/product'
+import {
+  getProducts,
+  getProductTypes,
+  disable,
+  saveProductInfo
+} from '@/api/product'
 export default {
   data() {
     return {
@@ -126,6 +128,9 @@ export default {
       tableKey: 0,
       total: 0,
       filter: {
+        hasStock: false,
+        hasSaledProduct: true,
+        hasCheckOut: true,
         pageIndex: 1,
         pageSize: 10
       },
@@ -171,7 +176,10 @@ export default {
         productId: obj.id
       }
       disable(params).then(res => {
-        res.code === 10000 && this.$message({ message: '操作成功！', type: 'success' })
+        res.code === 10000 && this.$message({
+          message: '操作成功！',
+          type: 'success'
+        })
       })
     },
 
@@ -214,13 +222,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.block{
-  padding-top: 15px;
+.block {
+    padding-top: 15px;
 }
-.demo-drawer__content{
-  padding: 20px;
-  height: calc(100vh - 60px);
-  overflow:scroll;
+
+.demo-drawer__content {
+    padding: 20px;
+    height: calc(100vh - 60px);
+    overflow: scroll;
 }
 </style>
-

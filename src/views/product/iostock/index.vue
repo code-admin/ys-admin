@@ -20,6 +20,16 @@
           </router-link>
         </template>
       </el-table-column>
+      <el-table-column label="客户/公司" prop="productNo" align="center" show-overflow-tooltip width="160">
+        <template slot-scope="scope">
+          <div v-if="scope.row.companyName">
+            {{ `${scope.row.customerName} / ${scope.row.companyName}` }}
+          </div>
+          <div v-else>
+            {{ scope.row.customerName }}
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label="产品编号" prop="productNo" align="center" show-overflow-tooltip width="120" />
       <el-table-column label="产品名称" prop="name" align="center" show-overflow-tooltip width="150">
         <template slot-scope="scope">
@@ -66,17 +76,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="产品编号" :label-width="formLabelWidth">
-            <el-select
-              v-model="history.productId"
-              filterable
-              remote
-              reserve-keyword
-              :remote-method="getProductList"
-              :loading="loading"
-              placeholder="请选择产品"
-              style="width:100%"
-              @change="changeProduct"
-            >
+            <el-select v-model="history.productId" filterable remote reserve-keyword :remote-method="getProductList" :loading="loading" placeholder="请选择产品" style="width:100%" @change="changeProduct">
               <el-option v-for="(product,index) in productList" :key="index" :label="`${product.name} / ${product.productNo}`" :value="product.id" />
             </el-select>
           </el-form-item>
@@ -113,31 +113,13 @@
       <div style="padding:20px">
         <el-form :model="exchange">
           <el-form-item label="入库产品" :label-width="formLabelWidth">
-            <el-select
-              v-model="exchange.plusStockProductId"
-              filterable
-              remote
-              reserve-keyword
-              :remote-method="getProductList"
-              :loading="loading"
-              placeholder="请选择入库产品"
-              style="width:100%"
-            >
-              <el-option v-for="(product,index) in productList" :key="index" :label="`${product.name} / ${product.productNo}`" :value="product.id" />
+            <el-select v-model="exchange.plusStockProductId" filterable remote reserve-keyword :remote-method="getProductList" :loading="loading" placeholder="请选择入库产品" style="width:100%">
+              <el-option v-for="(product,index) in productList" :key="index" :label="`${product.name} / ${product.productNo}[${product.stockNumber}]`" :value="product.id" />
             </el-select>
           </el-form-item>
           <el-form-item label="出库商品" :label-width="formLabelWidth">
-            <el-select
-              v-model="exchange.reduceStockProductId"
-              filterable
-              remote
-              reserve-keyword
-              :remote-method="getProductList"
-              :loading="loading"
-              placeholder="请选择入库产品"
-              style="width:100%"
-            >
-              <el-option v-for="(product,index) in productList" :key="index" :label="`${product.name} / ${product.productNo}`" :value="product.id" />
+            <el-select v-model="exchange.reduceStockProductId" filterable remote reserve-keyword :remote-method="getProductList" :loading="loading" placeholder="请选择入库产品" style="width:100%">
+              <el-option v-for="(product,index) in productList" :key="index" :label="`${product.name} / ${product.productNo}[${product.stockNumber}]`" :value="product.id" />
             </el-select>
           </el-form-item>
           <el-form-item label="重量" :label-width="formLabelWidth">
@@ -158,7 +140,12 @@
 </template>
 
 <script>
-import { getProducts, getProductLogList, createProductLog, exchangeProductStock } from '@/api/product'
+import {
+  getProducts,
+  getProductLogList,
+  createProductLog,
+  exchangeProductStock
+} from '@/api/product'
 export default {
   data() {
     return {
@@ -200,7 +187,11 @@ export default {
     },
     getProductList(kw) {
       this.loading = !this.loading
-      getProducts({ productNo: kw, pageIndex: 1, pageSize: 1000000 }).then(res => {
+      getProducts({
+        productNo: kw,
+        pageIndex: 1,
+        pageSize: 1000000
+      }).then(res => {
         this.loading = !this.loading
         if (res.code === 10000) this.productList = res.data
       })
@@ -272,16 +263,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.block{
-  padding-top: 15px;
+.block {
+    padding-top: 15px;
 }
-.demo-drawer__content{
-  padding: 20px;
-  height: calc(100vh - 60px);
-  overflow:scroll;
-  .alert{
-    margin-bottom: 10px;
-  }
+
+.demo-drawer__content {
+    padding: 20px;
+    height: calc(100vh - 60px);
+    overflow: scroll;
+
+    .alert {
+        margin-bottom: 10px;
+    }
 }
 </style>
-

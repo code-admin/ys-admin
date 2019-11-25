@@ -222,9 +222,10 @@
         <el-table-column property="requirement" label="要求" align="center" show-overflow-tooltip />
         <el-table-column property="width" label="宽度" align="center" />
         <el-table-column property="weight" label="克重" align="center" />
+        <el-table-column prop="stockNumber" label="库存" align="center" />
         <el-table-column property="number" label="出库个数" align="center" width="160">
           <template slot-scope="scope">
-            <el-input-number v-model="scope.row.number" :min="0" size="mini" placeholder="当前出库个数" />
+            <el-input-number v-model="scope.row.number" :min="0" size="mini" :max="scope.row.stockNumber" placeholder="当前出库个数" />
           </template>
         </el-table-column>
         <el-table-column v-if="orderInfo.orderType === 1" prop="goodsLength" label="长度" align="center" width="160" />
@@ -256,11 +257,46 @@
             </div>
           </template>
         </el-table-column>
+        <el-table-column label="操作" prop="index" align="center" fixed="right" width="80" type="index">
+          <template slot-scope="scope">
+            <div>
+              <el-button type="text" size="mini" @click="changeNumber(scope.$index,scope.row)">调换货</el-button>
+            </div>
+          </template>
+        </el-table-column>
       </el-table>
       <div slot="footer" class="dialog-footer">
         <el-button @click="outStockVisible = false">取 消</el-button>
         <el-button type="primary" icon="el-icon-edit-outline" @click="saveOutStock">保 存</el-button>
         <el-button type="primary" icon="el-icon-finished" @click="submitOutstock">保存并出库</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 调换货 -->
+    <el-dialog ref="drawer2" title="产品调换货" :visible.sync="showExchange" direction="ltr" custom-class="demo-drawer">
+      <div style="padding:20px">
+        <el-form :model="exchange">
+          <el-form-item label="入库产品" :label-width="formLabelWidth">
+            <el-select v-model="exchange.plusStockProductId" filterable disabled placeholder="请选择入库产品" style="width:100%">
+              <el-option v-for="product in productList" :key="product.id" :label="`${product.name}${product.width}${product.weight}(${product.productNo})`" :value="product.id" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="出库商品" :label-width="formLabelWidth">
+            <el-select v-model="exchange.reduceStockProductId" filterable placeholder="请选择入库产品" style="width:100%">
+              <el-option v-for="product in productList" :key="product.id" :label="`${product.name}${product.width}${product.weight}(${product.productNo})[${product.stockNumber}]`" :value="product.id" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="重量" :label-width="formLabelWidth">
+            <el-input-number v-model="exchange.netWeight" :min="1" placeholder="重量(KG)" />
+          </el-form-item>
+          <el-form-item label="数量" :label-width="formLabelWidth">
+            <el-input-number v-model="exchange.stockNumber" :min="1" placeholder="克重(个)" />
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="showExchange = false">取 消</el-button>
+          <el-button type="primary" @click="saveExchange">保 存</el-button>
+        </span>
       </div>
     </el-dialog>
   </div>
@@ -274,6 +310,10 @@ import {
   submitDeliveryOrder,
   confirmOut
 } from '@/api/order'
+import {
+  getValidateProducts,
+  exchangeProductStock
+} from '@/api/product'
 import {
   getUsers
 } from '@/api/user'
@@ -289,11 +329,18 @@ export default {
       userList: [],
       tempProducts: [],
       spanArr: [],
-      printArr: []
+      printArr: [],
+      productList: [],
+
+      showExchange: false,
+      formLabelWidth: '90px',
+      exchange: {},
+      tempIndex: null
     }
   },
   mounted() {
     this.getDetailById(this.$route.params.id)
+    this.getValidateProductList()
     // this.getUserList('')
   },
   methods: {
@@ -327,6 +374,7 @@ export default {
         orderId: this.orderInfo.orderNo,
         orderExtId: isAdd ? obj.id : obj.orderExtId,
         productId: obj.productId,
+        stockNumber: obj.product.stockNumber,
         name: `${obj.product.productNo} / ${obj.product.name}`,
         requirement: obj.requirement,
         width: obj.width,
@@ -366,8 +414,17 @@ export default {
             message: '提交出库成功！',
             type: 'success'
           })
-          this.getDetailById(this.$route.params.id)
+          // this.getDetailById(this.$route.params.id)
           this.outStockVisible = !this.outStockVisible
+          this.$router.push({
+            name: 'OrderPrinting',
+            params: {
+              id: this.orderInfo.id
+            },
+            query: {
+              arr: res.data
+            }
+          })
         }
       })
     },
@@ -408,6 +465,7 @@ export default {
             orderId: this.orderInfo.orderNo,
             orderExtId: obj.id,
             productId: obj.productId,
+            stockNumber: obj.product.stockNumber,
             name: `${obj.product.productNo} / ${obj.product.name}`,
             requirement: obj.requirement,
             width: obj.width,
@@ -534,13 +592,46 @@ export default {
             arr: this.printArr
           }
         })
-        // const routeData = this.$router.resolve({
-        //   name: 'OrderPrinting',
-        //   params: { id: this.orderInfo.id },
-        //   query: { arr: this.printArr }
-        // })
-        // window.open(routeData.href, '_blank')
       }
+    },
+    changeNumber(index, obj) {
+      this.exchange = {
+        plusStockProductId: obj.productId,
+        reduceStockProductId: null,
+        netWeight: 1,
+        stockNumber: 1
+      }
+      this.tempIndex = index
+      this.showExchange = !this.showExchange
+    },
+    saveExchange() {
+      exchangeProductStock(this.exchange).then(res => {
+        if (res.code === 10000) {
+          const i = this.tempIndex
+          this.outStockList[i].stockNumber = this.outStockList[i].stockNumber + this.exchange.stockNumber
+          this.getValidateProductList()
+          this.$message({
+            message: '操作成功！',
+            type: 'success'
+          })
+          // todo
+          this.showExchange = !this.showExchange
+        }
+      })
+    },
+    getValidateProductList() {
+      const loading = this.$loading({
+        lock: true,
+        text: '正在加载产品数据……',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
+      getValidateProducts().then(res => {
+        if (res.code === 10000) {
+          this.productList = res.data
+        }
+        loading.close()
+      })
     }
   }
 }

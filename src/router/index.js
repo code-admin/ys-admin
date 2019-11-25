@@ -112,6 +112,12 @@ export const constantRoutes = [
         component: () => import('@/views/order/approval/detail'),
         hidden: true,
         meta: { title: '审核详情' }
+      },
+      {
+        path: '/order/detail',
+        name: 'OrderDetail',
+        component: () => import('@/views/order/detail/index'),
+        meta: { title: '订单明细' }
       }
     ]
   },

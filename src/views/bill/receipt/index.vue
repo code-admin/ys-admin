@@ -13,7 +13,20 @@
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="queryData">查询</el-button>
       <el-button class="filter-item" icon="el-icon-plus" @click="editInit">新增收款</el-button>
     </div>
-
+    <div class="total-data">
+      <el-row :gutter="5">
+        <el-col :span="4">
+          <div>
+            <span>
+              总金额:
+            </span>
+            <span>
+              {{ summary.totalBillAmount }}
+            </span>
+          </div>
+        </el-col>
+      </el-row>
+    </div>
     <el-table v-loading="listLoading" :data="billList" border>
       <el-table-column type="index" width="50" align="center" />
       <el-table-column label="流水号" prop="billNo" align="center" width="140" />
@@ -114,6 +127,7 @@ export default {
         pageSize: 10
       },
       billList: [],
+      summary: {},
       customeList: [],
       bill: {
         collectionTime: null
@@ -132,6 +146,7 @@ export default {
       getOrderBillList(this.filter).then(res => {
         if (res.code === 10000) {
           this.billList = res.data
+          this.summary = res.summary
           this.total = res.total
         }
         this.listLoading = false
@@ -204,5 +219,10 @@ export default {
 
 .decrease {
     color: #f40;
+}
+.total-data {
+    line-height: 38px;
+    font-size: 14px;
+    color: #909399;
 }
 </style>

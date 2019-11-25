@@ -28,8 +28,41 @@
       </router-link>
 
     </div>
-
-    <el-table :key="tableKey" v-loading="listLoading" :data="orderList" border fit highlight-current-row style="width: 100%;">
+    <div class="total-data">
+      <el-row :gutter="5">
+        <el-col :span="4">
+          <div>
+            <span>
+              总 订/退 购产品数:
+            </span>
+            <span>
+              {{ summary.totalOrderExts }}
+            </span>
+          </div>
+        </el-col>
+        <el-col :span="4">
+          <div>
+            <span>
+              总 出/入库数:
+            </span>
+            <span>
+              {{ summary.totalOrderExpresses }}
+            </span>
+          </div>
+        </el-col>
+        <el-col :span="4">
+          <div>
+            <span>
+              总 金额:
+            </span>
+            <span>
+              {{ summary.totalAmount }}
+            </span>
+          </div>
+        </el-col>
+      </el-row>
+    </div>
+    <el-table :key="tableKey" v-loading="listLoading" show-summary :data="orderList" border fit highlight-current-row style="width: 100%;">
       <el-table-column type="index" width="50" align="center" />
       <el-table-column label="订单号" prop="orderNo" align="center" width="140" />
       <el-table-column label="客户" prop="customerName" align="center" />
@@ -180,6 +213,7 @@ export default {
       total: 0,
       filter: this.$store.state.filter.queryData,
       orderList: [],
+      summary: {},
       orderTypeList: [],
       flowList: [],
       formLabelWidth: '80px',
@@ -206,6 +240,7 @@ export default {
       getOrders(params).then(res => {
         if (res.code === 10000) {
           this.orderList = res.data
+          this.summary = res.summary
           this.total = res.total
         }
         this.listLoading = false
@@ -315,5 +350,11 @@ export default {
 <style lang="scss" scoped>
 .block {
     padding-top: 15px;
+}
+
+.total-data {
+    line-height: 38px;
+    font-size: 14px;
+    color: #909399;
 }
 </style>

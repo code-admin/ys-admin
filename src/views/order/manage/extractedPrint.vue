@@ -43,18 +43,24 @@
             <td class="lab" style="width:180px;">{{ order && order.remark }}</td>
           </tr>
           <tr class="tr">
-            <td class="lab col1">发货方式</td>
-            <td class="text" colspan="3" style="text-align:left;padding-left: 15px;">{{ orderInfo.deliveryName }}</td>
-            <td class="lab col1">地址:</td>
-            <td class="text" colspan="4" style="text-align:left;padding-left: 15px;">{{ orderInfo.provinceName && orderInfo.cityName && orderInfo.districtName ? `${orderInfo.provinceName}${orderInfo.cityName}${orderInfo.districtName}${orderInfo.address}` : orderInfo.address }}</td>
+            <td class="lab col1">发货方式:</td>
+            <td class="text" colspan="8" style="text-align:left;padding-left: 15px;"> {{ orderInfo.deliveryName }} / {{ orderInfo.address }} / {{ orderInfo.customerName }} / {{ orderInfo.phone }} </td>
           </tr>
           <tr class="tr">
-            <td class="lab col1">联系人:</td>
-            <td class="text" colspan="4" style="text-align:left;padding-left: 15px;">{{ orderInfo.customerName }} /{{ orderInfo.phone }} </td>
-            <td class="lab col1">销售员:</td>
-            <td class="text" colspan="3" style="text-align:left;padding-left: 15px;">{{ orderInfo.salesMan }}</td>
+            <td class="lab col1">备注:</td>
+            <td class="text" colspan="8" style="text-align:left;padding-left: 15px;">
+              {{ orderInfo.remark }}
+            </td>
           </tr>
         </table>
+        <el-row :gutter="10">
+          <el-col :span="8">
+            <span style="line-height:30px;padding:0 20px;">制单: </span> <span>{{ name }} </span>
+          </el-col>
+          <el-col :span="16">
+            <span style="line-height:30px;padding:0 20px;">审核: </span> <span>{{ orderInfo && orderInfo.salesMan }} </span>
+          </el-col>
+        </el-row>
       </div>
     </div>
   </div>
@@ -62,9 +68,17 @@
 
 <script>
 import {
+  mapGetters
+} from 'vuex'
+import {
   getOrderById
 } from '@/api/order'
 export default {
+  computed: {
+    ...mapGetters([
+      'name'
+    ])
+  },
   data() {
     return {
       loading: true,
@@ -165,8 +179,8 @@ export default {
 
     .tr {
         font-size: 16px;
-        height: 25px;
-        line-height: 25px;
+        height: 24px;
+        line-height: 24px;
 
         td {
             border: 1px solid #000000;

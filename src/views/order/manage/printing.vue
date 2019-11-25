@@ -25,9 +25,9 @@
             <td>要求</td>
             <td>宽度</td>
             <td>克重</td>
+            <td>长度</td>
             <td>个数</td>
             <td>条数</td>
-            <td>长度</td>
             <td>重量(KG)</td>
             <td>车皮</td>
             <td>单价(吨)</td>
@@ -40,9 +40,9 @@
             <td class="lab">{{ order.requirement }}</td>
             <td class="lab">{{ order.width }}</td>
             <td class="lab">{{ order.weight }}</td>
+            <td class="lab">{{ order. goodsLength ? order.goodsLength : '' }}</td>
             <td class="lab">{{ order.number }}</td>
             <td class="lab">{{ order.productNumber ? order.productNumber : '' }}</td>
-            <td class="lab">{{ order. goodsLength ? order.goodsLength : '' }}</td>
             <td class="lab">{{ order.totalWeight }}</td>
             <td class="lab">{{ order.tareWeight }}</td>
             <td class="lab">{{ order.price }}</td>

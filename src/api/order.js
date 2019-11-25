@@ -162,3 +162,12 @@ export function getOrderPrintInfo(data) {
     data
   })
 }
+
+// 订单所以明细
+export function getOrderDetailList(data) {
+  return request({
+    url: '/order/getOrderDetailList',
+    method: 'post',
+    data
+  })
+}

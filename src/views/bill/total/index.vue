@@ -8,7 +8,120 @@
       <el-date-picker v-model="filter.queryDate" clearable class="filter-item" value-format="yyyy-MM-dd" :format="'yyyy-MM-dd'" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" />
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="queryData">查询</el-button>
     </div>
-
+    <div class="total-data">
+      <el-row :gutter="5">
+        <el-col :span="4">
+          <div>
+            <span>
+              销售重量:
+            </span>
+            <span>
+              {{ summary.totalWeight }}
+            </span>
+          </div>
+        </el-col>
+        <el-col :span="4">
+          <div>
+            <span>
+              欠款余额:
+            </span>
+            <span>
+              {{ summary.totalDebtAmount }}
+            </span>
+          </div>
+        </el-col>
+        <el-col :span="4">
+          <div>
+            <span>
+              上年结余:
+            </span>
+            <span>
+              {{ summary.totalLastYearBalanceAmount }}
+            </span>
+          </div>
+        </el-col>
+        <el-col :span="4">
+          <div>
+            <span>
+              销售金额:
+            </span>
+            <span>
+              {{ summary.totalAmount }}
+            </span>
+          </div>
+        </el-col>
+        <el-col :span="4">
+          <div>
+            <span>
+              收款金额:
+            </span>
+            <span>
+              {{ summary.totalReceivablesAmount }}
+            </span>
+          </div>
+        </el-col>
+        <el-col :span="4">
+          <div>
+            <span>
+              退筒金额:
+            </span>
+            <span>
+              {{ summary.totalReturnAmount }}
+            </span>
+          </div>
+        </el-col>
+        <el-col :span="4">
+          <div>
+            <span>
+              销售个数:
+            </span>
+            <span>
+              {{ summary.totalNumber }}
+            </span>
+          </div>
+        </el-col>
+        <el-col :span="4">
+          <div>
+            <span>
+              退筒个数:
+            </span>
+            <span>
+              {{ summary.totalReturnNumber }}
+            </span>
+          </div>
+        </el-col>
+        <el-col :span="4">
+          <div>
+            <span>
+              差值:
+            </span>
+            <span>
+              {{ summary.totalDifferentAmount }}
+            </span>
+          </div>
+        </el-col>
+        <el-col :span="4">
+          <div>
+            <span>
+              其他款:
+            </span>
+            <span>
+              {{ summary.totalOtherAmount }}
+            </span>
+          </div>
+        </el-col>
+        <el-col :span="4">
+          <div>
+            <span>
+              余额:
+            </span>
+            <span>
+              {{ summary.totalBalanceAmount }}
+            </span>
+          </div>
+        </el-col>
+      </el-row>
+    </div>
     <el-table v-loading="listLoading" :data="billList" border show-summary>
       <el-table-column label="客户名称" prop="customerName" align="center" width="120" />
       <el-table-column label="销售重量(KG)" prop="totalWeight" align="center" width="150" />
@@ -77,6 +190,7 @@ export default {
         pageSize: 10
       },
       billList: [],
+      summary: {},
       customeList: []
     }
   },
@@ -90,6 +204,7 @@ export default {
       getCustomerBillReport(this.filter).then(res => {
         if (res.code === 10000) {
           this.billList = res.data
+          this.summary = res.summary
           this.total = res.total
         }
         this.listLoading = false
@@ -132,5 +247,11 @@ export default {
 
 .decrease {
     color: #f40;
+}
+
+.total-data {
+    line-height: 38px;
+    font-size: 14px;
+    color: #909399;
 }
 </style>

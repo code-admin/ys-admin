@@ -28,6 +28,13 @@
           <el-form-item label="下单日期">
             <el-date-picker v-model="orderInfo.orderTime" type="date" placeholder="请选择下单日期" value-format="yyyy-MM-dd" style="width:100%;" />
           </el-form-item>
+          <el-form-item v-if="currentData !== orderInfo.orderTime">
+            <el-alert
+              title="下单日期与当前日期不同！请注意您所选择需要下单的日期。"
+              type="warning"
+              show-icon
+            />
+          </el-form-item>
         </el-form>
       </div>
     </div>
@@ -99,7 +106,7 @@
                   </el-form-item>
                 </div>
                 <el-form-item label="个数">
-                  <el-input-number v-model="orderInfo.orderExts[index].goodsNumber" :min="1" :max="orderInfo.orderExts[index].stockNumber ? orderInfo.orderExts[index].stockNumber : 1" placeholder="下单数量" style="width:100%" />
+                  <el-input-number v-model="orderInfo.orderExts[index].goodsNumber" :min="1" placeholder="下单数量" style="width:100%" />
                 </el-form-item>
                 <el-form-item label="单价">
                   <el-input v-model="orderInfo.orderExts[index].price" type="number" placeholder="单价(元)" />
@@ -169,7 +176,7 @@
           </el-form-item>
           <el-form-item label="出库商品" :label-width="formLabelWidth">
             <el-select v-model="exchange.reduceStockProductId" filterable placeholder="请选择入库产品" style="width:100%">
-              <el-option v-for="product in productList" :key="product.id" :label="`${product.name}${product.width}${product.weight}(${product.productNo})`" :value="product.id" />
+              <el-option v-for="product in productList" :key="product.id" :label="`${product.name}${product.width}${product.weight}(${product.productNo})[${product.stockNumber}]`" :value="product.id" />
             </el-select>
           </el-form-item>
           <el-form-item label="重量" :label-width="formLabelWidth">
@@ -204,82 +211,25 @@ import {
 import {
   getProvinces,
   getCitys,
-  getCountrys,
-  getTowns
+  getCountrys
 } from '@/api/common'
 import {
   exchangeProductStock
 } from '@/api/product'
+const date = new Date()
+const today = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
 export default {
   data() {
     return {
+      currentData: today,
       props: {
         lazy: true,
-        lazyLoad(node, resolve) {
-          const {
-            level,
-            value
-          } = node
-          if (level === 0) {
-            getProvinces().then(res => {
-              const nodes = []
-              if (res.code === 10000 && res.data.length) {
-                res.data.map(item => {
-                  nodes.push({
-                    value: item.provinceId,
-                    label: item.name
-                  })
-                })
-                resolve(nodes)
-              }
-            })
-          } else if (level === 1) {
-            getCitys(value).then(res => {
-              const nodes = []
-              if (res.code === 10000 && res.data.length) {
-                res.data.map(item => {
-                  nodes.push({
-                    value: item.cityId,
-                    label: item.name
-                  })
-                })
-                resolve(nodes)
-              }
-            })
-          } else if (level === 2) {
-            getCountrys(value).then(res => {
-              const nodes = []
-              if (res.code === 10000 && res.data.length) {
-                res.data.map(item => {
-                  nodes.push({
-                    value: item.countryId,
-                    label: item.name,
-                    leaf: level >= 2
-                  })
-                })
-                resolve(nodes)
-              }
-            })
-          } else if (level === 3) {
-            getTowns(value).then(res => {
-              const nodes = []
-              if (res.code === 10000 && res.data.length) {
-                res.data.map(item => {
-                  nodes.push({
-                    value: item.townId,
-                    label: item.name,
-                    leaf: level >= 3
-                  })
-                })
-                resolve(nodes)
-              }
-            })
-          }
-        }
+        lazyLoad: (node, resolve) => this.loadPCC(node, resolve)
       },
       orderInfo: {
         makingType: 1,
         orderType: 2,
+        orderTime: today,
         orderExts: [{
           length: null,
           number: null,
@@ -312,6 +262,53 @@ export default {
     this.getExpresList()
   },
   methods: {
+    loadPCC(node, resolve) {
+      const {
+        level,
+        value
+      } = node
+      if (level === 0) {
+        getProvinces().then(res => {
+          const nodes = []
+          if (res.code === 10000 && res.data.length) {
+            res.data.map(item => {
+              nodes.push({
+                value: item.provinceId,
+                label: item.name
+              })
+            })
+            resolve(nodes)
+          }
+        })
+      } else if (level === 1) {
+        getCitys(value).then(res => {
+          const nodes = []
+          if (res.code === 10000 && res.data.length) {
+            res.data.map(item => {
+              nodes.push({
+                value: item.cityId,
+                label: item.name
+              })
+            })
+            resolve(nodes)
+          }
+        })
+      } else if (level === 2) {
+        getCountrys(value).then(res => {
+          const nodes = []
+          if (res.code === 10000 && res.data.length) {
+            res.data.map(item => {
+              nodes.push({
+                value: item.countryId,
+                label: item.name,
+                leaf: level >= 2
+              })
+            })
+            resolve(nodes)
+          }
+        })
+      }
+    },
     getCustomeList() {
       getCustomes().then(res => {
         if (res.code === 10000) this.customeList = res.data
@@ -349,7 +346,7 @@ export default {
         number: null,
         price: null,
         productId: null,
-        goodsLength: 1,
+        goodsLength: null,
         goodsNumber: 1,
         weight: null,
         width: null,

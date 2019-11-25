@@ -13,7 +13,50 @@
       <el-date-picker v-model="filter.queryDate" clearable class="filter-item" value-format="yyyy-MM-dd" :format="'yyyy-MM-dd'" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" />
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="queryData">查询</el-button>
     </div>
-
+    <div class="total-data">
+      <el-row :gutter="5">
+        <el-col :span="4">
+          <div>
+            <span>
+              总个数:
+            </span>
+            <span>
+              {{ summary.totalProductNumber }}
+            </span>
+          </div>
+        </el-col>
+        <el-col :span="4">
+          <div>
+            <span>
+              总条数:
+            </span>
+            <span>
+              {{ summary.totalGoodsNumber }}
+            </span>
+          </div>
+        </el-col>
+        <el-col :span="4">
+          <div>
+            <span>
+              总重量:
+            </span>
+            <span>
+              {{ summary.totalWeight }}
+            </span>
+          </div>
+        </el-col>
+        <el-col :span="4">
+          <div>
+            <span>
+              总金额:
+            </span>
+            <span>
+              {{ summary.totalBillAmount }}
+            </span>
+          </div>
+        </el-col>
+      </el-row>
+    </div>
     <el-table v-loading="listLoading" :data="billList" border>
       <el-table-column type="index" width="50" align="center" />
       <el-table-column label="流水号" prop="billNo" align="center" width="140" />
@@ -77,7 +120,8 @@ export default {
         pageIndex: 1,
         pageSize: 10
       },
-      billList: []
+      billList: [],
+      summary: {}
     }
   },
   mounted() {
@@ -89,6 +133,7 @@ export default {
       getOrderBillSummaryList(this.filter).then(res => {
         if (res.code === 10000) {
           this.billList = res.data
+          this.summary = res.summary
           this.total = res.total
         }
         this.listLoading = false
@@ -122,5 +167,11 @@ export default {
 
 .decrease {
     color: #f40;
+}
+
+.total-data {
+    line-height: 38px;
+    font-size: 14px;
+    color: #909399;
 }
 </style>
