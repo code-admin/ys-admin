@@ -8,6 +8,7 @@
       <el-input v-model="filter.weight" placeholder="克重" style="width: 200px;" class="filter-item" clearable />
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="queryData">查询</el-button>
       <el-button class="filter-item" icon="el-icon-plus" @click="addInit">添加</el-button>
+      <el-button class="filter-item" icon="el-icon-download" @click="exportData">导出</el-button>
     </div>
     <div class="tool-bar">
       <el-checkbox v-model="filter.hasStock" label="显示0库存" border size="small" @change="queryData" />
@@ -119,7 +120,8 @@ import {
   getProducts,
   getProductTypes,
   disable,
-  saveProductInfo
+  saveProductInfo,
+  exportProduct
 } from '@/api/product'
 export default {
   data() {
@@ -216,6 +218,19 @@ export default {
     handleCurrentChange(val) {
       this.filter.pageIndex = val
       this.getProductList()
+    },
+    exportData() {
+      exportProduct(this.filter).then(res => {
+        if (res.code === 10000) {
+          window.open(res.data)
+          return
+        }
+      }).catch(err => {
+        this.$message({
+          message: err.message,
+          type: 'error'
+        })
+      })
     }
   }
 }

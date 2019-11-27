@@ -85,3 +85,12 @@ export function exportProductReport(data) {
     data
   })
 }
+
+// 产品管理导出
+export function exportProduct(data) {
+  return request({
+    url: '/product/exportProduct',
+    method: 'post',
+    data
+  })
+}

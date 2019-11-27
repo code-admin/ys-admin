@@ -278,12 +278,12 @@
         <el-form :model="exchange">
           <el-form-item label="入库产品" :label-width="formLabelWidth">
             <el-select v-model="exchange.plusStockProductId" filterable disabled placeholder="请选择入库产品" style="width:100%">
-              <el-option v-for="product in productList" :key="product.id" :label="`${product.name}${product.width}${product.weight}(${product.productNo})`" :value="product.id" />
+              <el-option v-for="product in productList" :key="product.id" :label="`${product.name}${product.width}${product.weight}/[${product.todaySaledNumber ? product.todaySaledNumber : 0}]/[${product.stockNumber}]`" :value="product.id" />
             </el-select>
           </el-form-item>
           <el-form-item label="出库商品" :label-width="formLabelWidth">
             <el-select v-model="exchange.reduceStockProductId" filterable placeholder="请选择入库产品" style="width:100%">
-              <el-option v-for="product in productList" :key="product.id" :label="`${product.name}${product.width}${product.weight}(${product.productNo})[${product.stockNumber}]`" :value="product.id" />
+              <el-option v-for="product in productList" :key="product.id" :label="`${product.name}${product.width}${product.weight}/[${product.todaySaledNumber ? product.todaySaledNumber : 0}]/[${product.stockNumber}]`" :value="product.id" />
             </el-select>
           </el-form-item>
           <el-form-item label="重量" :label-width="formLabelWidth">
