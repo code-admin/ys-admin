@@ -137,6 +137,13 @@ export const constantRoutes = [
         meta: { title: '收款管理' }
       },
       {
+        path: '/bill/receipt/addReturn',
+        name: 'BillReceiptAddReturn',
+        component: () => import('@/views/bill/receipt/AddReturn'),
+        meta: { title: '添加退筒单' },
+        hidden: true
+      },
+      {
         path: '/bill/detail',
         name: 'BillDetail',
         component: () => import('@/views/bill/detail/index'),

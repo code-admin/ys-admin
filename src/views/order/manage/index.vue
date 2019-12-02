@@ -6,7 +6,7 @@
       <el-input v-model="filter.createName" placeholder="制单人" style="width: 200px;" class="filter-item" clearable />
       <el-select v-model="filter.makingType" placeholder="单据类型" style="width: 200px;" class="filter-item" clearable>
         <el-option label="销售单" :value="1" />
-        <el-option label="退筒单" :value="2" />
+        <el-option label="退货单" :value="2" />
       </el-select>
       <el-select v-model="filter.userType" placeholder="制单人类型" style="width: 200px;" class="filter-item" clearable>
         <el-option label="客户" :value="2" />
@@ -24,7 +24,7 @@
         <el-button class="filter-item" icon="el-icon-plus">创建销售单</el-button>
       </router-link>
       <router-link :to="{ name: 'OrderManageReturnAdd'}">
-        <el-button class="filter-item" icon="el-icon-plus">创建退筒单</el-button>
+        <el-button class="filter-item" icon="el-icon-plus">创建退货单</el-button>
       </router-link>
 
     </div>

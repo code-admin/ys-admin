@@ -8,11 +8,16 @@
       <el-select v-model="filter.feeType" placeholder="收款类型" style="width: 200px;" class="filter-item" clearable>
         <el-option label="收袋款" :value="1" />
         <el-option label="其他款" :value="2" />
+        <el-option label="退筒单" :value="5" />
       </el-select>
       <el-date-picker v-model="filter.queryDate" clearable class="filter-item" value-format="yyyy-MM-dd" :format="'yyyy-MM-dd'" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" />
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="queryData">查询</el-button>
       <el-button class="filter-item" icon="el-icon-plus" @click="editInit">新增收款</el-button>
+      <router-link :to="{name:'BillReceiptAddReturn'}">
+        <el-button class="filter-item" icon="el-icon-plus"> 新增退筒单据</el-button>
+      </router-link>
     </div>
+
     <div class="total-data">
       <el-row :gutter="5">
         <el-col :span="4">
@@ -27,34 +32,53 @@
         </el-col>
       </el-row>
     </div>
+
     <el-table v-loading="listLoading" :data="billList" border>
-      <el-table-column type="index" width="50" align="center" />
+      <!-- <el-table-column type="index" width="50" align="center" /> -->
+      <!-- <el-table-column :type="feeType === 5 ? 'selection' : null" width="55" /> -->
+      <el-table-column type="selection" width="55" />
       <el-table-column label="流水号" prop="billNo" align="center" width="140" />
-      <el-table-column label="付款人(客户)" prop="userName" align="center" width="120" />
-      <el-table-column label="单据类型" prop="feeTypeName" align="center" width="80">
-        <template slot-scope="scope">
-          <div>
-            <el-tag size="mini" :type="scope.row.feeType === 1 ? null :'success'">{{ scope.row.feeTypeName }}</el-tag>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column label="金额(元)" prop="amount" align="center" width="150">
-        <template slot-scope="scope">
-          <div v-if="scope.row.amount" :class=" scope.row.amount > 0 ? 'increase' : 'decrease'">
-            {{ scope.row.amount }}
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column label="收款日期" prop="collectionTime" align="center" width="120">
+      <el-table-column label="日期" prop="collectionTime" align="center" width="120">
         <template slot-scope="scope">
           {{ scope.row.collectionTime | moment('YYYY-MM-DD') }}
         </template>
       </el-table-column>
-      <el-table-column label="记录时间" prop="createTime" align="center" width="180">
+      <el-table-column label="客户" prop="userName" align="center" width="120" />
+      <el-table-column label="单据类型" prop="feeTypeName" align="center" width="80">
+        <template slot-scope="scope">
+          <div>
+            <el-tag v-if="scope.row.feeType === 1" size="mini">{{ scope.row.feeTypeName }}</el-tag>
+            <el-tag v-if="scope.row.feeType === 2" size="mini" type="info">{{ scope.row.feeTypeName }}</el-tag>
+            <el-tag v-if="scope.row.feeType === 5" size="mini" type="danger">{{ scope.row.feeTypeName }}</el-tag>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="品名" prop="productName" align="center" width="150" show-overflow-tooltip />
+      <el-table-column label="要求" prop="requirement" align="center" width="150" show-overflow-tooltip />
+      <el-table-column label="宽度" prop="width" align="center" width="150" />
+      <el-table-column label="克重" prop="weight" align="center" width="150" />
+      <el-table-column label="长度" prop="goodsLength" align="center" width="150" />
+      <el-table-column label="个" prop="goodsNumber" align="center" width="150" />
+      <el-table-column label="条数" prop="productNumber" align="center" width="150" />
+      <el-table-column label="单价" prop="price" align="center" width="150" />
+      <el-table-column label="重量" prop="netWeight" align="center" width="150" />
+      <el-table-column label="车皮" prop="tareWeight" align="center" width="150" />
+
+      <el-table-column label="金额(元)" prop="amount" align="center" width="150">
+        <template slot-scope="scope">
+          <div v-if="scope.row.feeType === 5" :class="'decrease'">
+            {{ - scope.row.amount }}
+          </div>
+          <div v-else :class=" scope.row.amount > 0 ? 'increase' : 'decrease'">
+            {{ scope.row.amount }}
+          </div>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="记录时间" prop="createTime" align="center" width="180">
         <template slot-scope="scope">
           <i class="el-icon-time" /> {{ scope.row.createTime }}
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="备注" prop="remark" align="center" show-overflow-tooltip />
       <el-table-column label="操作" prop="id" align="center" width="100">
         <template slot-scope="scope">
@@ -220,6 +244,7 @@ export default {
 .decrease {
     color: #f40;
 }
+
 .total-data {
     line-height: 38px;
     font-size: 14px;

@@ -44,3 +44,12 @@ export function getCustomerBillReport(data) {
   })
 }
 
+// 保存退筒单据
+export function submitReturnOrderBill(data) {
+  return request({
+    url: 'bill/submitReturnOrderBill',
+    method: 'post',
+    data
+  })
+}
+
