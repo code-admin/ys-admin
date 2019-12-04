@@ -21,6 +21,8 @@ import router from './router'
 import '@/icons' // icon
 import '@/permission' // permission control
 
+import filters from './filters' // 过滤器
+
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -39,6 +41,7 @@ Vue.use(ElementUI, { locale })
 
 Vue.use(moment)
 
+Vue.use(filters)
 // echarts
 // Vue.use(Echarts)
 Vue.component('v-chart', VueECharts)
