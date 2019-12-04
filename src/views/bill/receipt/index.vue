@@ -101,21 +101,21 @@
     <el-dialog title="添加收款" :visible.sync="dialogFormVisible">
       <el-form :model="bill">
         <el-form-item label="收款日期" :label-width="formLabelWidth">
-          <el-date-picker v-model="bill.collectionTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="选择收款日期" />
+          <el-date-picker v-model="bill.collectionTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="选择收款日期" style="width:50%;" />
         </el-form-item>
         <el-form-item label="收款类型" :label-width="formLabelWidth">
-          <el-select v-model="bill.feeType" placeholder="请选择活动区域" @change="bill.amount = null">
+          <el-select v-model="bill.feeType" placeholder="请选择活动区域" style="width:50%;" @change="bill.amount = null">
             <el-option label="收袋款" :value="1" />
             <el-option label="其他款" :value="2" />
           </el-select>
         </el-form-item>
         <el-form-item label="付款人(客户)" :label-width="formLabelWidth">
-          <el-select v-model="bill.userId" placeholder="请选择付款人(客户)" filterable>
+          <el-select v-model="bill.userId" placeholder="请选择付款人(客户)" filterable style="width:50%;">
             <el-option v-for="user in customeList" :key="user.loginName" :label="user.userName" :value="user.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="收款金额(元)" :label-width="formLabelWidth">
-          <el-input-number v-model="bill.amount" controls-position="right" /> <span v-if="bill.amount" class="amount">{{ bill.amount }} ¥</span>
+          <el-input-number v-model="bill.amount" controls-position="right" style="width:50%;" /> <span v-if="bill.amount" class="amount">{{ bill.amount | capitalAmount }}</span>
         </el-form-item>
         <el-form-item label="备注" :label-width="formLabelWidth">
           <el-input v-model="bill.remark" type="textarea" placeholder="请输入备注" maxlength="100" show-word-limit />

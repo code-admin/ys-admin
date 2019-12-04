@@ -412,7 +412,9 @@ export default {
         if (res.code === 10000) {
           this.$message({
             message: '提交出库成功！',
-            type: 'success'
+            type: 'success',
+            duration: 500
+
           })
           // this.getDetailById(this.$route.params.id)
           this.outStockVisible = !this.outStockVisible
