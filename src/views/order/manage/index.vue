@@ -243,7 +243,7 @@ export default {
     }
   },
   created() {
-    this.filter = JSON.parse(sessionStorage.getItem('filter')) === null && JSON.parse(sessionStorage.getItem('filter')).filter === undefined ? { pageIndex: 1, pageSize: 10 } : JSON.parse(sessionStorage.getItem('filter')).filter
+    this.filter = JSON.parse(sessionStorage.getItem('filter')).filter === undefined ? { pageIndex: 1, pageSize: 10 } : JSON.parse(sessionStorage.getItem('filter')).filter
   },
   mounted() {
     this.getOrderList()
