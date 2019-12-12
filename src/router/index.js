@@ -56,7 +56,7 @@ export const constantRoutes = [
         name: 'OrderManageReturnAdd',
         component: () => import('@/views/order/manage/return/add'),
         hidden: true,
-        meta: { title: '新建退筒单' }
+        meta: { title: '新建退货单' }
       },
       {
         path: '/order/manage/edit/:id',
@@ -70,7 +70,7 @@ export const constantRoutes = [
         name: 'OrderManageReturnEdit',
         component: () => import('@/views/order/manage/return/edit'),
         hidden: true,
-        meta: { title: '编辑退筒单' }
+        meta: { title: '编辑退货单' }
       },
       {
         path: '/order/manage/detail/:id',
@@ -84,7 +84,7 @@ export const constantRoutes = [
         name: 'OrderManageReturnDetail',
         component: () => import('@/views/order/manage/return/detail'),
         hidden: true,
-        meta: { title: '退筒单详情' }
+        meta: { title: '退货单详情' }
       },
       {
         path: '/order/printing/extracted/:id',

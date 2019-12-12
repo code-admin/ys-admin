@@ -59,6 +59,13 @@ export function getOrderById(id) {
     method: 'post'
   })
 }
+// 删除订单
+export function deleteOrderById(orderId) {
+  return request({
+    url: `/order/deleteOrderById/${orderId}`,
+    method: 'post'
+  })
+}
 
 // 关闭订单
 export function closeOrder(id) {

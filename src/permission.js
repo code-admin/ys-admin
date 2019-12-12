@@ -11,11 +11,15 @@ NProgress.configure({ showSpinner: false }) // NProgress Configuration
 const whiteList = ['/login'] // no redirect whitelist
 
 router.beforeEach(async(to, from, next) => {
+  if (from.name !== null) {
+    console.log('第一次跳转页面')
+    sessionStorage.setItem('filter', JSON.stringify({ filter: { pageIndex: 1, pageSize: 10 }}))
+  }
   // start progress bar
   NProgress.start()
-
   // set page title
-  document.title = getPageTitle(to.meta.title)
+  const keyword = to.query.title ? to.query.title + ' - ' : ''
+  document.title = getPageTitle(`${keyword}${to.meta.title}`)
 
   // determine whether the user has logged in
   const hasToken = getToken()

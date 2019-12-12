@@ -64,7 +64,11 @@
     </div>
     <el-table :key="tableKey" v-loading="listLoading" show-summary :data="orderList" border fit highlight-current-row style="width: 100%;">
       <el-table-column type="index" width="50" align="center" />
-      <el-table-column label="订单号" prop="orderNo" align="center" width="140" />
+      <el-table-column label="订单号" prop="orderNo" align="center" width="140">
+        <template slot-scope="scope">
+          <el-button type="text" @click="detail(scope.row)">{{ scope.row.orderNo }}</el-button>
+        </template>
+      </el-table-column>
       <el-table-column label="客户" prop="customerName" align="center" />
       <el-table-column label="单据类型" prop="makingTypeName" align="center">
         <template slot-scope="scope">
@@ -163,7 +167,8 @@
       <el-table-column label="更新时间" prop="updateTime" align="center" width="160" />
       <el-table-column label="操作" prop="id" sortable="custom" align="left" width="210">
         <template slot-scope="scope">
-          <el-button size="mini" @click="detail(scope.row)">查看</el-button>
+
+          <!-- <el-button size="mini" @click="detail(scope.row)">查看</el-button> -->
           <el-button v-if="scope.row.status == 0" type="primary" size="mini" @click="edit(scope.row)">编辑</el-button>
           <el-popover v-if="(scope.row.makingType === 1 && scope.row.status !== 5) || ( scope.row.makingType === 2 && scope.row.status !== 3)" :ref="scope.row.id" placement="top" width="300" trigger="click">
             <p>确定要关闭该订单吗？关闭后，该订单将不再可操作!!</p>
@@ -173,6 +178,7 @@
             </div>
             <el-button slot="reference" type="danger" size="mini">关闭</el-button>
           </el-popover>
+          <el-button type="danger" size="mini" @click="showConfirm = !showConfirm, orderId = scope.row.id">删除</el-button>
         </template>
       </el-table-column>
 
@@ -193,6 +199,14 @@
         <el-button type="primary" @click="saveHistory">保 存</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog title="提示" :visible.sync="showConfirm" width="300px">
+      <span>确定要删除该订单吗？</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="showConfirm = false">取 消</el-button>
+        <el-button type="danger" @click="confirmDelete()">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -201,6 +215,7 @@ import {
   getOrders,
   getOrderTypes,
   getOrderFlowNodes,
+  deleteOrderById,
   closeOrder,
   addRemark,
   getOrderById
@@ -211,7 +226,7 @@ export default {
       listLoading: true,
       tableKey: 0,
       total: 0,
-      filter: this.$store.state.filter.queryData,
+      filter: {},
       orderList: [],
       summary: {},
       orderTypeList: [],
@@ -222,8 +237,13 @@ export default {
         orderId: '',
         remark: ''
       },
-      orderInfo: {}
+      orderInfo: {},
+      orderId: null,
+      showConfirm: false
     }
+  },
+  created() {
+    this.filter = JSON.parse(sessionStorage.getItem('filter')) === null && JSON.parse(sessionStorage.getItem('filter')).filter === undefined ? { pageIndex: 1, pageSize: 10 } : JSON.parse(sessionStorage.getItem('filter')).filter
   },
   mounted() {
     this.getOrderList()
@@ -236,7 +256,8 @@ export default {
       const params = {
         ...this.filter
       }
-      this.$store.dispatch('filter/setFilter', this.filter)
+      // this.$store.dispatch('filter/setFilter', this.filter)
+      sessionStorage.setItem('filter', JSON.stringify({ filter: { ...this.filter }}))
       getOrders(params).then(res => {
         if (res.code === 10000) {
           this.orderList = res.data
@@ -274,21 +295,29 @@ export default {
       }
     },
     detail(obj) {
+      let routeData = null
       if (obj.makingType === 1) {
-        this.$router.push({
+        routeData = this.$router.resolve({
           name: 'OrderManageDetail',
           params: {
             id: obj.id
+          },
+          query: {
+            title: obj.customerName
           }
         })
       } else if (obj.makingType === 2) {
-        this.$router.push({
+        routeData = this.$router.resolve({
           name: 'OrderManageReturnDetail',
           params: {
             id: obj.id
+          },
+          query: {
+            title: obj.customerName
           }
         })
       }
+      window.open(routeData.href, '_blank')
     },
     outStock(obj) {
       this.history.orderId = obj.id
@@ -329,6 +358,19 @@ export default {
           message: err.message
         })
       })
+    },
+    // 删除订单
+    confirmDelete() {
+      deleteOrderById(this.orderId).then(res => {
+        if (res.code === 10000) {
+          this.$message({
+            type: 'success',
+            message: '删除成功！'
+          })
+          this.getOrderList()
+        }
+      })
+      this.showConfirm = !this.showConfirm
     },
     queryData() {
       this.filter.pageIndex = 1
