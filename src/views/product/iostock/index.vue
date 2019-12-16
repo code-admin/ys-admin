@@ -117,9 +117,11 @@
               <el-option v-for="(product,index) in productList" :key="index" :label="`${product.name} / ${product.productNo}[${product.stockNumber}]`" :value="product.id" />
             </el-select>
           </el-form-item>
+        </el-form>
+        <el-form :model="exchange">
           <el-form-item label="出库商品" :label-width="formLabelWidth">
-            <el-select v-model="exchange.reduceStockProductId" filterable remote reserve-keyword :remote-method="getProductList" :loading="loading" placeholder="请选择入库产品" style="width:100%">
-              <el-option v-for="(product,index) in productList" :key="index" :label="`${product.name} / ${product.productNo}[${product.stockNumber}]`" :value="product.id" />
+            <el-select v-model="exchange.reduceStockProductId" filterable remote reserve-keyword :remote-method="getProductList2" :loading="loading" placeholder="请选择入库产品" style="width:100%">
+              <el-option v-for="(product,index) in productList2" :key="index" :label="`${product.name} / ${product.productNo}[${product.stockNumber}]`" :value="product.id" />
             </el-select>
           </el-form-item>
           <el-form-item label="重量" :label-width="formLabelWidth">
@@ -158,6 +160,7 @@ export default {
         pageSize: 10
       },
       productList: [],
+      productList2: [],
       historyList: [],
       history: {},
       title: '',
@@ -193,7 +196,22 @@ export default {
         pageSize: 1000000
       }).then(res => {
         this.loading = !this.loading
-        if (res.code === 10000) this.productList = res.data
+        if (res.code === 10000) {
+          this.productList = res.data
+        }
+      })
+    },
+    getProductList2(kw) {
+      this.loading = !this.loading
+      getProducts({
+        productNo: kw,
+        pageIndex: 1,
+        pageSize: 1000000
+      }).then(res => {
+        this.loading = !this.loading
+        if (res.code === 10000) {
+          this.productList2 = res.data
+        }
       })
     },
     addInit() {
