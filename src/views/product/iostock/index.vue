@@ -250,6 +250,7 @@ export default {
         stockNumber: 1
       }
       this.getProductList('')
+      this.getProductList2('')
       this.showExchange = !this.showExchange
     },
     saveExchange() {

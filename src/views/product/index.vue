@@ -7,6 +7,7 @@
       <el-input v-model="filter.width" placeholder="宽度" style="width: 200px;" class="filter-item" clearable />
       <el-input v-model="filter.weight" placeholder="克重" style="width: 200px;" class="filter-item" clearable />
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="queryData">查询</el-button>
+      <el-button class="filter-item" type="primary" icon="el-icon-s-operation" @click="initExchange">调换货</el-button>
       <el-button class="filter-item" icon="el-icon-plus" @click="addInit">添加</el-button>
       <el-button class="filter-item" icon="el-icon-download" @click="exportData">导出</el-button>
     </div>
@@ -58,7 +59,7 @@
       <el-pagination v-show="total>0" :current-page="filter.pageIndex" :page-sizes="[10, 20, 50, 100]" :page-size="filter.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
     </div>
 
-    <el-drawer ref="drawer" :title="title" size="30%" :visible.sync="dialogFormVisible" direction="rtl" custom-class="demo-drawer">
+    <el-drawer ref="drawer" :wrapper-closable="false" :title="title" size="30%" :visible.sync="dialogFormVisible" direction="rtl" custom-class="demo-drawer">
       <div class="demo-drawer__content">
         <el-form :model="product">
           <!-- <el-form-item label="产品编号" :label-width="formLabelWidth">
@@ -82,13 +83,13 @@
           <el-form-item label="价格" :label-width="formLabelWidth">
             <el-input v-model="product.price" placeholder="请输入基准价(元/吨)" />
           </el-form-item>
-          <!--<el-form-item label="库存" :label-width="formLabelWidth">
+          <el-form-item label="库存" :label-width="formLabelWidth">
             <el-input v-model="product.stockNumber" placeholder="请输入库存数" />
           </el-form-item>
           <el-form-item label="重量" :label-width="formLabelWidth">
             <el-input v-model="product.netWeight" placeholder="请输入库存重量(KG)" />
           </el-form-item>
-        <el-form-item label="今日入库" :label-width="formLabelWidth">
+          <!-- <el-form-item label="今日入库" :label-width="formLabelWidth">
             <el-input v-model="product.todayStockNumber" placeholder="请输今日入库数" />
           </el-form-item>
           <el-form-item label="今日出库" :label-width="formLabelWidth">
@@ -112,6 +113,36 @@
       </div>
     </el-drawer>
 
+    <!-- 调换货 -->
+    <el-drawer ref="drawer2" title="产品调换货" size="30%" :visible.sync="showExchange" direction="ltr" custom-class="demo-drawer">
+      <div style="padding:20px">
+        <el-form :model="exchange">
+          <el-form-item label="入库产品" :label-width="formLabelWidth">
+            <el-select v-model="exchange.plusStockProductId" filterable remote reserve-keyword :remote-method="getProductList1" :loading="loading" placeholder="请选择入库产品" style="width:100%">
+              <el-option v-for="(product,index) in productList" :key="index" :label="`${product.name} / ${product.productNo}[${product.stockNumber}]`" :value="product.id" />
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <el-form :model="exchange">
+          <el-form-item label="出库商品" :label-width="formLabelWidth">
+            <el-select v-model="exchange.reduceStockProductId" filterable remote reserve-keyword :remote-method="getProductList2" :loading="loading" placeholder="请选择入库产品" style="width:100%">
+              <el-option v-for="(product,index) in productList2" :key="index" :label="`${product.name} / ${product.productNo}[${product.stockNumber}]`" :value="product.id" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="重量" :label-width="formLabelWidth">
+            <el-input-number v-model="exchange.netWeight" :min="1" placeholder="重量(KG)" />
+          </el-form-item>
+          <el-form-item label="数量" :label-width="formLabelWidth">
+            <el-input-number v-model="exchange.stockNumber" :min="1" placeholder="克重(个)" />
+          </el-form-item>
+        </el-form>
+        <div class="demo-drawer__footer">
+          <el-button @click="showExchange = false">取 消</el-button>
+          <el-button type="primary" @click="saveExchange">保 存</el-button>
+        </div>
+      </div>
+    </el-drawer>
+
   </div>
 </template>
 
@@ -121,7 +152,8 @@ import {
   getProductTypes,
   disable,
   saveProductInfo,
-  exportProduct
+  exportProduct,
+  exchangeProductStock
 } from '@/api/product'
 export default {
   data() {
@@ -137,12 +169,16 @@ export default {
         pageSize: 10
       },
       productList: [],
+      productList1: [],
+      productList2: [],
       productTypeList: [],
       product: {},
       department: {},
       title: '',
       dialogFormVisible: false,
-      formLabelWidth: '90px'
+      formLabelWidth: '90px',
+      showExchange: false,
+      exchange: {}
     }
   },
 
@@ -206,6 +242,55 @@ export default {
           this.dialogFormVisible = !this.dialogFormVisible
         }
       })
+    },
+    initExchange() {
+      this.exchange = {
+        plusStockProductId: null,
+        reduceStockProductId: null,
+        netWeight: 1,
+        stockNumber: 1
+      }
+      this.getProductList1('')
+      this.getProductList2('')
+      this.showExchange = !this.showExchange
+    },
+    getProductList1(kw) {
+      this.loading = !this.loading
+      getProducts({
+        productNo: kw,
+        pageIndex: 1,
+        pageSize: 1000000
+      }).then(res => {
+        this.loading = !this.loading
+        if (res.code === 10000) {
+          this.productList1 = res.data
+        }
+      })
+    },
+    getProductList2(kw) {
+      this.loading = !this.loading
+      getProducts({
+        productNo: kw,
+        pageIndex: 1,
+        pageSize: 1000000
+      }).then(res => {
+        this.loading = !this.loading
+        if (res.code === 10000) {
+          this.productList2 = res.data
+        }
+      })
+    },
+    saveExchange() {
+      exchangeProductStock(this.exchange).then(res => {
+        if (res.code === 10000) {
+          this.$message({
+            message: '操作成功！',
+            type: 'success'
+          })
+          this.getProductList()
+        }
+      })
+      this.showExchange = !this.showExchange
     },
     queryData() {
       this.filter.pageIndex = 1
