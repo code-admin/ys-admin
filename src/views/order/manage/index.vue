@@ -176,7 +176,7 @@
               <el-button size="mini" type="text" @click="()=>{$refs[scope.row.id].doClose()}">取消</el-button>
               <el-button type="danger" size="mini" plain @click="close(scope.row)">确 定</el-button>
             </div>
-            <el-button slot="reference" type="danger" size="mini">关闭</el-button>
+            <el-button slot="reference" type="danger" size="mini">完成</el-button>
           </el-popover>
           <el-button type="danger" size="mini" @click="showConfirm = !showConfirm, orderId = scope.row.id">删除</el-button>
         </template>
@@ -228,7 +228,11 @@ export default {
       total: 0,
       filter: {},
       orderList: [],
-      summary: {},
+      summary: {
+        totalOrderExts: null,
+        totalOrderExpresses: null,
+        totalAmount: null
+      },
       orderTypeList: [],
       flowList: [],
       formLabelWidth: '80px',

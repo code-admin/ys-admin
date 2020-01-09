@@ -34,6 +34,13 @@
         </template>
       </el-table-column>
       <el-table-column label="今日入库" prop="todayStockNumber" align="center" />
+      <el-table-column label="订单数量(未完成订单数)" prop="todayStockNumber" align="center" width="90">
+        <template slot-scope="scope">
+          <div>
+            {{ scope.row.totalOrders }}{{ scope.row.unfinishedOrders ? `( ${scope.row.unfinishedOrders} )` : '' }}
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label="今日出库" prop="todaySaledNumber" align="center" />
       <el-table-column label="预售" prop="preSaledNumber" align="center" />
       <el-table-column label="在产数" prop="productingNumber" align="center" />
