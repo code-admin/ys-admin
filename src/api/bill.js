@@ -53,3 +53,21 @@ export function submitReturnOrderBill(data) {
   })
 }
 
+// 导出账目明细
+export function exportBillDetail(data) {
+  return request({
+    url: '/bill/exportBillDetail',
+    method: 'post',
+    data
+  })
+}
+
+// 导出账目汇总
+export function exportBillCustomerSummary(data) {
+  return request({
+    url: '/bill/exportBillCustomerSummary',
+    method: 'post',
+    data
+  })
+}
+

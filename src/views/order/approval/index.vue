@@ -31,7 +31,21 @@
     <el-table :key="tableKey" v-loading="listLoading" :data="orderList" border fit highlight-current-row style="width: 100%;">
       <el-table-column type="selection" align="center" width="55" />
       <el-table-column type="index" width="50" align="center" />
-      <el-table-column label="订单编号" prop="orderNo" align="center" width="140" />
+      <el-table-column label="审核编号" prop="auditNo" align="center" width="140" />
+      <el-table-column label="订单编号" prop="orderNo" align="center" width="140">
+        <template slot-scope="scope">
+          <router-link v-if=" scope.row.id" :to="{name: 'OrderManageDetail', params: { id: scope.row.id } }">
+            <el-button size="mini" type="text">{{ `${scope.row.orderNo}` }}</el-button>
+          </router-link>
+        </template>
+      </el-table-column>
+      <el-table-column label="审核类型" prop="auditTypeName" align="center" width="140">
+        <template slot-scope="scope">
+          <div>
+            <el-tag type="primary" size="mini">{{ scope.row.auditTypeName }}</el-tag>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label="客户" prop="customerName" align="center" />
       <el-table-column label="销售类型" prop="orderTypeName" align="center" />
       <el-table-column label="制单人类型" prop="userTypeName" align="center" />

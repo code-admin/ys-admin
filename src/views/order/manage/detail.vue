@@ -2,14 +2,14 @@
   <div v-loading="loading" class="page">
     <div class="card ">
       <div style="text-align: right">
-        <el-button icon="el-icon-back" size="mini" @click="$router.back()">返回</el-button>
+        <el-button icon="el-icon-back" size="mini" @click="closeWindow">关闭</el-button>
       </div>
       <el-steps :active="orderInfo.status+1" finish-status="success" align-center>
         <el-step title="创建" />
         <el-step title="待审核" />
         <el-step title="待出库" />
-        <el-step title="待签收" />
-        <el-step title="待确认" />
+        <el-step title="销售确认" />
+        <el-step title="客户确认" />
         <el-step title="完成" />
       </el-steps>
     </div>
@@ -109,7 +109,7 @@
 
       <el-divider />
 
-      <el-table v-if="orderInfo.orderExts" :data="orderInfo.orderExts" style="width: 100%" @selection-change="handleSelectionChange">
+      <el-table v-if="orderInfo.orderExts" :data="orderInfo.orderExts" style="width: 100%" size="mini" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="50" />
         <el-table-column prop="requirement" label="产品编号/名称" align="center" show-overflow-tooltip>
           <template slot-scope="scope">
@@ -143,8 +143,10 @@
     <div v-if="orderInfo.status > 1" class="card mt20">
       <div class="flex justify-between">
         <div class="title">出库记录</div>
-        <el-button v-if="orderInfo.orderExpressList && orderInfo.orderExpressList.length && orderInfo.status > 2" size="mini" icon="el-icon-printer" @click="handlePrint">打印出库单{{ printArr.length ? `(${printArr.length})` : '' }}</el-button>
-        <el-popover v-if="orderInfo.orderExpressList && orderInfo.orderExpressList.length && orderInfo.status === 3" v-model="finishVisible" placement="top" width="160">
+        <el-button v-if="orderInfo.orderExpressList && orderInfo.orderExpressList.length && orderInfo.status >= 2" size="mini" icon="el-icon-printer" @click="handlePrint">打印出库单{{ printArr.length ? `(${printArr.length})` : '' }}</el-button>
+        <el-button v-if="orderInfo.status === 2 || orderInfo.status === 3" type="primary" size="mini" @click="initConfirm()">申请调价(销售)</el-button>
+
+        <el-popover v-if="orderInfo.orderExpressList && orderInfo.orderExpressList.length && (orderInfo.status === 2 || orderInfo.status === 3)" v-model="finishVisible" placement="top" width="160">
           <p>确认要完成出库吗</p>
           <div style="text-align: right; margin: 0">
             <el-button size="mini" type="text" @click="finishVisible = false">取消</el-button>
@@ -152,9 +154,10 @@
           </div>
           <el-button slot="reference" size="mini" type="danger">完成出库</el-button>
         </el-popover>
+
       </div>
       <el-divider />
-      <el-table :data="orderInfo.orderExpressList" style="width: 100%" @selection-change="changePrint">
+      <el-table :data="orderInfo.orderExpressList" style="width: 100%" size="mini" @selection-change="changePrint">
         <el-table-column type="selection" width="60" :selectable="isCheck" />
         <el-table-column prop="productNo" label="产品编号/名称" align="center" width="140" show-overflow-tooltip>
           <template slot-scope="scope">
@@ -168,15 +171,36 @@
         <el-table-column v-if="orderInfo.orderType === 1" prop="productNumber" label="条数" align="center" />
         <el-table-column prop="totalWeight" label="重量(KG)" align="center" />
         <el-table-column prop="tareWeight" label="车皮" align="center" />
-        <el-table-column prop="price" label="单价(吨)" align="center" />
-        <el-table-column prop="netWeight" label="净重" align="center" />
-        <el-table-column prop="totalPrice" label="金额" align="center" />
-        <el-table-column prop="number" label="出库个数" align="center" show-overflow-tooltip />
-        <!-- <el-table-column prop="requirement" label="司机/电话" align="center" width="180" show-overflow-tooltip>
+        <el-table-column prop="price" label="单价(吨)" align="center" width="200">
           <template slot-scope="scope">
-            {{ `${scope.row.driverName} / ${scope.row.driverPhone}` }}
+            <div v-if="scope.row.confirmPrice && scope.row.confirmPrice !== scope.row.price">
+              <span class="confirm-price">{{ scope.row.confirmPrice }} ¥</span>
+              <span class="price">{{ scope.row.price }} ¥</span>
+              <el-button v-if="orderInfo.status === 2 && (scope.row.status ===1 || scope.row.status ===3)" type="text" size="mini" @click="initPrice(scope.row, scope.$index)">调价</el-button>
+              <span v-if="scope.row.status === 2">(审核中...)</span>
+              <span v-if="scope.row.status === 3">(审核通过)</span>
+            </div>
+            <div v-else>
+              <span>{{ scope.row.price }} ¥</span>
+              <el-button v-if="orderInfo.status === 2 && (scope.row.status ===1 || scope.row.status ===3)" type="text" size="mini" @click="initPrice(scope.row, scope.$index)">调价</el-button>
+              <span v-if="scope.row.status === 2">(审核中...)</span>
+              <span v-if="scope.row.status === 3">(审核通过)</span>
+            </div>
           </template>
-        </el-table-column> -->
+        </el-table-column>
+        <el-table-column prop="netWeight" label="净重(KG)" align="center" />
+        <el-table-column prop="totalPrice" label="金额" align="center">
+          <!-- <template slot-scope="scope">
+            <div v-if="scope.row.confirmPrice && scope.row.confirmPrice !== scope.row.price">
+              <span class="confirm-price">{{ scope.row.confirmPrice }} ¥</span>
+              <span class="price">{{ scope.row.price }} ¥</span>
+            </div>
+            <div v-else>
+              <span>{{ scope.row.price }} ¥</span>
+            </div>
+          </template> -->
+        </el-table-column>
+        <el-table-column prop="number" label="出库个数" align="center" show-overflow-tooltip />
         <el-table-column prop="createBy" label="记录人/时间" align="center" width="180" show-overflow-tooltip>
           <template slot-scope="scope">
             <div>
@@ -217,7 +241,7 @@
     <!-- 添加出库窗口 -->
     <!-- :span-method="objectSpanMethod" -->
     <el-dialog :close-on-click-modal="false" :title="`添加 ( ${orderInfo.orderNo} ) 订单出库`" :visible.sync="outStockVisible" width="80%">
-      <el-table :data="outStockList">
+      <el-table :data="outStockList" size="mini">
         <el-table-column property="name" label="产品编号/名称" align="center" width="140" show-overflow-tooltip />
         <el-table-column property="requirement" label="要求" align="center" show-overflow-tooltip />
         <el-table-column property="width" label="宽度" align="center" />
@@ -299,6 +323,65 @@
         </span>
       </div>
     </el-dialog>
+
+    <!-- 调价 -->
+    <el-dialog title="出库调价" :visible.sync="showTempPrice" width="300px">
+      <el-form>
+        <el-form-item label="原价:" :label-width="formLabelWidth">
+          <el-input v-model="updatePrice.price" size="mini" disabled />
+        </el-form-item>
+        <el-form-item label="调价:" :label-width="formLabelWidth">
+          <el-input v-model="updatePrice.confirmPrice" type="number" size="mini" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="showTempPrice = false">取 消</el-button>
+        <el-button type="primary" @click="savePrice">确 定</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 提交确认 -->
+    <el-dialog title="提交确认" :visible.sync="showConfirm" :close-on-click-modal="false">
+      <el-table :data="confirmData.priceChangeList" size="mini" style="width: 100%">
+        <el-table-column prop="date" label="产品名称" width="180">
+          <template slot-scope="scope">
+            <div>
+              {{ `${scope.row.productName}/${scope.row.requirement}/${scope.row.width}/${scope.row.weight}` }}
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="number" label="出库个数" />
+        <el-table-column prop="date" label="单价">
+          <template slot-scope="scope">
+            <div v-if="scope.row.confirmPrice && scope.row.confirmPrice !== scope.row.price">
+              <span class="confirm-price">{{ scope.row.confirmPrice }} ¥</span>
+              <span class="price">{{ scope.row.price }} ¥</span>
+            </div>
+            <div v-else>
+              <span>{{ scope.row.price }} ¥</span>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="" label="净重(KG)" align="center">
+          <template slot-scope="scope">
+            <div>{{ scope.row.totalWeight - scope.row.tareWeight }}</div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="totalPrice" label="金额" align="center" width="100" />
+        <el-table-column prop="date" label="操作">
+          <template slot-scope="scope">
+            <div>
+              <el-button type="text" size="mini" @click="delRow(scope.$index)">删除</el-button>
+            </div>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="showConfirm = false">取 消</el-button>
+        <el-button type="primary" @click="submitConfirm()">确 认</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -308,7 +391,8 @@ import {
   saveDeliveryOrder,
   deleteDeliveryOrder,
   submitDeliveryOrder,
-  confirmOut
+  confirmOut,
+  orderConfirmPrice
 } from '@/api/order'
 import {
   getValidateProducts,
@@ -335,12 +419,20 @@ export default {
       showExchange: false,
       formLabelWidth: '90px',
       exchange: {},
-      tempIndex: null
+      tempIndex: null,
+
+      updatePrice: {},
+      showTempPrice: false,
+      showConfirm: false,
+      confirmData: {
+        orderId: this.$route.params.id,
+        priceChangeList: []
+      }
     }
   },
   mounted() {
     this.getDetailById(this.$route.params.id)
-    this.getValidateProductList()
+    // this.getValidateProductList()
     // this.getUserList('')
   },
   methods: {
@@ -440,6 +532,7 @@ export default {
       })
     },
     confirmOutStock() {
+      this.finishVisible = false
       confirmOut(this.$route.params.id).then(res => {
         if (res.code === 10000) {
           this.$message({
@@ -597,6 +690,7 @@ export default {
       }
     },
     changeNumber(index, obj) {
+      this.getValidateProductList()
       this.exchange = {
         plusStockProductId: obj.productId,
         reduceStockProductId: null,
@@ -634,6 +728,84 @@ export default {
         }
         loading.close()
       })
+    },
+    // 关闭窗口
+    closeWindow() {
+      this.$confirm('确认关闭离开当前页面吗？')
+        .then(_ => {
+          window.close()
+        })
+        .catch(_ => {})
+    },
+
+    // 调价弹框
+    initPrice(obj, i) {
+      let confirmPrice = 0
+      if (obj.confirmPrice) {
+        confirmPrice = obj.confirmPrice
+      } else {
+        confirmPrice = obj.price
+      }
+      this.updatePrice = {
+        index: i,
+        price: obj.price,
+        confirmPrice: confirmPrice
+      }
+      this.showTempPrice = !this.showTempPrice
+    },
+    savePrice() {
+      if (this.updatePrice.price === this.updatePrice.confirmPrice) {
+        this.showTempPrice = !this.showTempPrice
+        return false
+      } else {
+        const row = this.orderInfo.orderExpressList[this.updatePrice.index]
+        row.confirmPrice = parseInt(this.updatePrice.confirmPrice)
+        row.totalPrice = (row.totalWeight - row.tareWeight) * this.updatePrice.confirmPrice / 1000
+      }
+      let totalPrice = 0
+      this.orderInfo.orderExpressList.map(item => {
+        if (item.status !== 0) {
+          totalPrice += item.totalPrice
+        }
+      })
+      this.orderInfo.totalPrice = totalPrice.toFixed(2)
+      this.showTempPrice = !this.showTempPrice
+    },
+    // 提交审核弹框
+    initConfirm() {
+      this.confirmData.priceChangeList = []
+      this.orderInfo.orderExpressList && this.orderInfo.orderExpressList.map(item => {
+        if (item.status !== 0 && item.status !== 2 && item.confirmPrice && item.confirmPrice !== item.price) this.confirmData.priceChangeList.push(item)
+      })
+      this.showConfirm = !this.thishowConfirm
+    },
+    delRow(index) {
+      if (this.confirmData.priceChangeList.length < 2) {
+        this.$message({
+          message: '至少需要保留一条记录！！',
+          type: 'error'
+        })
+        return false
+      }
+      this.confirmData.priceChangeList.splice(index, 1)
+    },
+    submitConfirm() {
+      orderConfirmPrice(this.confirmData).then(res => {
+        if (res.code === 10000) {
+          this.$message({
+            type: 'success',
+            message: '申请提交成功！'
+          })
+          this.getDetailById(this.$route.params.id)
+          this.showConfirm = !this.showConfirm
+        }
+      })
+      // .catch(err => {
+      //   this.$message({
+      //     type: 'error',
+      //     message: err.message
+      //   })
+      // })
     }
   }
 }
@@ -672,6 +844,16 @@ export default {
             font-weight: 500;
             color: #f40;
         }
+    }
+    .confirm-price{
+      font-size: 18px;
+      font-weight: 500;
+      color: #f40;
+    }
+    .price{
+      font-size: 11px;
+      color: #888888;
+      text-decoration:line-through
     }
 }
 

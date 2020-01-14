@@ -178,3 +178,12 @@ export function getOrderDetailList(data) {
     data
   })
 }
+
+// 订单确认（销售）
+export function orderConfirmPrice(data) {
+  return request({
+    url: '/order/orderConfirmPrice',
+    method: 'post',
+    data
+  })
+}

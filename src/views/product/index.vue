@@ -15,6 +15,7 @@
       <el-checkbox v-model="filter.hasStock" label="显示0库存" border size="small" @change="queryData" />
       <el-checkbox v-model="filter.hasCheckOut" label="显示0出库" border size="small" @change="queryData" />
       <el-checkbox v-model="filter.hasSaledProduct" label="显示0预售" border size="small" @change="queryData" />
+      <el-checkbox v-model="filter.hasProducting" label="显示0在产" border size="small" @change="queryData" />
     </div>
     <el-table :key="tableKey" v-loading="listLoading" :data="productList" border fit highlight-current-row style="width: 100%;">
       <el-table-column type="index" width="50" align="center" />
@@ -158,6 +159,7 @@ import {
 export default {
   data() {
     return {
+      loading: false,
       listLoading: true,
       tableKey: 0,
       total: 0,
@@ -165,6 +167,7 @@ export default {
         hasStock: false,
         hasSaledProduct: true,
         hasCheckOut: true,
+        hasProducting: true,
         pageIndex: 1,
         pageSize: 10
       },

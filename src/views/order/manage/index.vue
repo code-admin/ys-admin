@@ -28,6 +28,7 @@
       </router-link>
 
     </div>
+
     <div class="total-data">
       <el-row :gutter="5">
         <el-col :span="4">
@@ -62,6 +63,7 @@
         </el-col>
       </el-row>
     </div>
+
     <el-table :key="tableKey" v-loading="listLoading" show-summary :data="orderList" border fit highlight-current-row style="width: 100%;">
       <el-table-column type="index" width="50" align="center" />
       <el-table-column label="订单号" prop="orderNo" align="center" width="140">
@@ -207,6 +209,7 @@
         <el-button type="danger" @click="confirmDelete()">确 定</el-button>
       </span>
     </el-dialog>
+
   </div>
 </template>
 

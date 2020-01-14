@@ -11,8 +11,8 @@
 
     <el-table :key="tableKey" v-loading="listLoading" :data="orderList" border fit highlight-current-row style="width: 100%;">
       <!-- <el-table-column type="selection" align="center" width="55" /> -->
-      <!-- <el-table-column type="selection" width="55" /> -->
-      <el-table-column type="index" width="50" align="center" />
+      <el-table-column type="selection" width="55" />
+      <!-- <el-table-column type="index" width="50" align="center" /> -->
       <el-table-column label="日期" prop="orderTime" align="center" width="120">
         <template slot-scope="scope">
           <div>

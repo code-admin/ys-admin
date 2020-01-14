@@ -12,6 +12,7 @@
       </el-select>
       <el-date-picker v-model="filter.queryDate" clearable class="filter-item" value-format="yyyy-MM-dd" :format="'yyyy-MM-dd'" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" />
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="queryData">查询</el-button>
+      <el-button class="filter-item" icon="el-icon-download" @click="exportData">导出</el-button>
     </div>
     <div class="total-data">
       <el-row :gutter="5">
@@ -107,7 +108,8 @@
 
 <script>
 import {
-  getOrderBillSummaryList
+  getOrderBillSummaryList,
+  exportBillDetail
 } from '@/api/bill'
 export default {
   data() {
@@ -139,6 +141,29 @@ export default {
         this.listLoading = false
       })
     },
+    // 导出
+    exportData() {
+      const loading = this.$loading({
+        lock: true,
+        text: '正在拼命整理数据中……',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
+      exportBillDetail(this.filter).then(res => {
+        if (res.code === 10000) {
+          loading.close()
+          window.open(res.data)
+          return
+        }
+      }).catch(err => {
+        loading.close()
+        this.$message({
+          message: err.message,
+          type: 'error'
+        })
+      })
+    },
+    // 查询
     queryData() {
       this.filter.pageIndex = 1
       this.getBillDetailList()

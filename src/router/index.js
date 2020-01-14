@@ -118,6 +118,12 @@ export const constantRoutes = [
         name: 'OrderDetail',
         component: () => import('@/views/order/detail/index'),
         meta: { title: '订单明细' }
+      },
+      {
+        path: '/order/refund',
+        name: 'OrderRefund',
+        component: () => import('@/views/order/refund/index'),
+        meta: { title: '退筒管理' }
       }
     ]
   },
