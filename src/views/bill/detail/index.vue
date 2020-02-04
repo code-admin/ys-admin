@@ -6,7 +6,8 @@
       <!-- <el-input v-model="filter.createName" placeholder="制单人" style="width: 200px;" class="filter-item" clearable /> -->
       <el-select v-model="filter.feeType" placeholder="收款类型" style="width: 200px;" class="filter-item" clearable>
         <el-option label="销售单" :value="3" />
-        <el-option label="退筒单" :value="4" />
+        <el-option label="退货单" :value="4" />
+        <el-option label="退筒" :value="5" />
         <el-option label="收袋款" :value="1" />
         <el-option label="其他款" :value="2" />
       </el-select>

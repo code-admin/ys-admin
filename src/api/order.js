@@ -187,3 +187,30 @@ export function orderConfirmPrice(data) {
     data
   })
 }
+
+// 退筒明细
+export function returnOrderDetailList(data) {
+  return request({
+    url: '/order/returnOrderDetailList ',
+    method: 'post',
+    data
+  })
+}
+
+// 退筒账单
+export function submitRefundByOrderDetail(data) {
+  return request({
+    url: '/order/submitRefundByOrderDetail',
+    method: 'post',
+    data
+  })
+}
+
+// 批量退筒初始化数据
+export function selectRefundByOrderDetail(data) {
+  return request({
+    url: '/order/selectRefundByOrderDetail',
+    method: 'post',
+    data
+  })
+}

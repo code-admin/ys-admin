@@ -124,6 +124,19 @@ export const constantRoutes = [
         name: 'OrderRefund',
         component: () => import('@/views/order/refund/index'),
         meta: { title: '退筒管理' }
+      }, {
+        path: '/order/refund/add',
+        name: 'OrderRefundAdd',
+        component: () => import('@/views/order/refund/Add'),
+        meta: { title: '添加退筒' },
+        hidden: true
+      },
+      {
+        path: '/order/refund/batch/:number/:weight',
+        name: 'OrderRefundBatch',
+        component: () => import('@/views/order/refund/Batch'),
+        meta: { title: '添加退筒' },
+        hidden: true
       }
     ]
   },
