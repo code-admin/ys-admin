@@ -98,3 +98,11 @@ export function getStaffsByClassId(classId) {
     method: 'post'
   })
 }
+
+// 获取员工
+export function getStaffList() {
+  return request({
+    url: `/user/getStaffList`,
+    method: 'post'
+  })
+}

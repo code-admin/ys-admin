@@ -48,9 +48,45 @@
             <td>金额(元)</td>
             <td style="width:100px">备注</td>
           </tr>
+
+          <tr v-for="(order,index) in bill.orderExpressList" :key="index" class="tr">
+            <td class="lab" style="min-width:90px;">
+              {{ order.productName }}
+            </td>
+            <td class="lab">
+              <el-input readonly style="width:60px;" />
+            </td>
+            <td class="lab">
+              <el-input readonly style="width:30px;" />
+            </td>
+            <td class="lab">
+              <el-input readonly style="width:30px;" />
+            </td>
+
+            <td class="lab">
+              {{ order.number }}
+            </td>
+            <td class="lab">
+              {{ order.totalWeight }}
+            </td>
+            <td class="lab" />
+            <td class="lab">
+              {{ order.price }}
+            </td>
+            <td class="lab">
+              {{ order.netWeight }}
+            </td>
+            <td class="lab">
+              {{ order.totalPrice }}
+            </td>
+            <td class="lab">
+              <el-input style="width:80px;" />
+            </td>
+          </tr>
+
           <tr class="tr">
             <td class="lab" style="min-width:90px;">
-              <el-input readonly class="p0" style="width:90px;" />
+              总计:
             </td>
             <td class="lab">
               <el-input readonly style="width:60px;" />
@@ -81,6 +117,7 @@
             <td class="lab">
               <el-input style="width:80px;" />
             </td>
+
           </tr>
           <tr class="tr">
             <td class="lab">退款:</td>
@@ -174,6 +211,7 @@ export default {
         preReturnWeight: this.$route.params.weight | 0,
         price: 0,
         totalPrice: 0,
+        orderExpressList: [],
         orderRefunds: [],
         totalNetWeight: null
       }
@@ -212,7 +250,8 @@ export default {
           if (res.code === 10000) {
             console.log(res.data)
             this.bill.orderRefunds = res.data.list
-            this.bill.price = res.data.print.orderExpressList[0].price
+            this.bill.orderExpressList = res.data.print.orderExpressList
+            this.bill.price = res.data.print.avgPrice
             this.bill.totalPrice = res.data.print.totalPrice
           }
         }).catch(() => {

@@ -260,6 +260,12 @@ export const constantRoutes = [
         meta: { title: '生产日志' }
       },
       {
+        path: '/produce/device',
+        name: 'ProduceDevice',
+        component: () => import('@/views/produce/device/index'),
+        meta: { title: '设备绑定' }
+      },
+      {
         path: '/produce/log/import',
         name: 'ProduceLogImport',
         component: () => import('@/views/produce/log/ImportData'),

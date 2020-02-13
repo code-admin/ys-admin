@@ -42,3 +42,21 @@ export function getDevicesByUserId(userId) {
     method: 'post'
   })
 }
+
+// 获取有效设备绑定列表
+export function getDeviceRelInfoList(data) {
+  return request({
+    url: `/device/getDeviceRelInfoList`,
+    method: 'post',
+    data
+  })
+}
+
+// 设备绑定
+export function bindDevice(data) {
+  return request({
+    url: `/device/bindDevice`,
+    method: 'post',
+    data
+  })
+}

@@ -20,13 +20,21 @@
       <el-form-item label="退筒总个数:">
         <el-input v-model="batchData.returnNumber" placeholder="请输入想要退筒的个数" />
       </el-form-item>
-      <el-form-item label="退筒总重量:">
-        <el-input v-model="batchData.returnWeight" placeholder="请输入想要退筒的重量" />
+      <el-form-item label="总重量:">
+        <el-input v-model="batchData.returnWeight1" placeholder="请输入想要退筒的重量" />
+      </el-form-item>
+      <el-form-item label="皮量:">
+        <el-input v-model="batchData.returnWeight2" placeholder="请输入想要退筒的重量" />
+      </el-form-item>
+      <el-form-item label="退筒净重:">
+        <span>{{ returnWeight }}</span>
       </el-form-item>
       <el-form-item>
         <el-button type="success" @click="batchSubmit()">批量退筒</el-button>
       </el-form-item>
     </el-form>
+
+    <el-checkbox v-model="filter.isNeedFlag" @change="showAll">显示已退</el-checkbox>
 
     <el-table :key="tableKey" v-loading="listLoading" :data="orderList" border style="width: 100%;" @selection-change="selectTable">
       <!-- <el-table-column type="selection" align="center" width="55" /> -->
@@ -75,6 +83,7 @@ export default {
       tableKey: 0,
       total: 0,
       filter: {
+        isNeedFlag: true,
         queryDate: [],
         pageIndex: 1,
         pageSize: 10
@@ -85,8 +94,19 @@ export default {
         productNumber: 0,
         acceptableNumber: 0,
         returnNumber: 0,
-        returnWeight: 0
+        returnWeight: 0,
+        returnWeight1: 0,
+        returnWeight2: 0
       }
+    }
+  },
+  computed: {
+    returnWeight() {
+      let weight = 0
+      if (this.batchData.returnWeight1 >= 0) {
+        weight = this.batchData.returnWeight1 - this.batchData.returnWeight2
+      }
+      return weight
     }
   },
   mounted() {
@@ -104,6 +124,7 @@ export default {
       window.localStorage.setItem('returnList', JSON.stringify(select))
     },
     batchSubmit() {
+      this.batchData.returnWeight = this.batchData.returnWeight1 - this.batchData.returnWeight2
       if (this.returnList.length < 1) {
         this.$notify({
           title: '提示',
@@ -137,10 +158,10 @@ export default {
           type: 'warning'
         })
         return
-      } else if (this.batchData.returnWeight === 0) {
+      } else if (this.batchData.returnWeight <= 0) {
         this.$notify({
           title: '提示',
-          message: '退筒总重量不能为空！！',
+          message: '退筒净重不能为空！！',
           type: 'warning'
         })
         return
@@ -204,6 +225,9 @@ export default {
         this.listLoading = false
         window.localStorage.removeItem('returnList')
       })
+    },
+    showAll() {
+      this.getOrderList()
     },
     queryData() {
       this.filter.pageIndex = 1

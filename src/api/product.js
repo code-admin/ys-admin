@@ -34,10 +34,19 @@ export function saveProductInfo(data) {
     data
   })
 }
+
 // 有效产品列表
 export function getValidateProducts() {
   return request({
     url: '/product/getValidateProducts',
+    method: 'post'
+  })
+}
+
+// 有效产品下拉列表专用
+export function getAllProducts() {
+  return request({
+    url: '/product/getAllProducts',
     method: 'post'
   })
 }
