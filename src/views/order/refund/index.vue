@@ -109,6 +109,9 @@ export default {
       return weight
     }
   },
+  created() {
+    this.filter = JSON.parse(sessionStorage.getItem('returnOrderDetailList')).params === undefined ? { pageIndex: 1, pageSize: 10 } : JSON.parse(sessionStorage.getItem('returnOrderDetailList')).params
+  },
   mounted() {
     this.getOrderList()
   },
@@ -217,6 +220,7 @@ export default {
       const params = {
         ...this.filter
       }
+      sessionStorage.setItem('returnOrderDetailList', JSON.stringify({ params: { ...this.filter }}))
       returnOrderDetailList(params).then(res => {
         if (res.code === 10000) {
           this.orderList = res.data

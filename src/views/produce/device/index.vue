@@ -2,7 +2,7 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="filter.deviceNo" placeholder="设备编号" style="width: 200px;" class="filter-item" clearable />
-      <el-input v-model="filter.productName" placeholder="设备名称" style="width: 200px;" class="filter-item" clearable />
+      <el-input v-model="filter.productName" placeholder="产品" style="width: 200px;" class="filter-item" clearable />
       <el-input v-model="filter.userName" placeholder="员工姓名" style="width: 200px;" class="filter-item" clearable />
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="queryData">查询</el-button>
     </div>
@@ -20,9 +20,9 @@
       </el-table-column>
       <el-table-column label="单价" prop="price" align="center" />
       <el-table-column label="甲班员工" prop="firstStaffName" align="center" />
-      <el-table-column label="备注" prop="remark" align="center" />
+      <el-table-column label="备注" prop="firstRemark" align="center" />
       <el-table-column label="乙班员工" prop="secondStaffName" align="center" />
-      <el-table-column label="备注" prop="remark" align="center" />
+      <el-table-column label="备注" prop="secondRemark" align="center" />
       <el-table-column label="状态" prop="enable" align="center" width="120">
         <template slot-scope="scope">
           <div>
@@ -63,7 +63,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="备注" :label-width="formLabelWidth">
-          <el-input v-model="device.firstRemark" readonly />
+          <el-input v-model="device.firstRemark" />
         </el-form-item>
         <el-form-item label="乙班员工" :label-width="formLabelWidth">
           <el-select v-model="device.secondStaffId" filterable style="width:100%">
@@ -71,7 +71,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="备注" :label-width="formLabelWidth">
-          <el-input v-model="device.secondRemark" readonly />
+          <el-input v-model="device.secondRemark" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
