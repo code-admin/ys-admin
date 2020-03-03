@@ -95,9 +95,18 @@
           <el-table-column prop="requirement" label="要求" show-overflow-tooltip align="center" />
           <el-table-column prop="width" label="宽度(CM)" align="center" />
           <el-table-column prop="weight" label="克重(G)" align="center" />
-          <!-- <el-table-column prop="goodsLength" label="长度(cm)" align="center" />
-          <el-table-column prop="productNumber" label="条数" align="center" /> -->
-          <el-table-column prop="number" label="出库个数" align="center" show-overflow-tooltip />
+
+          <el-table-column prop="number" label="出库个数" align="center" show-overflow-tooltip>
+            <template slot-scope="scope">
+              <div v-if="scope.row.confirmNumber && scope.row.confirmNumber !== scope.row.number">
+                <span class="confirm-price">{{ scope.row.confirmNumber }} 个</span>
+                <span class="price">{{ scope.row.number }} 个</span>
+              </div>
+              <div v-else>
+                <span>{{ scope.row.number }} 个</span>
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column prop="totalWeight" label="重量(KG)" align="center" />
           <el-table-column prop="tareWeight" label="车皮" align="center" />
           <el-table-column prop="price" label="单价(吨)" align="center" width="200">

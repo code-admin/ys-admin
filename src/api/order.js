@@ -214,3 +214,30 @@ export function selectRefundByOrderDetail(data) {
     data
   })
 }
+
+// 直接改价
+export function updateExpressPrice(data) {
+  return request({
+    url: '/order/updateExpressPrice',
+    method: 'post',
+    data
+  })
+}
+
+// 直接改个数
+export function updateExpressNumber(data) {
+  return request({
+    url: '/order/updateExpressNumber',
+    method: 'post',
+    data
+  })
+}
+
+// 申请修改个数
+export function orderConfirmNumber(data) {
+  return request({
+    url: '/order/orderConfirmNumber',
+    method: 'post',
+    data
+  })
+}
