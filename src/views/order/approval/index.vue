@@ -14,6 +14,12 @@
       <el-select v-model="filter.status" placeholder="订单状态" style="width: 200px;" class="filter-item" clearable>
         <el-option v-for="(flow,index) in flowList" :key="index" :label="flow.workName" :value="flow.workStatus" />
       </el-select>
+      <el-select v-model="filter.auditType" placeholder="审核类型" style="width: 200px;" class="filter-item" clearable>
+        <el-option label="订单审核" :value="1" />
+        <el-option label="调价审核" :value="2" />
+        <el-option label="数量审核" :value="4" />
+        <el-option label="出库审核" :value="3" />
+      </el-select>
       <el-select v-model="filter.auditStatus" placeholder="审核状态" style="width: 200px;" class="filter-item" clearable>
         <el-option label="待审核" :value="1" />
         <el-option label="驳回" :value="2" />
@@ -42,7 +48,10 @@
       <el-table-column label="审核类型" prop="auditTypeName" align="center" width="140">
         <template slot-scope="scope">
           <div>
-            <el-tag type="primary" size="mini">{{ scope.row.auditTypeName }}</el-tag>
+            <el-tag v-if="scope.row.auditType===1 " type="primary" size="mini">{{ scope.row.auditTypeName }}</el-tag>
+            <el-tag v-if="scope.row.auditType===2 " type="danger" size="mini">{{ scope.row.auditTypeName }}</el-tag>
+            <el-tag v-if="scope.row.auditType===3 " type="success" size="mini">{{ scope.row.auditTypeName }}</el-tag>
+            <el-tag v-if="scope.row.auditType===4 " type="warning" size="mini">{{ scope.row.auditTypeName }}</el-tag>
           </div>
         </template>
       </el-table-column>

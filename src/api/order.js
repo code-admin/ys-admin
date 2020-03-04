@@ -215,6 +215,15 @@ export function selectRefundByOrderDetail(data) {
   })
 }
 
+// 订单改价
+export function updateOrderExtPrice(data) {
+  return request({
+    url: '/order/updateOrderExtPrice',
+    method: 'post',
+    data
+  })
+}
+
 // 直接改价
 export function updateExpressPrice(data) {
   return request({

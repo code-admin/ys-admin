@@ -4,7 +4,7 @@
       <div style="width:100%;height:100%;">
 
         <div class="company">浙江亚设塑业有限公司</div>
-        <div class="title">编织袋半成品退筒单</div>
+        <div class="title">退筒单</div>
 
         <img class="logo" src="../../../assets/imgs/arsh_logo.png">
 

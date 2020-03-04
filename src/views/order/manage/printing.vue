@@ -4,7 +4,7 @@
       <div style="width:100%;height:100%;">
 
         <div class="company">浙江亚设塑业有限公司</div>
-        <div class="title">{{ orderInfo.makingType === 1 ? '编织袋半成品结算单' : ' 编织袋半成品退筒单' }}</div>
+        <div class="title">{{ orderInfo.makingType === 1 ? '结算单' : ' 退筒单' }}</div>
 
         <img class="logo" src="../../../assets/imgs/arsh_logo.png">
 

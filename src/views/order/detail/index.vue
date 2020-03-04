@@ -35,7 +35,7 @@
       <el-table-column label="已出库" prop="checkOutNumber" align="center" />
       <el-table-column label="单价" prop="price" align="center" />
       <el-table-column label="备注" prop="remark" align="center" />
-      </el-table-column></el-table>
+    </el-table>
     <div class="block">
       <el-pagination v-show="total>0" :current-page="filter.pageIndex" :page-sizes="[10, 20, 50, 100]" :page-size="filter.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
     </div>
