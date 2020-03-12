@@ -69,9 +69,9 @@
           </router-link>
         </template>
       </el-table-column>
-      <el-table-column label="时间" prop="createTime" align="center" width="120">
+      <el-table-column label="时间" prop="collectionTime  " align="center" width="120">
         <template slot-scope="scope">
-          <i class="el-icon-time" /> {{ scope.row.createTime | moment('YYYY-MM-DD') }}
+          <i class="el-icon-time" /> {{ scope.row.collectionTime | moment('YYYY-MM-DD') }}
         </template>
       </el-table-column>
       <el-table-column label="客户" prop="userName" align="center" width="160" />
@@ -89,10 +89,7 @@
       <!-- <el-table-column label="重量" prop="" align="center" /> -->
       <el-table-column label="金额(元)" prop="amount" align="center">
         <template slot-scope="scope">
-          <div v-if="scope.row.feeType === 4" class="decrease">
-            -{{ scope.row.amount }}
-          </div>
-          <div v-else-if="scope.row.amount" :class=" scope.row.amount > 0 ? 'increase' : 'decrease'">
+          <div :class=" scope.row.amount > 0 ? 'increase' : 'decrease'">
             {{ scope.row.amount }}
           </div>
         </template>

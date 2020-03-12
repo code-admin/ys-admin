@@ -46,19 +46,11 @@
       <el-table-column label="客户" prop="userName" align="center" width="120" />
       <el-table-column label="金额(元)" prop="amount" align="center" width="80">
         <template slot-scope="scope">
-          <div v-if="scope.row.feeType === 5" :class="'decrease'">
-            {{ - scope.row.amount }}
-          </div>
-          <div v-else :class=" scope.row.amount > 0 ? 'increase' : 'decrease'">
+          <div :class=" scope.row.amount >= 0 ? 'increase' : 'decrease'">
             {{ scope.row.amount }}
           </div>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="记录时间" prop="createTime" align="center" width="180">
-        <template slot-scope="scope">
-          <i class="el-icon-time" /> {{ scope.row.createTime }}
-        </template>
-      </el-table-column> -->
       <el-table-column label="备注" prop="remark" align="center" width="150" show-overflow-tooltip />
       <el-table-column label="单据类型" prop="feeTypeName" align="center" width="80">
         <template slot-scope="scope">

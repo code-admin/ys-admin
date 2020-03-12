@@ -310,8 +310,8 @@
       </el-table>
       <div slot="footer" class="dialog-footer">
         <el-button @click="outStockVisible = false">取 消</el-button>
-        <el-button type="primary" icon="el-icon-edit-outline" @click="saveOutStock">保 存</el-button>
-        <el-button type="primary" icon="el-icon-finished" @click="submitOutstock">保存并出库</el-button>
+        <el-button type="primary" icon="el-icon-edit-outline" :loading="saveOutStockLoading" @click="saveOutStock">保 存</el-button>
+        <el-button type="primary" icon="el-icon-finished" :loading="submitOutstockLoading" @click="submitOutstock">保存并出库</el-button>
       </div>
     </el-dialog>
 
@@ -453,6 +453,8 @@ import {
 export default {
   data() {
     return {
+      saveOutStockLoading: false,
+      submitOutstockLoading: false,
       loading: false,
       loadingUser: false,
       outStockVisible: false,
@@ -536,6 +538,7 @@ export default {
       this.outStockVisible = !this.outStockVisible
     },
     saveOutStock() {
+      this.saveOutStockLoading = !this.saveOutStockLoading
       saveDeliveryOrder({
         orderExpressList: this.outStockList
       }).then(res => {
@@ -547,9 +550,13 @@ export default {
           this.getDetailById(this.$route.params.id)
           this.outStockVisible = !this.outStockVisible
         }
+        this.saveOutStockLoading = !this.saveOutStockLoading
+      }).catch(() => {
+        this.saveOutStockLoading = !this.saveOutStockLoading
       })
     },
     submitOutstock() {
+      this.submitOutstockLoading = !this.submitOutstockLoading
       submitDeliveryOrder({
         orderExpressList: this.outStockList
       }).then(res => {
@@ -572,6 +579,9 @@ export default {
             }
           })
         }
+        this.submitOutstockLoading = !this.submitOutstockLoading
+      }).catch(() => {
+        this.submitOutstockLoading = !this.submitOutstockLoading
       })
     },
     deleteOutStock(id) {
