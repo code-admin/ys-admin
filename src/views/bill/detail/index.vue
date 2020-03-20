@@ -62,19 +62,25 @@
     <el-table v-loading="listLoading" :data="billList" border>
       <el-table-column type="index" width="50" align="center" />
       <el-table-column label="流水号" prop="billNo" align="center" width="140" />
-      <el-table-column label="订单号" prop="orderNo" align="center" width="120">
+      <el-table-column label="订单号" prop="orderNo" align="center" width="140">
         <template slot-scope="scope">
-          <router-link v-if=" scope.row.orderId" :to="{name: scope.row.makingType === 1 ? 'OrderManageDetail' : 'OrderManageReturnDetail', params: { id: scope.row.orderId } }">
-            <el-button size="mini" type="text">{{ `${scope.row.orderNo}` }}</el-button>
-          </router-link>
+          <div v-if="scope.row.returnNo">
+            {{ scope.row.returnNo }}
+          </div>
+          <div v-else>
+            <router-link v-if=" scope.row.orderId" :to="{name: scope.row.makingType === 1 ? 'OrderManageDetail' : 'OrderManageReturnDetail', params: { id: scope.row.orderId } }">
+              <el-button size="mini" type="text">{{ `${scope.row.orderNo}` }}</el-button>
+            </router-link>
+          </div>
         </template>
       </el-table-column>
+      <!-- <el-table-column label="退筒单号" prop="returnNo" align="center" width="120" /> -->
       <el-table-column label="时间" prop="collectionTime  " align="center" width="120">
         <template slot-scope="scope">
           <i class="el-icon-time" /> {{ scope.row.collectionTime | moment('YYYY-MM-DD') }}
         </template>
       </el-table-column>
-      <el-table-column label="客户" prop="userName" align="center" width="160" />
+      <el-table-column label="客户" prop="userName" align="center" />
       <el-table-column label="单据类型" prop="feeTypeName" align="center" width="100" />
 
       <el-table-column label="品名" prop="productName" align="center" />
@@ -94,9 +100,8 @@
           </div>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="制单人" prop="createBy" align="center" /> -->
+      <el-table-column label="操作人" prop="createBy" align="center" />
       <el-table-column label="备注" prop="remark" align="center" show-overflow-tooltip />
-
     </el-table>
     <div class="block">
       <el-pagination v-show="total>0" :current-page="filter.pageIndex" :page-sizes="[10, 20, 50, 100]" :page-size="filter.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />

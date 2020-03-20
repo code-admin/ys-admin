@@ -36,10 +36,11 @@ export function saveProductInfo(data) {
 }
 
 // 有效产品列表
-export function getValidateProducts() {
+export function getValidateProducts(data) {
   return request({
     url: '/product/getValidateProducts',
-    method: 'post'
+    method: 'post',
+    data: data || {}
   })
 }
 

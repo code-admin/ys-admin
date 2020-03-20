@@ -140,6 +140,9 @@
           </template>
         </el-table-column>
       </el-table>
+      <div class="foot-btn">
+        <el-button v-if="orderInfo.orderExpressList && orderInfo.orderExpressList.length === 0 && orderInfo.status <= 2" icon="el-icon-plus" size="mini" @click="addProductInit">添加产品</el-button>
+      </div>
     </div>
 
     <div v-if="orderInfo.status > 1" class="card mt20">
@@ -427,6 +430,73 @@
       </div>
     </el-dialog>
 
+    <!-- 添加产品弹窗户 -->
+    <el-dialog title="添加产品" :visible.sync="showAddProduct" :close-on-click-modal="false">
+      <template>
+        <div>
+          <el-form label-position="right" label-width="80px" :model="orderProduct">
+            <el-form-item label="产品编号">
+              <el-input v-model="orderProduct.productNo" placeholder="产品编号" disabled />
+            </el-form-item>
+            <el-form-item label="产品名称">
+              <el-select
+                v-model="orderProduct.productId"
+                placeholder="请选择产品"
+                filterable
+                remote
+                :remote-method="searchProduct"
+                loading-text="正在加载产品数据……"
+                :loading="productLoading"
+                style="width:100%;"
+                @change="changeProduct()"
+              >
+                <el-option v-for="product in productList" :key="product.id" :label="`${product.name}${product.width}${product.weight}(${product.productNo})`" :value="product.id" />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="要求">
+              <el-input v-model="orderProduct.requirement" readonly placeholder="要求" />
+            </el-form-item>
+            <el-form-item label="宽度">
+              <el-input v-model="orderProduct.width" readonly placeholder="宽度(cm)" />
+            </el-form-item>
+            <el-form-item label="克重">
+              <el-input v-model="orderProduct.weight" readonly placeholder="克重(g)" />
+            </el-form-item>
+            <div v-if="orderInfo.orderType === 2">
+              <el-form-item label="米数">
+                <el-input v-model="orderProduct.length" readonly placeholder="克重(g)" />
+              </el-form-item>
+            </div>
+            <el-form-item label="库存">
+              <el-input v-model="orderProduct.stockNumber" readonly placeholder="库存" />
+            </el-form-item>
+            <div v-if="orderInfo.orderType === 1">
+              <el-form-item label="长度">
+                <el-input v-model="orderProduct.goodsLength" placeholder="长度(cm)/条" />
+              </el-form-item>
+              <el-form-item label="条数">
+                <el-input-number v-model="orderProduct.number" :min="1" placeholder="下单条数" style="width:100%" />
+              </el-form-item>
+            </div>
+            <el-form-item label="个数">
+              <el-input-number v-model="orderProduct.goodsNumber" :min="1" placeholder="下单数量" style="width:100%" />
+            </el-form-item>
+            <el-form-item label="单价">
+              <el-input v-model="orderProduct.price" type="number" placeholder="单价(元)" />
+            </el-form-item>
+            <el-form-item label="备注">
+              <el-input v-model="orderProduct.remark" placeholder="请输入备注" />
+            </el-form-item>
+          </el-form>
+
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="showAddProduct = false">取 消</el-button>
+            <el-button type="primary" @click="saveProduct">确 认</el-button>
+          </div>
+        </div>
+      </template>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -439,7 +509,8 @@ import {
   confirmOut,
   updateOrderExtPrice,
   orderConfirmPrice,
-  orderConfirmNumber
+  orderConfirmNumber,
+  addOrderExt
   // updateExpressPrice,
   // updateExpressNumber
 } from '@/api/order'
@@ -455,10 +526,13 @@ export default {
     return {
       saveOutStockLoading: false,
       submitOutstockLoading: false,
+      showAddProduct: false,
       loading: false,
       loadingUser: false,
       outStockVisible: false,
       finishVisible: false,
+      productLoading: false,
+      orderProduct: {},
       orderInfo: {},
       outStockList: null,
       userList: [],
@@ -486,7 +560,7 @@ export default {
   },
   mounted() {
     this.getDetailById(this.$route.params.id)
-    // this.getValidateProductList()
+    this.getValidateProductList()
     // this.getUserList('')
   },
   methods: {
@@ -613,6 +687,25 @@ export default {
     },
     handleSelectionChange(val) {
       this.tempProducts = val
+    },
+    // 添加产品弹框
+    addProductInit() {
+      this.getValidateProductList()
+      this.orderProduct = {
+        productId: null,
+        orderId: this.$route.params.id, // 订单Id
+        length: null,
+        number: null,
+        price: null,
+        requirement: null,
+        goodsLength: null, // 按条出库   单个产品长度
+        goodsNumber: null, // 订单数量
+        weight: null,
+        width: null,
+        remark: null,
+        productNo: null
+      }
+      this.showAddProduct = !this.showAddProduct
     },
     batchInit() {
       if (this.tempProducts.length) {
@@ -777,18 +870,35 @@ export default {
         }
       })
     },
+
+    searchProduct(query) {
+      if (query !== '') {
+        this.productLoading = true
+        this.productList = []
+        getValidateProducts({ keywords: query.trim() }).then(res => {
+          this.productLoading = false
+          if (res.code === 10000) {
+            this.productList = res.data
+          }
+        }).catch(err => {
+          console.log(err.message)
+          this.productLoading = false
+          this.productList = []
+        })
+      }
+    },
     getValidateProductList() {
-      const loading = this.$loading({
-        lock: true,
-        text: '正在加载产品数据……',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      })
-      getValidateProducts().then(res => {
+      this.productLoading = true
+      this.productList = []
+      getValidateProducts({}).then(res => {
+        this.productLoading = false
         if (res.code === 10000) {
           this.productList = res.data
         }
-        loading.close()
+      }).catch(err => {
+        console.log(err.message)
+        this.productLoading = false
+        this.productList = []
       })
     },
     // 关闭窗口
@@ -951,13 +1061,37 @@ export default {
           }
         })
       }
-
-      // .catch(err => {
-      //   this.$message({
-      //     type: 'error',
-      //     message: err.message
-      //   })
-      // })
+    },
+    // 添加产品选择产品
+    changeProduct() {
+      const product = this.productList.find(item => item.id === this.orderProduct.productId)
+      this.orderProduct = {
+        ...this.orderProduct,
+        productNo: product.productNo,
+        requirement: product.requirement,
+        width: product.width,
+        weight: product.weight,
+        length: product.length,
+        goodsLength: null,
+        number: null,
+        goodsNumber: 1,
+        price: product.price,
+        remark: null,
+        stockNumber: product.stockNumber
+      }
+    },
+    // 保存添加的产品
+    saveProduct() {
+      addOrderExt(this.orderProduct).then(res => {
+        if (res.code === 10000) {
+          this.$message({
+            type: 'success',
+            message: '保存成功！'
+          })
+          this.getDetailById(this.$route.params.id)
+          this.showAddProduct = false
+        }
+      })
     }
   }
 }
@@ -989,6 +1123,11 @@ export default {
             color: #555555;
         }
 
+        .foot-btn {
+            margin: 20px;
+            text-align: center;
+        }
+
         .totalPrice {
             text-align: right;
             padding-right: 20px;
@@ -1008,6 +1147,9 @@ export default {
         font-size: 11px;
         color: #888888;
         text-decoration: line-through
+    }
+    .dialog-footer{
+      text-align: right;
     }
 }
 

@@ -152,8 +152,8 @@
     </div>
 
     <div class="card mt20">
-      <el-button type="primary" icon="el-icon-edit-outline" @click="saveOrderInfo">保存</el-button>
-      <el-button type="primary" icon="el-icon-position" @click="saveOrSubmitOrderInfo">保存并提交</el-button>
+      <!-- <el-button type="primary" icon="el-icon-edit-outline" @click="saveOrderInfo">保存</el-button> -->
+      <el-button type="primary" icon="el-icon-position" @click="saveOrSubmitOrderInfo">保存</el-button>
       <el-button icon="el-icon-back" @click="$router.back()">返回</el-button>
     </div>
 

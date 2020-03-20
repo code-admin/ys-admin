@@ -250,3 +250,20 @@ export function orderConfirmNumber(data) {
     data
   })
 }
+
+// 订单添加产品
+export function addOrderExt(data) {
+  return request({
+    url: '/order/addOrderExt',
+    method: 'post',
+    data
+  })
+}
+
+// 获取退筒序列号
+export function getReturnNo() {
+  return request({
+    url: '/common/getReturnNo',
+    method: 'post'
+  })
+}

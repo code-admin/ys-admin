@@ -13,24 +13,10 @@
           <el-button type="text" size="mini" icon="el-icon-printer" @click="saveData">保存并打印</el-button>
         </div>
 
-        <div class="bar">
-          <el-row :gutter="10">
-            <el-col :span="4" style="text-align: right">
-              <span>客户: </span>
-            </el-col>
-            <el-col :span="8">
-              {{ bill.orderRefunds[0] ? bill.orderRefunds[0].customerName : '' }}
-              <!-- <el-select v-model="bill.userId" placeholder="请选择付款人(客户)" filterable style="text-align:left">
-                <el-option v-for="user in customeList" :key="user.loginName" :label="user.userName" :value="user.id" />
-              </el-select> -->
-            </el-col>
-            <el-col :span="4" style="text-align: right">
-              <span>日期:</span>
-            </el-col>
-            <el-col :span="8">
-              <el-date-picker v-model="bill.collectionTime" style="text-align:left" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="选择收款日期" />
-            </el-col>
-          </el-row>
+        <div class="bar flex justify-between">
+          <div class="tac"><span>客户:</span><span class="text">&nbsp;{{ bill.orderRefunds[0] ? bill.orderRefunds[0].customerName : '' }}</span></div>
+          <div class="tac"><span>日期:</span><span class="text">&nbsp;{{ bill.collectionTime | moment('YYYY-MM-DD') }}</span></div>
+          <div class="tac"><span>单号:</span><span class="text">&nbsp;{{ bill.returnNo }}</span></div>
         </div>
 
         <table style="border-collapse:collapse;border:none;" width="100%">
@@ -124,6 +110,7 @@ import {
   mapGetters
 } from 'vuex'
 import {
+  getReturnNo,
   submitRefundByOrderDetail
 } from '@/api/order'
 export default {
@@ -133,6 +120,7 @@ export default {
       loading: false,
       customeList: [],
       bill: {
+        returnNo: null,
         feeType: 5,
         collectionTime: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
         orderRefunds: [],
@@ -191,6 +179,7 @@ export default {
 
   mounted() {
     this.initData()
+    this.getTempNumber()
   },
 
   methods: {
@@ -218,11 +207,19 @@ export default {
         this.$router.replace({ name: 'OrderRefund' })
       }
     },
+    getTempNumber() {
+      getReturnNo().then(res => {
+        if (res.code === 10000) {
+          this.bill.returnNo = res.message
+        }
+      })
+    },
     saveData() {
       const tempArr = []
       this.bill.orderRefunds.map(item => {
         if (item.extId) {
           tempArr.push({
+            returnNo: this.bill.returnNo,
             extId: item.extId, // 子订单Id
             remark: item.remark, // 备注
             returnNumber: item.number, // 退筒个数

@@ -44,14 +44,6 @@
         </template>
       </el-table-column>
       <el-table-column label="客户" prop="userName" align="center" width="120" />
-      <el-table-column label="金额(元)" prop="amount" align="center" width="80">
-        <template slot-scope="scope">
-          <div :class=" scope.row.amount >= 0 ? 'increase' : 'decrease'">
-            {{ scope.row.amount }}
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column label="备注" prop="remark" align="center" width="150" show-overflow-tooltip />
       <el-table-column label="单据类型" prop="feeTypeName" align="center" width="80">
         <template slot-scope="scope">
           <div>
@@ -61,6 +53,15 @@
           </div>
         </template>
       </el-table-column>
+      <el-table-column label="金额(元)" prop="amount" align="center" width="80">
+        <template slot-scope="scope">
+          <div :class=" scope.row.amount >= 0 ? 'increase' : 'decrease'">
+            {{ scope.row.amount }}
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="备注" prop="remark" align="center" width="150" show-overflow-tooltip />
+      <el-table-column label="操作人" prop="createBy" align="center" width="150" />
       <el-table-column label="品名" prop="productName" align="center" width="150" show-overflow-tooltip />
       <el-table-column label="要求" prop="requirement" align="center" width="150" show-overflow-tooltip />
       <el-table-column label="宽度" prop="width" align="center" width="150" />
@@ -71,7 +72,7 @@
       <el-table-column label="单价" prop="price" align="center" width="150" />
       <el-table-column label="重量" prop="netWeight" align="center" width="150" />
       <el-table-column label="车皮" prop="tareWeight" align="center" width="150" />
-      <el-table-column label="操作" prop="id" align="center" width="100">
+      <el-table-column label="操作" prop="id" align="center" width="100" fixed="right">
         <template slot-scope="scope">
           <!-- <el-button v-if="scope.row.status == 0" type="primary" size="mini" @click="edit(scope.row)">编辑</el-button> -->
           <el-popover :ref="scope.row.id" placement="top" width="300" trigger="click">
