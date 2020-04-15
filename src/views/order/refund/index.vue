@@ -2,8 +2,8 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="filter.orderNo" placeholder="订单编号" style="width: 200px;" class="filter-item" clearable />
-      <el-select v-model="filter.customerName" filterable remote clearable :remote-method="fetchCustomer" placeholder="客户" @change="queryData">
-        <el-option v-for="customer in customerList" :key="customer.id" :value="customer.userName" :label="customer.userName" />
+      <el-select v-model="filter.customerId" :loading="showCustomer" filterable default-first-option clearable placeholder="客户" @change="queryData">
+        <el-option v-for="customer in customerList" :key="customer.id" :value="customer.id" :label="customer.userName" />
       </el-select>
       <!-- <el-input v-model="filter.customerName" placeholder="客户" style="width: 200px;" class="filter-item" clearable /> -->
       <el-input v-model="filter.productNo" placeholder="产品编号" style="width: 200px;" class="filter-item" clearable />
@@ -80,7 +80,7 @@ import {
   returnOrderDetailList
 } from '@/api/order'
 import {
-  getUsers
+  getCustomes
 } from '@/api/user'
 export default {
   data() {
@@ -89,7 +89,9 @@ export default {
       tableKey: 0,
       total: 0,
       customerList: [],
+      showCustomer: true,
       filter: {
+        customerId: null,
         isNeedFlag: true,
         queryDate: [],
         pageIndex: 1,
@@ -123,20 +125,17 @@ export default {
     } : JSON.parse(sessionStorage.getItem('returnOrderDetailList')).params
   },
   mounted() {
+    this.filter.customerId = null
+    this.fetchCustomer()
     this.getOrderList()
   },
   methods: {
     // 搜索客户
-    fetchCustomer(keywords) {
-      const option = {
-        userType: '2',
-        userName: keywords,
-        departmentId: null,
-        pageIndex: 1,
-        pageSize: 10000000
-      }
-      getUsers(option).then(res => {
+    fetchCustomer() {
+      this.customerList = []
+      getCustomes().then(res => {
         this.customerList = res.data
+        this.showCustomer = !this.showCustomer
       })
     },
     selectTable(select) {

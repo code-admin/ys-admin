@@ -2,7 +2,10 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="filter.orderNo" placeholder="订单编号" style="width: 200px;" class="filter-item" clearable />
-      <el-input v-model="filter.customerName" placeholder="客户" style="width: 200px;" class="filter-item" clearable />
+      <el-select v-model="filter.customerId" :loading="showCustomer" filterable default-first-option clearable placeholder="客户" @change="queryData">
+        <el-option v-for="customer in customerList" :key="customer.id" :value="customer.id" :label="customer.userName" />
+      </el-select>
+      <!-- <el-input v-model="filter.customerName" placeholder="客户" style="width: 200px;" class="filter-item" clearable /> -->
       <el-input v-model="filter.createName" placeholder="制单人" style="width: 200px;" class="filter-item" clearable />
       <el-select v-model="filter.userType" placeholder="制单人类型" style="width: 200px;" class="filter-item" clearable>
         <el-option label="客户" :value="2" />
@@ -88,6 +91,7 @@ import {
   getOrderTypes,
   getOrderFlowNodes
 } from '@/api/order'
+import { getCustomes } from '@/api/user'
 export default {
   data() {
     return {
@@ -104,15 +108,27 @@ export default {
       orderTypeList: [],
       flowList: [],
       dialogFormVisible: false,
-      formLabelWidth: '80px'
+      formLabelWidth: '80px',
+      customerList: [],
+      showCustomer: true
     }
   },
   mounted() {
+    this.filter.customerId = null
+    this.fetchCustomer()
     this.getOrderList()
     this.getOrderTypeList()
     this.getFlowList()
   },
   methods: {
+    // 搜索客户
+    fetchCustomer() {
+      this.customerList = []
+      getCustomes().then(res => {
+        this.customerList = res.data
+        this.showCustomer = !this.showCustomer
+      })
+    },
     getOrderList() {
       this.listLoading = true
       const params = {

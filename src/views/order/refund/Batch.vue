@@ -109,7 +109,7 @@
             <td class="lab">退款:</td>
             <td class="text" style="text-align:left;padding-left: 15px" colspan="6">{{ bill.totalPrice | capitalAmount }}</td>
             <td class="lab">净重</td>
-            <td class="text" colspan="1">{{ bill.preReturnWeight }}</td>
+            <td class="text" colspan="1">{{ -bill.preReturnWeight }}</td>
             <td class="lab">金额</td>
             <td class="text" colspan="1">{{ bill.totalPrice }}</td>
           </tr>
