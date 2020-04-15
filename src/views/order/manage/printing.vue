@@ -4,7 +4,7 @@
       <div style="width:100%;height:100%;">
 
         <div class="company">浙江亚设塑业有限公司</div>
-        <div class="title">{{ orderInfo.makingType === 1 ? '结算单' : ' 退筒单' }}</div>
+        <div class="title">{{ orderInfo.makingType === 1 ? '结算单' : ' 退货单' }}</div>
 
         <img class="logo" src="../../../assets/imgs/arsh_logo.png">
 
@@ -90,12 +90,9 @@ import {
 import {
   getOrderPrintInfo
 } from '@/api/order'
+
 export default {
-  computed: {
-    ...mapGetters([
-      'name'
-    ])
-  },
+  name: 'Printing',
   data() {
     return {
       loading: true,
@@ -105,10 +102,12 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapGetters([
+      'name'
+    ])
+  },
   mounted() {
-    // console.log('?????????????????????', [[this.$route.query.arr]].flat(2))
-    // console.log('----', [...[...this.$route.query.arr]])
-
     this.getDetailById({
       orderId: this.$route.params.id,
       expressIds: [...[...this.$route.query.arr]]

@@ -85,17 +85,17 @@
             </td>
 
             <td class="lab">
-              {{ bill.preReturnNumber }}
+              {{ -bill.preReturnNumber }}
             </td>
             <td class="lab">
-              {{ bill.preReturnWeight }}
+              {{ -bill.preReturnWeight }}
             </td>
             <td class="lab" />
             <td class="lab">
               {{ bill.price }}
             </td>
             <td class="lab">
-              {{ bill.preReturnWeight }}
+              {{ -bill.preReturnWeight }}
             </td>
             <td class="lab">
               {{ bill.totalPrice }}
