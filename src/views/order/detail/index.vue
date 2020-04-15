@@ -2,7 +2,10 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="filter.orderNo" placeholder="订单编号" style="width: 200px;" class="filter-item" clearable />
-      <el-input v-model="filter.customerName" placeholder="客户" style="width: 200px;" class="filter-item" clearable />
+      <el-select v-model="filter.customerName" filterable remote clearable :remote-method="fetchCustomer" placeholder="客户" @change="queryData">
+        <el-option v-for="customer in customerList" :key="customer.id" :value="customer.userName" :label="customer.userName" />
+      </el-select>
+      <!-- <el-input v-model="filter.customerName" placeholder="客户" style="width: 200px;" class="filter-item" clearable /> -->
       <el-input v-model="filter.productNo" placeholder="产品编号" style="width: 200px;" class="filter-item" clearable />
       <el-input v-model="filter.productName" placeholder="产品名称" style="width: 200px;" class="filter-item" clearable />
       <el-date-picker v-model="filter.queryDate" clearable class="filter-item" value-format="yyyy-MM-dd" :format="'yyyy-MM-dd'" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" />
@@ -46,12 +49,16 @@
 import {
   getOrderDetailList
 } from '@/api/order'
+import {
+  getUsers
+} from '@/api/user'
 export default {
   data() {
     return {
       listLoading: true,
       tableKey: 0,
       total: 0,
+      customerList: [],
       filter: {
         queryDate: [],
         pageIndex: 1,
@@ -75,6 +82,19 @@ export default {
           this.total = res.total
         }
         this.listLoading = false
+      })
+    },
+    // 搜索客户
+    fetchCustomer(keywords) {
+      const option = {
+        userType: '2',
+        userName: keywords,
+        departmentId: null,
+        pageIndex: 1,
+        pageSize: 10000000
+      }
+      getUsers(option).then(res => {
+        this.customerList = res.data
       })
     },
     queryData() {

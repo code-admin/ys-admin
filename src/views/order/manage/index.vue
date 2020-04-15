@@ -2,7 +2,10 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="filter.orderNo" placeholder="订单编号" style="width: 200px;" class="filter-item" clearable />
-      <el-input v-model="filter.customerName" placeholder="客户" style="width: 200px;" class="filter-item" clearable />
+      <el-select v-model="filter.customerName" filterable remote clearable :remote-method="fetchCustomer" placeholder="客户" @change="queryData">
+        <el-option v-for="customer in customerList" :key="customer.id" :value="customer.userName" :label="customer.userName" />
+      </el-select>
+      <!-- <el-input v-model="filter.customerName" placeholder="客户" style="width: 200px;" class="filter-item" clearable /> -->
       <el-input v-model="filter.createName" placeholder="制单人" style="width: 200px;" class="filter-item" clearable />
       <el-select v-model="filter.makingType" placeholder="单据类型" style="width: 200px;" class="filter-item" clearable>
         <el-option label="销售单" :value="1" />
@@ -26,39 +29,26 @@
       <router-link :to="{ name: 'OrderManageReturnAdd'}">
         <el-button class="filter-item" icon="el-icon-plus">创建退货单</el-button>
       </router-link>
-
     </div>
 
     <div class="total-data">
       <el-row :gutter="5">
         <el-col :span="4">
           <div>
-            <span>
-              总 订/退 购产品数:
-            </span>
-            <span>
-              {{ summary.totalOrderExts }}
-            </span>
+            <span>总 订/退 购产品数:</span>
+            <span>{{ summary.totalOrderExts }}</span>
           </div>
         </el-col>
         <el-col :span="4">
           <div>
-            <span>
-              总 出/入库数:
-            </span>
-            <span>
-              {{ summary.totalOrderExpresses }}
-            </span>
+            <span>总 出/入库数:</span>
+            <span>{{ summary.totalOrderExpresses }}</span>
           </div>
         </el-col>
         <el-col :span="4">
           <div>
-            <span>
-              总 金额:
-            </span>
-            <span>
-              {{ summary.totalAmount }}
-            </span>
+            <span>总 金额:</span>
+            <span>{{ summary.totalAmount }}</span>
           </div>
         </el-col>
       </el-row>
@@ -99,9 +89,7 @@
 
                 <el-table-column prop="price" label="单价(吨)" align="center">
                   <template slot-scope="scoped">
-                    <div v-if="scoped.row.price" style="color:#f40;">
-                      {{ scoped.row.price }} ¥
-                    </div>
+                    <div v-if="scoped.row.price" style="color:#f40;">{{ scoped.row.price }} ¥</div>
                   </template>
                 </el-table-column>
                 <el-table-column prop="remark" label="备注" align="center" show-overflow-tooltip />
@@ -134,9 +122,7 @@
                 <el-table-column prop="number" label="出库个数" align="center" show-overflow-tooltip />
                 <el-table-column prop="createBy" label="记录人/时间" align="center" width="180" show-overflow-tooltip>
                   <template slot-scope="scoped">
-                    <div>
-                      {{ `${scoped.row.createBy}/${scoped.row.createTime}` }}
-                    </div>
+                    <div>{{ `${scoped.row.createBy}/${scoped.row.createTime}` }}</div>
                   </template>
                 </el-table-column>
               </el-table>
@@ -148,9 +134,7 @@
 
       <el-table-column label="金额(元)" prop="totalPrice" align="center">
         <template slot-scope="scope">
-          <div v-if="scope.row.totalPrice" style="color:#f40;">
-            {{ scope.row.makingType === 2 ? `-${ scope.row.totalPrice}` : scope.row.totalPrice }}
-          </div>
+          <div v-if="scope.row.totalPrice" style="color:#f40;">{{ scope.row.makingType === 2 ? `-${ scope.row.totalPrice}` : scope.row.totalPrice }}</div>
         </template>
       </el-table-column>
       <el-table-column label="状态" prop="statusName" align="center">
@@ -163,13 +147,13 @@
       </el-table-column>
       <el-table-column label="下单日期" prop="orderTime" align="center" sortable="custom" width="120">
         <template slot-scope="scope">
-          <i class="el-icon-time" /> {{ scope.row.orderTime | moment('YYYY-MM-DD') }}
+          <i class="el-icon-time" />
+          {{ scope.row.orderTime | moment('YYYY-MM-DD') }}
         </template>
       </el-table-column>
       <el-table-column label="更新时间" prop="updateTime" align="center" width="160" />
       <el-table-column label="操作" prop="id" sortable="custom" align="left" width="210">
         <template slot-scope="scope">
-
           <!-- <el-button size="mini" @click="detail(scope.row)">查看</el-button> -->
           <el-button v-if="scope.row.status == 0" type="primary" size="mini" @click="edit(scope.row)">编辑</el-button>
           <el-popover v-if="(scope.row.makingType === 1 && scope.row.status !== 5) || ( scope.row.makingType === 2 && scope.row.status !== 3)" :ref="scope.row.id" placement="top" width="300" trigger="click">
@@ -183,7 +167,6 @@
           <el-button type="danger" size="mini" @click="showConfirm = !showConfirm, orderId = scope.row.id">删除</el-button>
         </template>
       </el-table-column>
-
     </el-table>
 
     <div class="block">
@@ -209,7 +192,6 @@
         <el-button type="danger" @click="confirmDelete()">确 定</el-button>
       </span>
     </el-dialog>
-
   </div>
 </template>
 
@@ -223,12 +205,16 @@ import {
   addRemark,
   getOrderById
 } from '@/api/order'
+import {
+  getUsers
+} from '@/api/user'
 export default {
   data() {
     return {
       listLoading: true,
       tableKey: 0,
       total: 0,
+      customerList: [],
       filter: {},
       orderList: [],
       summary: {
@@ -250,7 +236,13 @@ export default {
     }
   },
   created() {
-    this.filter = JSON.parse(sessionStorage.getItem('filter')).filter === undefined ? { pageIndex: 1, pageSize: 10 } : JSON.parse(sessionStorage.getItem('filter')).filter
+    this.filter =
+            JSON.parse(sessionStorage.getItem('filter')).filter === undefined
+              ? {
+                pageIndex: 1,
+                pageSize: 10
+              }
+              : JSON.parse(sessionStorage.getItem('filter')).filter
   },
   mounted() {
     this.getOrderList()
@@ -264,7 +256,14 @@ export default {
         ...this.filter
       }
       // this.$store.dispatch('filter/setFilter', this.filter)
-      sessionStorage.setItem('filter', JSON.stringify({ filter: { ...this.filter }}))
+      sessionStorage.setItem(
+        'filter',
+        JSON.stringify({
+          filter: {
+            ...this.filter
+          }
+        })
+      )
       getOrders(params).then(res => {
         if (res.code === 10000) {
           this.orderList = res.data
@@ -355,16 +354,18 @@ export default {
     },
     getDetailById(orderId) {
       this.orderInfo = {}
-      getOrderById(orderId).then(res => {
-        if (res.code === 10000) {
-          this.orderInfo = res.data
-        }
-      }).catch(err => {
-        this.$message({
-          type: 'error',
-          message: err.message
+      getOrderById(orderId)
+        .then(res => {
+          if (res.code === 10000) {
+            this.orderInfo = res.data
+          }
         })
-      })
+        .catch(err => {
+          this.$message({
+            type: 'error',
+            message: err.message
+          })
+        })
     },
     // 删除订单
     confirmDelete() {
@@ -379,6 +380,19 @@ export default {
       })
       this.showConfirm = !this.showConfirm
     },
+    // 搜索客户
+    fetchCustomer(keywords) {
+      const option = {
+        userType: '2',
+        userName: keywords,
+        departmentId: null,
+        pageIndex: 1,
+        pageSize: 10000000
+      }
+      getUsers(option).then(res => {
+        this.customerList = res.data
+      })
+    },
     queryData() {
       this.filter.pageIndex = 1
       this.getOrderList()
@@ -391,7 +405,6 @@ export default {
       this.filter.pageIndex = val
       this.getOrderList()
     }
-
   }
 }
 </script>

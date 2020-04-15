@@ -2,7 +2,10 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="filter.orderNo" placeholder="订单编号" style="width: 200px;" class="filter-item" clearable />
-      <el-input v-model="filter.customerName" placeholder="客户" style="width: 200px;" class="filter-item" clearable />
+      <el-select v-model="filter.customerName" filterable remote clearable :remote-method="fetchCustomer" placeholder="客户" @change="queryData">
+        <el-option v-for="customer in customerList" :key="customer.id" :value="customer.userName" :label="customer.userName" />
+      </el-select>
+      <!-- <el-input v-model="filter.customerName" placeholder="客户" style="width: 200px;" class="filter-item" clearable /> -->
       <el-input v-model="filter.productNo" placeholder="产品编号" style="width: 200px;" class="filter-item" clearable />
       <el-input v-model="filter.productName" placeholder="产品名称" style="width: 200px;" class="filter-item" clearable />
       <el-date-picker v-model="filter.queryDate" clearable class="filter-item" value-format="yyyy-MM-dd" :format="'yyyy-MM-dd'" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" />
@@ -76,12 +79,16 @@
 import {
   returnOrderDetailList
 } from '@/api/order'
+import {
+  getUsers
+} from '@/api/user'
 export default {
   data() {
     return {
       listLoading: true,
       tableKey: 0,
       total: 0,
+      customerList: [],
       filter: {
         isNeedFlag: true,
         queryDate: [],
@@ -110,12 +117,28 @@ export default {
     }
   },
   created() {
-    this.filter = JSON.parse(sessionStorage.getItem('returnOrderDetailList')).params === undefined ? { pageIndex: 1, pageSize: 10 } : JSON.parse(sessionStorage.getItem('returnOrderDetailList')).params
+    this.filter = JSON.parse(sessionStorage.getItem('returnOrderDetailList')).params === undefined ? {
+      pageIndex: 1,
+      pageSize: 10
+    } : JSON.parse(sessionStorage.getItem('returnOrderDetailList')).params
   },
   mounted() {
     this.getOrderList()
   },
   methods: {
+    // 搜索客户
+    fetchCustomer(keywords) {
+      const option = {
+        userType: '2',
+        userName: keywords,
+        departmentId: null,
+        pageIndex: 1,
+        pageSize: 10000000
+      }
+      getUsers(option).then(res => {
+        this.customerList = res.data
+      })
+    },
     selectTable(select) {
       this.batchData.productNumber = select.length // 退筒个数;
       let tempNumber = 0
@@ -220,7 +243,11 @@ export default {
       const params = {
         ...this.filter
       }
-      sessionStorage.setItem('returnOrderDetailList', JSON.stringify({ params: { ...this.filter }}))
+      sessionStorage.setItem('returnOrderDetailList', JSON.stringify({
+        params: {
+          ...this.filter
+        }
+      }))
       returnOrderDetailList(params).then(res => {
         if (res.code === 10000) {
           this.orderList = res.data
@@ -250,13 +277,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.batchData{
-  span{
-    font-size: 14px;
-    font-weight: 600;
-    color: #409EFF;
-  }
+.batchData {
+    span {
+        font-size: 14px;
+        font-weight: 600;
+        color: #409EFF;
+    }
 }
+
 .block {
     padding-top: 15px;
 }
