@@ -369,6 +369,22 @@ export const constantRoutes = [
         meta: { title: '设备维护' }
       }]
   },
+  {
+    path: '/pring',
+    component: Layout,
+    redirect: '/pring/history',
+    name: 'System',
+    meta: { title: '打印管理', icon: 'system-management' },
+    alwaysShow: true,
+    children: [
+      {
+        path: '/pring/history',
+        name: 'PringHistory',
+        component: () => import('@/views/print/TakeDeliveryOfGoods/index.vue'),
+        meta: { title: '提货单' }
+      }
+    ]
+  },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
