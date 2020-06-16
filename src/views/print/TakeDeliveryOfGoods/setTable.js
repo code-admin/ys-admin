@@ -5,7 +5,7 @@ export function setTable(tableData, column) {
     if (index === 0) {
       spanArr.push(1)
     } else {
-      if (item[column] === tableData[index - 1][column]) { // 第一列需合并相同内容的判断条件
+      if (item[column] === tableData[index - 1][column]) {
         spanArr[concat] += 1
         spanArr.push(0)
       } else {

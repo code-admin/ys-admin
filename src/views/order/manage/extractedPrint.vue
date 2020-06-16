@@ -73,6 +73,10 @@ import {
 import {
   getOrderById
 } from '@/api/order'
+import {
+  savePrint
+} from '@/api/print'
+
 export default {
   computed: {
     ...mapGetters([
@@ -113,7 +117,6 @@ export default {
       const leftNav = document.getElementsByClassName('el-scrollbar')[0]
       const sidebarContainer = document.getElementsByClassName('sidebar-container')[0]
       const mainContainer = document.getElementsByClassName('main-container')[0]
-
       const print_box = document.getElementById('print_box')
 
       //  给对应DOM添加class
@@ -125,8 +128,41 @@ export default {
 
       print_box.style.cssText = 'border: 0px;margin-top:-20px;'
 
-      window.print() //  调用打印功能
-      window.location.reload() //  点击取消打印后刷新页面，恢复点击打印按钮之前的原始数据
+      // 保存打印信息的参数
+      const printDetails = []
+      this.orderInfo.orderExts && this.orderInfo.orderExts.forEach(item => {
+        if (JSON.stringify(item) !== '{}') {
+          printDetails.push({
+            productName: item.productName, // 产品名称
+            requirement: item.requirement, // 要求
+            width: item.width, // 宽度
+            weight: item.weight, // 克重
+            goodsNumber: item.goodsNumber, // 个数
+            length: item.goodsLength, // 长度
+            price: item.price, // 价格
+            productNumber: item.number, // 条数
+            remark: item.remark
+          })
+        }
+      })
+      const option = {
+        customerName: this.orderInfo.orderUserName, // 客户,
+        delivery: `${this.orderInfo.deliveryName} / ${this.orderInfo.address} / ${this.orderInfo.customerName} / ${this.orderInfo.phone}`, //  发货方式,
+        functionNo: this.orderInfo.orderNo, // : 单号,
+        functionTime: this.orderInfo.updateTime, // 订单日期
+        printDetails, // 打印详情内容,
+        remark: this.orderInfo.remark, // : 备注,
+        type: 1
+      }
+      savePrint(option).then(res => {
+        window.print() //  调用打印功能
+        window.location.reload() //  点击取消打印后刷新页面，恢复点击打印按钮之前的原始数据
+      }).catch(err => {
+        this.$notify.error({
+          title: '错误',
+          message: err.message
+        })
+      })
     }
   }
 }

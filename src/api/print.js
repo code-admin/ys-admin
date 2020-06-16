@@ -23,3 +23,27 @@ export function queryList(data) {
     data
   })
 }
+
+/**
+ *保存打印
+ * @param {*} data
+ */
+export function savePrint(data) {
+  return request({
+    url: '/print/savePrint',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ *获取打印信息
+ * @param {*} data
+ */
+export function getPrintInfos(printNo) {
+  return request({
+    url: `/print/getPrintInfos/${printNo}`,
+    method: 'post'
+  })
+}
+

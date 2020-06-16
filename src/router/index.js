@@ -374,14 +374,14 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/pring/history',
     name: 'System',
-    meta: { title: '打印管理', icon: 'system-management' },
+    meta: { title: '打印管理', icon: 'printer' },
     alwaysShow: true,
     children: [
       {
         path: '/pring/history',
         name: 'PringHistory',
         component: () => import('@/views/print/TakeDeliveryOfGoods/index.vue'),
-        meta: { title: '提货单' }
+        meta: { title: '打印历史' }
       }
     ]
   },
