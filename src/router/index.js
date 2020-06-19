@@ -124,7 +124,8 @@ export const constantRoutes = [
         name: 'OrderRefund',
         component: () => import('@/views/order/refund/index'),
         meta: { title: '退筒管理' }
-      }, {
+      },
+      {
         path: '/order/refund/add',
         name: 'OrderRefundAdd',
         component: () => import('@/views/order/refund/Add'),
@@ -137,6 +138,12 @@ export const constantRoutes = [
         component: () => import('@/views/order/refund/Batch'),
         meta: { title: '添加退筒' },
         hidden: true
+      },
+      {
+        path: '/order/refund/history',
+        name: 'OrderRefundHistory',
+        component: () => import('@/views/order/refund/History'),
+        meta: { title: '退筒记录' }
       }
     ]
   },
@@ -370,16 +377,16 @@ export const constantRoutes = [
       }]
   },
   {
-    path: '/pring',
+    path: '/print',
     component: Layout,
-    redirect: '/pring/history',
-    name: 'System',
+    redirect: '/print/history',
+    name: 'Print',
     meta: { title: '打印管理', icon: 'printer' },
     alwaysShow: true,
     children: [
       {
-        path: '/pring/history',
-        name: 'PringHistory',
+        path: '/print/history',
+        name: 'PrintHistory',
         component: () => import('@/views/print/TakeDeliveryOfGoods/index.vue'),
         meta: { title: '打印历史' }
       }

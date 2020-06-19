@@ -153,17 +153,14 @@ export default {
             requirement: item.requirement, // 要求
             width: item.width, // 宽度
             weight: item.weight, // 克重
-            goodsNumber: item.goodsNumber, // 个数
             length: item.goodsLength, // 长度
-            price: item.price, // 价格
-
+            goodsNumber: item.number, // 个数
             productNumber: item.productNumber ? item.productNumber : null, // 条数
-
             totalWeight: item.totalWeight, // 重量
-            tareWeight: item.totalWeight, // 车皮
+            tareWeight: item.tareWeight, // 车皮
+            price: item.price, // 价格
             netWeight: item.netWeight, // 净重
             amount: item.totalPrice, // 金额
-
             remark: item.remark
           })
         }
@@ -179,7 +176,7 @@ export default {
         totalAmount: this.orderInfo.totalPrice, // 金额
         delivery: `${this.orderInfo.deliveryName ? this.orderInfo.deliveryName : ''} / ${this.orderInfo.address ? this.orderInfo.address : ''} / ${this.orderInfo.customerName ? this.orderInfo.customerName : ''} / ${this.orderInfo.phone ? this.orderInfo.phone : ''}`, //  地址,
         // remark: this.orderInfo.remark, // : 备注,
-        type: 3 // 退货
+        type: this.orderInfo.makingType === 1 ? 2 : 3 // 退货
       }
       savePrint(option).then(res => {
         window.print() //  调用打印功能

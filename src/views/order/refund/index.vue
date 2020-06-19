@@ -67,6 +67,7 @@
       <el-table-column label="退筒个数" prop="returnNumber" align="center" />
       <el-table-column label="退筒重量(KG)" prop="returnWeight" align="center" width="120" />
       <el-table-column label="退筒金额" prop="returnPrice" align="center" />
+      <el-table-column label="送货地址" prop="address" align="center" show-overflow-tooltip width="200" />
       <el-table-column label="备注" prop="remark" align="center" />
     </el-table>
     <div class="block">

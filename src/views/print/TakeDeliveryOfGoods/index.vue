@@ -6,7 +6,7 @@
       <el-input v-model="filter.customerName" placeholder="客户" style="width: 200px;" class="filter-item" clearable />
       <el-select v-model="filter.type" placeholder="类型" style="width: 200px;" class="filter-item" clearable>
         <el-option label="提货单" :value="1" />
-        <el-option label="出库单" :value="2" />
+        <el-option label="结算单" :value="2" />
         <el-option label="退货单" :value="3" />
         <el-option label="退筒单" :value="4" />
         <el-option label="收袋款" :value="5" />
@@ -49,6 +49,8 @@
       <el-table-column label="单价" prop="price" align="center" />
       <el-table-column label="备注" prop="detailRemark" align="center" />
       <el-table-column label="发货方式" prop="delivery" align="center" width="220" show-overflow-tooltip />
+      <el-table-column label="净重" prop="totalNetWeight" align="center" />
+      <el-table-column label="金额" prop="totalAmount" align="center" />
       <el-table-column label="打印备注" prop="remark" align="center" />
       <el-table-column label="制单" prop="createName" align="center" />
       <el-table-column label="审核" prop="auditBy" align="center" />
@@ -87,12 +89,14 @@ export default {
         if (type === 1) {
           return '提货单'
         } else if (type === 2) {
-          return '出库单'
+          return '结算单'
         } else if (type === 3) {
           return '退货单'
         } else if (type === 4) {
-          return '收袋款'
+          return '退筒单'
         } else if (type === 5) {
+          return '收袋款'
+        } else if (type === 6) {
           return '其他款'
         }
       }
@@ -124,7 +128,8 @@ export default {
     },
     objectSpanMethod({ row, column, rowIndex, columnIndex }) {
       if (columnIndex === 0 || columnIndex === 2 || columnIndex === 3 || columnIndex === 4 ||
-      columnIndex === 5 || columnIndex === 14 || columnIndex === 15 || columnIndex === 16 || columnIndex === 17 || columnIndex === 18) {
+      columnIndex === 5 || columnIndex === 14 || columnIndex === 15 || columnIndex === 16 ||
+      columnIndex === 17 || columnIndex === 18 || columnIndex === 19 || columnIndex === 20) {
         const _row = (setTable(this.dataList, 'printNumber'))[rowIndex]
         const _col = _row > 0 ? 1 : 0
         return {

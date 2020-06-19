@@ -184,6 +184,10 @@ import {
   selectRefundByOrderDetail,
   submitRefundByOrderDetail
 } from '@/api/order'
+import {
+  savePrint
+} from '@/api/print'
+
 export default {
   data() {
     const date = new Date()
@@ -303,10 +307,50 @@ export default {
 
       print_box.style.cssText = 'border: 0px;'
 
-      window.print() //  调用打印功能
-      // 返回到列表
-      this.$router.back()
-      window.location.reload() //  点击取消打印后刷新页面，恢复点击打印按钮之前的原始数据
+      // 保存打印信息的参数
+      const printDetails = []
+      this.bill.orderExpressList && this.bill.orderExpressList.forEach(item => {
+        printDetails.push({
+          productName: item.productName, // 产品名称
+          // requirement: item.requirement, // 要求
+          // width: item.width, // 宽度
+          // weight: item.weight, // 克重
+          // length: item.goodsLength, // 长度
+          goodsNumber: item.number, // 个数
+          // productNumber: item.productNumber ? item.productNumber : null, // 条数
+          totalWeight: item.totalWeight, // 重量
+          // tareWeight: item.tareWeight, // 车皮
+          price: item.price, // 价格
+          netWeight: item.netWeight, // 净重
+          amount: item.totalPrice // 金额
+          // remark: item.remark
+        })
+      })
+      const option = {
+        customerName: this.bill.orderRefunds[0] ? this.bill.orderRefunds[0].customerName : null, // 客户,
+        functionNo: this.bill.returnNo, // : 单号,
+        functionTime: this.bill.collectionTime, // 订单日期
+
+        printDetails: printDetails, // 打印详情内容,
+
+        totalNetWeight: this.bill.totalNetWeight, // 净重
+        totalAmount: this.bill.totalPrice, // 金额
+        // delivery: `${this.orderInfo.deliveryName ? this.orderInfo.deliveryName : ''} / ${this.orderInfo.address ? this.orderInfo.address : ''} / ${this.orderInfo.customerName ? this.orderInfo.customerName : ''} / ${this.orderInfo.phone ? this.orderInfo.phone : ''}`, //  地址,
+        remark: this.bill.remark, // : 备注,
+        makingBy: this.name, // 制单
+        type: 4 // 退筒
+      }
+      savePrint(option).then(res => {
+        window.print() //  调用打印功能
+        // 返回到列表
+        this.$router.back()
+        window.location.reload() //  点击取消打印后刷新页面，恢复点击打印按钮之前的原始数据
+      }).catch(err => {
+        this.$notify.error({
+          title: '错误',
+          message: err.message
+        })
+      })
     }
   }
 }
