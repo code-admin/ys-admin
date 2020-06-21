@@ -263,6 +263,24 @@
     <!-- 添加出库窗口 -->
     <!-- :span-method="objectSpanMethod" -->
     <el-dialog :close-on-click-modal="false" :title="`添加 ( ${orderInfo.orderNo} ) 订单出库`" :visible.sync="outStockVisible" width="80%">
+
+      <el-dialog
+        width="30%"
+        title="确认日期"
+        :visible.sync="innerVisible"
+        append-to-body
+      >
+        <el-form label-position="right" label-width="80px" :model="orderProduct">
+          <el-form-item label="出库日期">
+            <el-date-picker v-model="expressTime" type="date" placeholder="选择日期" />
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button size="mini" @click="innerVisible = false">取 消</el-button>
+          <el-button type="primary" icon="el-icon-finished" :loading="submitOutstockLoading" size="mini" @click="submitOutstock">确认</el-button>
+        </div>
+      </el-dialog>
+
       <el-table :data="outStockList" size="mini">
         <el-table-column property="name" label="产品编号/名称" align="center" width="140" show-overflow-tooltip />
         <el-table-column property="requirement" label="要求" align="center" show-overflow-tooltip />
@@ -314,7 +332,7 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="outStockVisible = false">取 消</el-button>
         <el-button type="primary" icon="el-icon-edit-outline" :loading="saveOutStockLoading" @click="saveOutStock">保 存</el-button>
-        <el-button type="primary" icon="el-icon-finished" :loading="submitOutstockLoading" @click="submitOutstock">保存并出库</el-button>
+        <el-button type="primary" icon="el-icon-finished" @click="innerVisible=true, expressTime=new Date()">保存并出库</el-button>
       </div>
     </el-dialog>
 
@@ -555,7 +573,9 @@ export default {
       confirmData: {
         orderId: this.$route.params.id,
         priceChangeList: []
-      }
+      },
+      expressTime: new Date(),
+      innerVisible: false
     }
   },
   mounted() {
@@ -630,9 +650,14 @@ export default {
       })
     },
     submitOutstock() {
+      this.expressTime = this.$moment(this.expressTime).format('YYYY-MM-DD')
+      const expressList = this.outStockList.map(item => {
+        return { ...item, expressTime: this.expressTime }
+      })
+
       this.submitOutstockLoading = !this.submitOutstockLoading
       submitDeliveryOrder({
-        orderExpressList: this.outStockList
+        orderExpressList: expressList
       }).then(res => {
         if (res.code === 10000) {
           this.$message({
