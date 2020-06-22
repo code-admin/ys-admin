@@ -55,7 +55,9 @@
       <el-table-column label="制单" prop="createName" align="center" />
       <el-table-column label="审核" prop="auditBy" align="center" />
       <el-table-column label="操作" align="center" fixed="right">
-        <el-button type="text" size="mini">打印</el-button>
+        <template slot-scope="{row}">
+          <el-button type="text" size="mini" @click="handleView(row)">打印</el-button>
+        </template>
       </el-table-column>
     </el-table>
     <div class="block">
@@ -65,7 +67,9 @@
 </template>
 
 <script>
-import { setTable } from './setTable'
+import {
+  setTable
+} from './setTable'
 import {
   queryList
 } from '@/api/print.js'
@@ -114,6 +118,43 @@ export default {
         this.listLoading = false
       })
     },
+    handleView(obj) {
+      let routeData = null
+      if (obj.type === 1) {
+        routeData = this.$router.resolve({
+          name: 'PrintHistoryView',
+          params: {
+            id: obj.printNumber
+          }
+        })
+      } else if (obj.type === 2) {
+        routeData = this.$router.resolve({
+          name: 'PrintHistoryView2',
+          params: {
+            id: obj.printNumber
+          }
+        })
+      } else if (obj.type === 3) {
+        routeData = this.$router.resolve({
+          name: 'PrintHistoryView3',
+          params: {
+            id: obj.printNumber
+          }
+        })
+      } else if (obj.type === 4) {
+        routeData = this.$router.resolve({
+          name: 'PrintHistoryView4',
+          params: {
+            id: obj.printNumber
+          }
+        })
+      } else if (obj.type === 5) {
+        console.log(obj)
+      } else if (obj.type === 6) {
+        console.log(obj)
+      }
+      window.open(routeData.href, '_blank')
+    },
     queryData() {
       this.filter.pageIndex = 1
       this.getData()
@@ -126,10 +167,18 @@ export default {
       this.filter.pageIndex = val
       this.getData()
     },
-    objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+    /**
+         * 合并列
+         */
+    objectSpanMethod({
+      row,
+      column,
+      rowIndex,
+      columnIndex
+    }) {
       if (columnIndex === 0 || columnIndex === 2 || columnIndex === 3 || columnIndex === 4 ||
-      columnIndex === 5 || columnIndex === 14 || columnIndex === 15 || columnIndex === 16 ||
-      columnIndex === 17 || columnIndex === 18 || columnIndex === 19 || columnIndex === 20) {
+                columnIndex === 5 || columnIndex === 14 || columnIndex === 15 || columnIndex === 16 ||
+                columnIndex === 17 || columnIndex === 18 || columnIndex === 19 || columnIndex === 20) {
         const _row = (setTable(this.dataList, 'printNumber'))[rowIndex]
         const _col = _row > 0 ? 1 : 0
         return {

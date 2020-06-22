@@ -163,6 +163,13 @@ export const constantRoutes = [
         meta: { title: '收款管理' }
       },
       {
+        path: '/bill/receipt/add',
+        name: 'BillReceiptAdd',
+        component: () => import('@/views/bill/receipt/Add'),
+        meta: { title: '添加退筒单' },
+        hidden: true
+      },
+      {
         path: '/bill/receipt/addReturn',
         name: 'BillReceiptAddReturn',
         component: () => import('@/views/bill/receipt/AddReturn'),
@@ -387,10 +394,39 @@ export const constantRoutes = [
       {
         path: '/print/history',
         name: 'PrintHistory',
-        component: () => import('@/views/print/TakeDeliveryOfGoods/index.vue'),
+        component: () => import('@/views/print/index.vue'),
         meta: { title: '打印历史' }
       }
     ]
+  },
+
+  {
+    path: '/print/history/view/:id',
+    name: 'PrintHistoryView',
+    component: () => import('@/views/print/PrintView.vue'),
+    hidden: true,
+    meta: { title: '提货单' }
+  },
+  {
+    path: '/print/history/view/2/:id',
+    name: 'PrintHistoryView2',
+    component: () => import('@/views/print/PrintView2.vue'),
+    hidden: true,
+    meta: { title: '结算单' }
+  },
+  {
+    path: '/print/history/view/3/:id',
+    name: 'PrintHistoryView3',
+    component: () => import('@/views/print/PrintView3.vue'),
+    hidden: true,
+    meta: { title: '结算单' }
+  },
+  {
+    path: '/print/history/view/4/:id',
+    name: 'PrintHistoryView4',
+    component: () => import('@/views/print/PrintView4.vue'),
+    hidden: true,
+    meta: { title: '结算单' }
   },
 
   // 404 page must be placed at the end !!!

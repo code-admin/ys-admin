@@ -40,7 +40,7 @@
             <td class="lab">{{ order.requirement }}</td>
             <td class="lab">{{ order.width }}</td>
             <td class="lab">{{ order.weight }}</td>
-            <td class="lab">{{ order. goodsLength ? order.goodsLength : '' }}</td>
+            <td class="lab">{{ order.goodsLength ? order.goodsLength : '' }}</td>
             <td class="lab">{{ order.number }}</td>
             <td class="lab">{{ order.productNumber ? order.productNumber : '' }}</td>
             <td class="lab">{{ order.totalWeight }}</td>
