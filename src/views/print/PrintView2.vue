@@ -56,7 +56,7 @@
           </tr>
           <tr class="tr">
             <td class="lab">欠款:</td>
-            <td class="text" style="text-align:left;padding-left: 15px" colspan="5">{{ print.totalAmount }}</td>
+            <td class="text" style="text-align:left;padding-left: 15px" colspan="5">{{ print.totalAmount | capitalAmount }}</td>
             <td class="lab">净重</td>
             <td class="text" colspan="3">{{ print.totalNetWeight }}</td>
             <td class="lab">金额</td>
@@ -64,7 +64,7 @@
           </tr>
           <tr class="tr">
             <td class="lab">制单:</td>
-            <td class="text" style="text-align:left;padding-left: 15px;" colspan="3">{{ print.createBy }}</td>
+            <td class="text" style="text-align:left;padding-left: 15px;" colspan="3">{{ print.makingBy }}</td>
             <td class="lab">司机:</td>
             <td class="text" colspan="2">&nbsp;</td>
             <td class="lab">签收:</td>

@@ -19,7 +19,7 @@
       <el-table-column label="流水号" prop="printNumber" align="center" width="140">
         <template slot-scope="{row}">
           <div>
-            <el-button type="text" size="mini">{{ row.printNumber }}</el-button>
+            <el-button type="text" size="mini" @click="handleView(row)">{{ row.printNumber }}</el-button>
           </div>
         </template>
       </el-table-column>
@@ -149,9 +149,19 @@ export default {
           }
         })
       } else if (obj.type === 5) {
-        console.log(obj)
+        routeData = this.$router.resolve({
+          name: 'PrintHistoryView5',
+          params: {
+            id: obj.printNumber
+          }
+        })
       } else if (obj.type === 6) {
-        console.log(obj)
+        routeData = this.$router.resolve({
+          name: 'PrintHistoryView5',
+          params: {
+            id: obj.printNumber
+          }
+        })
       }
       window.open(routeData.href, '_blank')
     },

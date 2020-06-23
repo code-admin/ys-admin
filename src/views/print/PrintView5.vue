@@ -5,17 +5,17 @@
 
         <div class="company">浙江亚设塑业有限公司</div>
         <div class="title">
-          <el-select v-model="bill.feeType" placeholder="请选择收款类型" filterable style="text-align:left">
-            <el-option :value="1" label="收袋款" />
-            <el-option :value="2" label="其他款" />
-          </el-select>
+          {{
+            print.type === 5 ? '收袋款':'其他款'
+          }}
+
         </div>
 
         <img class="logo" src="../../assets/imgs/arsh_logo.png">
 
         <div class="print">
-          <el-button type="text" size="mini" icon="el-icon-close" style="color:#F56C6C" @click="$router.back()">关闭</el-button>
-          <el-button type="text" size="mini" icon="el-icon-printer" @click="saveData">保存并打印</el-button>
+          <el-button type="text" size="mini" icon="el-icon-close" style="color:#F56C6C" @click="closeWindow">关闭</el-button>
+          <el-button type="text" size="mini" icon="el-icon-printer" @click="clickPrinting">保存并打印</el-button>
         </div>
 
         <div class="bar">
@@ -24,15 +24,13 @@
               <span>付款人(客户): </span>
             </el-col>
             <el-col :span="8">
-              <el-select v-model="bill.userId" placeholder="请选择付款人(客户)" filterable style="text-align:left" @change="getOption">
-                <el-option v-for="user in customeList" :key="user.loginName" :label="user.userName" :value="user.id" />
-              </el-select>
+              {{ print.customerName }}
             </el-col>
             <el-col :span="4" style="text-align: right">
               <span>日期:</span>
             </el-col>
             <el-col :span="8">
-              <el-date-picker v-model="bill.collectionTime" style="text-align:left" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="选择收款日期" />
+              {{ print.functionTime | moment('YYYY-MM-DD') }}
             </el-col>
           </el-row>
         </div>
@@ -40,21 +38,21 @@
         <table style="border-collapse:collapse;border:none;" width="100%">
           <tr class="tr">
             <td class="lab">大写:</td>
-            <td class="text" style="text-align:left;padding-left: 15px" colspan="4"><span v-if="bill.amount">{{ bill.amount | capitalAmount }}</span></td>
+            <td class="text" style="text-align:left;padding-left: 15px" colspan="4"><span v-if="print.totalAmount">{{ print.totalAmount | capitalAmount }}</span></td>
             <td class="lab">金额</td>
             <td class="text" colspan="2">
-              <el-input v-model="bill.amount" />
+              <el-input v-model="print.totalAmount" />
             </td>
           </tr>
           <tr class="tr">
             <td class="lab">备注:</td>
             <td class="text" colspan="7">
-              <el-input v-model="bill.remark" />
+              {{ print.remark }}
             </td>
           </tr>
           <tr class="tr">
             <td class="lab">制单:</td>
-            <td class="text">{{ name }}</td>
+            <td class="text">{{ print.makingBy }}</td>
             <td>司机:</td>
             <td class="text" style="width:130px;">&nbsp;</td>
             <td>签收:</td>
@@ -74,89 +72,35 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import { getCustomes } from '@/api/user'
-import { submitOrderBill } from '@/api/bill'
-import { savePrint } from '@/api/print'
+import { getPrintInfos } from '@/api/print'
 
 export default {
   data() {
     return {
-      loading: false,
+      loading: true,
       customeList: [],
-      bill: {
-        feeType: 1,
-        customerName: null,
-        collectionTime: this.$moment(new Date()).format('YYYY-MM-DD')
-      }
+      print: {}
     }
   },
-  computed: {
-    ...mapGetters([
-      'name'
-    ])
-  },
   mounted() {
-    this.getCustomeList()
+    this.getDetailById(this.$route.params.id)
   },
   methods: {
-    getCustomeList() {
-      getCustomes().then(res => {
-        this.customeList = res.data
+    getDetailById(params) {
+      getPrintInfos(params).then(res => {
+        this.print = res.data
+        this.loading = !this.loading
       })
     },
-    getOption(opt) {
-      const current = this.customeList.find(item => {
-        return item.id === opt
-      })
-      this.bill.customerName = current.userName
+    closeWindow() {
+      window.close()
     },
-    saveData() {
-      submitOrderBill(this.bill).then(res => {
-        this.clickPrinting()
-      })
-    },
-
     clickPrinting() {
-      //  找到需要隐藏的DOM节点
-      const head = document.getElementsByClassName('navbar')[0]
       const printBtn = document.getElementsByClassName('print')[0]
-      const leftNav = document.getElementsByClassName('el-scrollbar')[0]
-      const sidebarContainer = document.getElementsByClassName('sidebar-container')[0]
-      const mainContainer = document.getElementsByClassName('main-container')[0]
-
-      const print_box = document.getElementById('print_box')
-
-      //  给对应DOM添加class
-      head.classList.add('printHideCss')
       printBtn.classList.add('printHideCss')
-      leftNav.classList.add('printHideCss')
-      sidebarContainer.classList.add('printHideCss')
-      mainContainer.classList.add('clearCss')
 
-      print_box.style.cssText = 'border: 0px;'
-
-      // window.print() //  调用打印功能
-      // // 返回到列表
-      // this.$router.back()
-      // window.location.reload() //  点击取消打印后刷新页面，恢复点击打印按钮之前的原始数据
-
-      const option = {
-        customerName: this.bill.customerName, // 客户,
-        functionTime: this.bill.collectionTime, // 订单日期
-        totalAmount: this.bill.amount, // 金额
-        remark: this.bill.remark, // : 备注,
-        type: this.bill.feeType === 1 ? 5 : 6// 收袋款
-      }
-      savePrint(option).then(res => {
-        window.print() //  调用打印功能
-        window.location.reload() //  点击取消打印后刷新页面，恢复点击打印按钮之前的原始数据
-      }).catch(err => {
-        this.$notify.error({
-          title: '错误',
-          message: err.message
-        })
-      })
+      window.print() //  调用打印功能
+      window.location.reload() //  点击取消打印后刷新页面，恢复点击打印按钮之前的原始数据
     }
   }
 }

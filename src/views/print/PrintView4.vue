@@ -103,7 +103,7 @@
           </tr>
           <tr class="tr">
             <td class="lab">制单:</td>
-            <td class="text" style="text-align:left;padding-left: 15px;" colspan="2">{{ print.createBy }}</td>
+            <td class="text" style="text-align:left;padding-left: 15px;" colspan="2">{{ print.makingBy }}</td>
             <td class="lab">司机:</td>
             <td class="text" colspan="2">&nbsp;</td>
             <td class="lab">签收:</td>

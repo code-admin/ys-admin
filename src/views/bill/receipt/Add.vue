@@ -43,7 +43,7 @@
             <td class="text" style="text-align:left;padding-left: 15px" colspan="4"><span v-if="bill.amount">{{ bill.amount | capitalAmount }}</span></td>
             <td class="lab">金额</td>
             <td class="text" colspan="2">
-              <el-input v-model="bill.amount" />
+              <el-input v-model="bill.amount" placeholder="请输入金额" />
             </td>
           </tr>
           <tr class="tr">

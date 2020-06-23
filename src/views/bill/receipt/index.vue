@@ -178,12 +178,13 @@ export default {
     },
 
     editInit() {
-      const date = new Date()
-      this.bill = {
-        feeType: 1,
-        collectionTime: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
-      }
-      this.dialogFormVisible = !this.dialogFormVisible
+      // const date = new Date()
+      // this.bill = {
+      //   feeType: 1,
+      //   collectionTime: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+      // }
+      // this.dialogFormVisible = !this.dialogFormVisible
+      this.$router.push({ name: 'BillReceiptAdd' })
     },
     saveBill() {
       submitOrderBill(this.bill).then(res => {

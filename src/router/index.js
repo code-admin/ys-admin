@@ -166,7 +166,7 @@ export const constantRoutes = [
         path: '/bill/receipt/add',
         name: 'BillReceiptAdd',
         component: () => import('@/views/bill/receipt/Add'),
-        meta: { title: '添加退筒单' },
+        meta: { title: '新增收款' },
         hidden: true
       },
       {
@@ -427,6 +427,13 @@ export const constantRoutes = [
     component: () => import('@/views/print/PrintView4.vue'),
     hidden: true,
     meta: { title: '结算单' }
+  },
+  {
+    path: '/print/history/view/5/:id',
+    name: 'PrintHistoryView5',
+    component: () => import('@/views/print/PrintView5.vue'),
+    hidden: true,
+    meta: { title: '收款单' }
   },
 
   // 404 page must be placed at the end !!!

@@ -55,7 +55,7 @@
         </table>
         <el-row :gutter="10">
           <el-col :span="8">
-            <span style="line-height:30px;padding:0 20px;">制单: </span> <span>{{ print.createBy }}</span>
+            <span style="line-height:30px;padding:0 20px;">制单: </span> <span>{{ print.makingBy }}</span>
           </el-col>
           <el-col :span="16">
             <span style="line-height:30px;padding:0 20px;">审核: </span>
