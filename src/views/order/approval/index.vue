@@ -22,6 +22,7 @@
         <el-option label="调价审核" :value="2" />
         <el-option label="数量审核" :value="4" />
         <el-option label="出库审核" :value="3" />
+        <el-option label="订单删除" :value="5" />
       </el-select>
       <el-select v-model="filter.auditStatus" placeholder="审核状态" style="width: 200px;" class="filter-item" clearable>
         <el-option label="待审核" :value="1" />
@@ -55,6 +56,7 @@
             <el-tag v-if="scope.row.auditType===2 " type="danger" size="mini">{{ scope.row.auditTypeName }}</el-tag>
             <el-tag v-if="scope.row.auditType===3 " type="success" size="mini">{{ scope.row.auditTypeName }}</el-tag>
             <el-tag v-if="scope.row.auditType===4 " type="warning" size="mini">{{ scope.row.auditTypeName }}</el-tag>
+            <el-tag v-if="scope.row.auditType===5 " type="danger" size="mini">{{ scope.row.auditTypeName }}</el-tag>
           </div>
         </template>
       </el-table-column>

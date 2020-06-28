@@ -137,7 +137,14 @@
           <div v-if="scope.row.totalPrice" style="color:#f40;">{{ scope.row.makingType === 2 ? `-${ scope.row.totalPrice}` : scope.row.totalPrice }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="状态" prop="statusName" align="center">
+      <el-table-column label="审核状态" prop="totalPrice" align="center">
+        <template slot-scope="{row}">
+          <div>
+            {{ row.auditFlag ? '审核中...':'' }}
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="订单状态" prop="statusName" align="center">
         <template slot-scope="scope">
           <div>
             <el-tag v-if="scope.row.makingType === 1" :type="scope.row.status == 5 ? 'info': 'success'" size="mini">{{ scope.row.statusName }}</el-tag>
@@ -186,7 +193,13 @@
     </el-dialog>
 
     <el-dialog title="提示" :visible.sync="showConfirm" width="300px">
-      <span>确定要删除该订单吗？</span>
+      <p>确定要删除该订单吗？</p>
+      <el-input
+        v-model="deleteRemark"
+        type="textarea"
+        :autosize="{ minRows: 2, maxRows: 4}"
+        placeholder="删除原因"
+      />
       <span slot="footer" class="dialog-footer">
         <el-button @click="showConfirm = false">取 消</el-button>
         <el-button type="danger" @click="confirmDelete()">确 定</el-button>
@@ -233,6 +246,7 @@ export default {
       },
       orderInfo: {},
       orderId: null,
+      deleteRemark: null,
       showConfirm: false
     }
   },
@@ -372,14 +386,16 @@ export default {
     },
     // 删除订单
     confirmDelete() {
-      deleteOrderById(this.orderId).then(res => {
-        if (res.code === 10000) {
-          this.$message({
-            type: 'success',
-            message: '删除成功！'
-          })
-          this.getOrderList()
-        }
+      const option = {
+        orderId: this.orderId,
+        remark: this.deleteRemark
+      }
+      deleteOrderById(option).then(res => {
+        this.$message({
+          type: 'success',
+          message: res.message
+        })
+        this.getOrderList()
       })
       this.showConfirm = !this.showConfirm
     },

@@ -223,6 +223,7 @@
             </div>
           </template>
         </el-table-column>
+        <el-table-column prop="expressTime" label="出库日期" width="90" />
         <el-table-column prop="createBy" label="记录人/时间" align="center" width="180" show-overflow-tooltip>
           <template slot-scope="scope">
             <div>

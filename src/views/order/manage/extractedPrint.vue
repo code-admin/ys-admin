@@ -78,11 +78,6 @@ import {
 } from '@/api/print'
 
 export default {
-  computed: {
-    ...mapGetters([
-      'name'
-    ])
-  },
   data() {
     return {
       loading: true,
@@ -91,6 +86,11 @@ export default {
         orderExts: [{}, {}, {}, {}, {}]
       }
     }
+  },
+  computed: {
+    ...mapGetters([
+      'name'
+    ])
   },
   mounted() {
     this.getDetailById(this.$route.params.id)

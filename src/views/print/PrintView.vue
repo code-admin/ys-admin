@@ -37,8 +37,8 @@
             <td class="lab">{{ order && order.width }}</td>
             <td class="lab">{{ order && order.weight }}</td>
             <td class="lab">{{ order && order.goodsNumber ? order.goodsNumber : '' }}</td>
-            <td class="lab">{{ order && order.goodsLength ? order.goodsLength : '' }}</td>
-            <td class="lab">{{ order && order.number }}</td>
+            <td class="lab">{{ order && order.length ? order.length : '' }}</td>
+            <td class="lab">{{ order && order.productNumber ? order.productNumber : '' }}</td>
             <td class="lab">{{ order && order.price }}</td>
             <td class="lab" style="width:180px;">{{ order && order.remark }}</td>
           </tr>

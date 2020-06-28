@@ -60,10 +60,11 @@ export function getOrderById(id) {
   })
 }
 // 删除订单
-export function deleteOrderById(orderId) {
+export function deleteOrderById(data) {
   return request({
-    url: `/order/deleteOrderById/${orderId}`,
-    method: 'post'
+    url: `/order/deleteOrderById`,
+    method: 'post',
+    data
   })
 }
 
