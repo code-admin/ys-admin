@@ -333,8 +333,12 @@ export default {
 
         printDetails: printDetails, // 打印详情内容,
 
-        totalNetWeight: this.bill.totalNetWeight, // 净重
+        totalGoodsNumber: 0 - this.bill.preReturnNumber, // 个数
+        totalWeight: 0 - this.bill.preReturnWeight, // 重量
+        avgPrice: this.bill.price, // 单价
+        totalNetWeight: 0 - this.bill.preReturnWeight, // 净重 (由于没有车皮，这里重量和净重相等)
         totalAmount: this.bill.totalPrice, // 金额
+
         // delivery: `${this.orderInfo.deliveryName ? this.orderInfo.deliveryName : ''} / ${this.orderInfo.address ? this.orderInfo.address : ''} / ${this.orderInfo.customerName ? this.orderInfo.customerName : ''} / ${this.orderInfo.phone ? this.orderInfo.phone : ''}`, //  地址,
         remark: this.bill.remark, // : 备注,
         makingBy: this.name, // 制单

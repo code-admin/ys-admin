@@ -185,7 +185,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="price" label="单价(吨)" align="center" width="260">
+        <el-table-column prop="price" label="单价(吨)" align="center" width="160">
           <template slot-scope="scope">
             <div v-if="scope.row.confirmPrice && scope.row.confirmPrice !== scope.row.price">
               <span class="confirm-price">{{ scope.row.confirmPrice }} ¥</span>
@@ -197,18 +197,6 @@
               <el-button v-if="orderInfo.status === 2 && (scope.row.status ===1 || scope.row.status ===3)" type="text" size="mini" @click="initPrice(scope.row, scope.$index, 1)">调价</el-button>
             </div>
           </template>
-        </el-table-column>
-        <el-table-column prop="netWeight" label="净重(KG)" align="center" />
-        <el-table-column prop="totalPrice" label="金额" align="center">
-          <!-- <template slot-scope="scope">
-            <div v-if="scope.row.confirmPrice && scope.row.confirmPrice !== scope.row.price">
-              <span class="confirm-price">{{ scope.row.confirmPrice }} ¥</span>
-              <span class="price">{{ scope.row.price }} ¥</span>
-            </div>
-            <div v-else>
-              <span>{{ scope.row.price }} ¥</span>
-            </div>
-          </template> -->
         </el-table-column>
         <el-table-column prop="number" label="出库个数" align="center" width="180">
           <template slot-scope="scope">
@@ -223,6 +211,8 @@
             </div>
           </template>
         </el-table-column>
+        <el-table-column prop="netWeight" label="净重(KG)" align="center" />
+        <el-table-column prop="totalPrice" label="金额" align="center" />
         <el-table-column prop="expressTime" label="出库日期" width="90" />
         <el-table-column prop="createBy" label="记录人/时间" align="center" width="180" show-overflow-tooltip>
           <template slot-scope="scope">
@@ -558,6 +548,7 @@ export default {
       tempProducts: [],
       spanArr: [],
       printArr: [],
+      expressTimes: [],
       productList: [],
 
       showExchange: false,
@@ -832,8 +823,10 @@ export default {
     },
     changePrint(arr) {
       this.printArr = []
+      this.expressTimes = []
       arr.forEach(item => {
         this.printArr.push(item.id)
+        this.expressTimes.push(item.expressTime)
       })
     },
     extractedGoods() {
@@ -858,6 +851,11 @@ export default {
           message: '超过了最大打印5个商品的范围！'
         })
         return
+      } else if (!this.isAllEqual(this.expressTimes)) {
+        this.$notify({
+          title: '提示',
+          message: '出库时间只能是同一天的！'
+        })
       } else {
         this.$router.push({
           name: 'OrderPrinting',
@@ -868,6 +866,15 @@ export default {
             arr: this.printArr
           }
         })
+      }
+    },
+    isAllEqual(array) {
+      if (array.length > 0) {
+        return !array.some(function(value, index) {
+          return value !== array[0]
+        })
+      } else {
+        return true
       }
     },
     changeNumber(index, obj) {
@@ -1016,20 +1023,6 @@ export default {
     },
     // 保存个数
     saveNumber() {
-      // if (this.orderInfo.status < 3) {
-      //   // 未完成出库可以直接改价个数
-      //   updateExpressNumber({
-      //     ...this.updateNumber
-      //   }).then(res => {
-      //     if (res.code === 10000) {
-      //       this.$message({
-      //         type: 'success',
-      //         message: '修改成功'
-      //       })
-      //       this.getDetailById(this.$route.params.id)
-      //     }
-      //   })
-      // } else {
       if (this.updateNumber.number === this.updateNumber.confirmNumber) {
         this.showTempNumber = !this.showTempNumber
         return false

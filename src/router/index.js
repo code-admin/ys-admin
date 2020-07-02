@@ -147,7 +147,22 @@ export const constantRoutes = [
       }
     ]
   },
-
+  {
+    path: '/print',
+    component: Layout,
+    redirect: '/print/history',
+    name: 'Print',
+    meta: { title: '打印管理', icon: 'printer' },
+    alwaysShow: true,
+    children: [
+      {
+        path: '/print/history',
+        name: 'PrintHistory',
+        component: () => import('@/views/print/index.vue'),
+        meta: { title: '打印历史' }
+      }
+    ]
+  },
   {
     path: '/bill',
     component: Layout,
@@ -382,22 +397,6 @@ export const constantRoutes = [
         component: () => import('@/views/system/device/index'),
         meta: { title: '设备维护' }
       }]
-  },
-  {
-    path: '/print',
-    component: Layout,
-    redirect: '/print/history',
-    name: 'Print',
-    meta: { title: '打印管理', icon: 'printer' },
-    alwaysShow: true,
-    children: [
-      {
-        path: '/print/history',
-        name: 'PrintHistory',
-        component: () => import('@/views/print/index.vue'),
-        meta: { title: '打印历史' }
-      }
-    ]
   },
 
   {

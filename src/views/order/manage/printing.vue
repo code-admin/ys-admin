@@ -15,7 +15,7 @@
 
         <div class="bar flex justify-between">
           <div class="tac"><span>客户:</span><span class="text">{{ orderInfo.customerName }}</span></div>
-          <div class="tac"><span>日期:</span><span class="text">{{ orderInfo.updateTime | moment('YYYY-MM-DD') }}</span></div>
+          <div class="tac"><span>日期:</span><span class="text">{{ orderInfo.orderExpressList[0].expressTime }}</span></div>
           <div class="tac"><span>单号:</span><span class="text">{{ orderInfo.orderNo }}</span></div>
         </div>
 
@@ -52,7 +52,7 @@
           </tr>
           <tr class="tr">
             <td class="lab">地址:</td>
-            <td class="text" style="text-align:left;padding-left: 15px;" colspan="12">{{ orderInfo.provinceName && orderInfo.cityName && orderInfo.districtName ? `${orderInfo.provinceName}${orderInfo.cityName}${orderInfo.districtName}${orderInfo.address}` : orderInfo.address }}</td>
+            <td class="text" style="text-align:left;padding-left: 15px;" colspan="12">{{ `${orderInfo.deliveryName ? orderInfo.deliveryName : ''} / ${orderInfo.address ? orderInfo.address : ''} / ${orderInfo.customerName ? orderInfo.customerName : ''} / ${orderInfo.phone ? orderInfo.phone : ''}` }}</td>
           </tr>
           <tr class="tr">
             <td class="lab">欠款:</td>
@@ -168,7 +168,7 @@ export default {
       const option = {
         customerName: this.orderInfo.orderUserName, // 客户,
         functionNo: this.orderInfo.orderNo, // : 单号,
-        functionTime: this.orderInfo.updateTime, // 订单日期
+        functionTime: this.orderInfo.orderExpressList[0].expressTime, // 订单日期
 
         printDetails, // 打印详情内容,
 

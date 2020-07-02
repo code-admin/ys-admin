@@ -15,7 +15,7 @@
 
         <div class="bar flex justify-between">
           <div class="tac"><span>客户:</span><span class="text">{{ print.customerName }}</span></div>
-          <div class="tac"><span>日期:</span><span class="text">{{ print.printTime | moment('YYYY-MM-DD') }}</span></div>
+          <div class="tac"><span>日期:</span><span class="text">{{ print.functionTime | moment('YYYY-MM-DD') }}</span></div>
           <div class="tac"><span>单号:</span><span class="text">{{ print.functionNo }}</span></div>
         </div>
 

@@ -15,7 +15,7 @@
 
         <div class="bar flex justify-between">
           <div class="tac"><span>客户:</span><span class="text">{{ print.customerName }}</span></div>
-          <div class="tac"><span>日期:</span><span class="text">{{ print.printTime | moment('YYYY-MM-DD') }}</span></div>
+          <div class="tac"><span>日期:</span><span class="text">{{ print.functionTime | moment('YYYY-MM-DD') }}</span></div>
           <div class="tac"><span>单号:</span><span class="text">{{ print.functionNo }}</span></div>
         </div>
 
@@ -44,12 +44,14 @@
             <td class="lab" />
 
             <td class="lab">
-              {{ order.number }}
+              {{ order.goodsNumber }}
             </td>
             <td class="lab">
               {{ order.totalWeight }}
             </td>
-            <td class="lab" />
+            <td class="lab">
+              {{ order.tareWeight }}
+            </td>
             <td class="lab">
               {{ order.price }}
             </td>
@@ -57,7 +59,7 @@
               {{ order.netWeight }}
             </td>
             <td class="lab">
-              {{ order.totalPrice }}
+              {{ order.amount }}
             </td>
             <td class="lab" />
           </tr>
@@ -71,31 +73,29 @@
             <td class="lab" />
 
             <td class="lab">
-              {{ -print.preReturnNumber }}
+              {{ print. totalGoodsNumber }}
             </td>
             <td class="lab">
-              {{ -print.preReturnWeight }}
+              {{ print. totalWeight }}
             </td>
-            <td class="lab" />
+            <td class="lab">{{ print.totalTareWeight }}</td>
+            <td class="lab">{{ print.avgPrice }}</td>
             <td class="lab">
-              {{ print.price }}
-            </td>
-            <td class="lab">
-              {{ -print.preReturnWeight }}
+              {{ print.totalNetWeight }}
             </td>
             <td class="lab">
-              {{ print.totalPrice }}
+              {{ print.totalAmount }}
             </td>
             <td class="lab" />
 
           </tr>
           <tr class="tr">
             <td class="lab">退款:</td>
-            <td class="text" style="text-align:left;padding-left: 15px" colspan="6">{{ print.totalPrice | capitalAmount }}</td>
+            <td class="text" style="text-align:left;padding-left: 15px" colspan="6">{{ print.totalAmount | capitalAmount }}</td>
             <td class="lab">净重</td>
-            <td class="text" colspan="1">{{ -print.preReturnWeight }}</td>
+            <td class="text" colspan="1">{{ print.totalNetWeight }}</td>
             <td class="lab">金额</td>
-            <td class="text" colspan="1">{{ print.totalPrice }}</td>
+            <td class="text" colspan="1">{{ print.totalAmount }}</td>
           </tr>
           <tr class="tr">
             <td class="lab">备注:</td>
@@ -142,13 +142,11 @@ export default {
   methods: {
     getDetailById(params) {
       getPrintInfos(params).then(res => {
-        if (res.code === 10000) {
-          this.print = res.data
-          var i = res.data.details.length
-          if (i <= 5) {
-            for (i; i < 5; i++) {
-              this.print.details[i] = {}
-            }
+        this.print = res.data
+        var i = res.data.details.length
+        if (i <= 5) {
+          for (i; i < 5; i++) {
+            this.print.details[i] = {}
           }
         }
         this.loading = !this.loading
