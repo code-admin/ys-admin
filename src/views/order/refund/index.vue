@@ -120,13 +120,12 @@ export default {
     }
   },
   created() {
-    this.filter = JSON.parse(sessionStorage.getItem('returnOrderDetailList')).params === undefined ? {
+    this.filter = JSON.parse(sessionStorage.getItem('returnOrderDetailList')) ? JSON.parse(sessionStorage.getItem('returnOrderDetailList')).params : {
       pageIndex: 1,
       pageSize: 10
-    } : JSON.parse(sessionStorage.getItem('returnOrderDetailList')).params
+    }
   },
   mounted() {
-    this.filter.customerId = null
     this.fetchCustomer()
     this.getOrderList()
   },

@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: '亚设管理后台',
+  title: '亚迦布科技销售系统',
 
   /**
    * @type {boolean} true | false

@@ -4,10 +4,10 @@
 
       <div class="title-container">
         <div>
-          <img src="../../assets/imgs/logo.png" class="img-logo">
+          <!-- <img src="../../assets/imgs/logo.png" class="img-logo"> -->
         </div>
         <div>
-          <h3 class="title">后台登录</h3>
+          <h3 class="title">亚迦布科技销售系统</h3>
         </div>
       </div>
 
@@ -50,7 +50,7 @@
 
     </el-form>
 
-    <div class="copyright">浙ICP备17030257号</div>
+    <div class="copyright">浙ICP备2020031805号</div>
   </div>
 </template>
 

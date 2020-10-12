@@ -20,15 +20,39 @@
           <!-- <a target="_blank" href="https://github.com/PanJiaChen/vue-admin-template/">
             <el-dropdown-item>Github</el-dropdown-item>
           </a>
-          <a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">
-            <el-dropdown-item>Docs</el-dropdown-item>
-          </a> -->
-          <el-dropdown-item icon="el-icon-switch-button" divided>
-            <span @click="logout">退出</span>
-          </el-dropdown-item>
+          -->
+          <div @click="updatePwdModal=true, updatePwd = {}">
+            <el-dropdown-item icon="el-icon-key">
+              <span>修改密码</span>
+            </el-dropdown-item>
+          </div>
+          <div @click="logout">
+            <el-dropdown-item icon="el-icon-switch-button" divided>
+              <span>退出</span>
+            </el-dropdown-item>
+          </div>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
+
+    <!-- 修改密码 -->
+    <el-dialog title="修改密码" :visible.sync="updatePwdModal" append-to-body :close-on-click-modal="false" width="600px">
+      <el-form ref="resetPwdForm" :model="updatePwd" :rules="pwdRules" label-width="80px">
+        <el-form-item label="当前密码" prop="oldPassword">
+          <el-input v-model="updatePwd.oldPassword" show-password />
+        </el-form-item>
+        <el-form-item label="新密码" prop="newPassword">
+          <el-input v-model="updatePwd.newPassword" show-password />
+        </el-form-item>
+        <el-form-item label="确认密码" prop="confirmPassword">
+          <el-input v-model="updatePwd.confirmPassword" show-password />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="updatePwdModal = false">取 消</el-button>
+        <el-button type="primary" @click="updatePassword('resetPwdForm')">更 新</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -38,11 +62,39 @@ import {
 } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import { changePwd } from '@/api/user'
 
 export default {
   components: {
     Breadcrumb,
     Hamburger
+  },
+  data() {
+    return {
+      updatePwdModal: false,
+      updatePwd: {
+        oldPassword: '', // 当前密码
+        newPassword: '', // 新密码
+        confirmPassword: '' // 确认密码
+      },
+      pwdRules: {
+        oldPassword: [{
+          required: true,
+          message: '请输入当前密码',
+          trigger: 'blur'
+        }],
+        newPassword: [{
+          required: true,
+          message: '请输入新密码',
+          trigger: 'blur'
+        }],
+        confirmPassword: [{
+          required: true,
+          message: '请输入确认密码',
+          trigger: 'blur'
+        }]
+      }
+    }
   },
   computed: {
     ...mapGetters([
@@ -55,18 +107,34 @@ export default {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
-    logout() {
-      const loading = this.$loading({
-        lock: true,
-        text: '正在注销退出',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
+    updatePassword(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          changePwd(this.updatePwd).then(res => {
+            this.$message({
+              type: 'success',
+              message: res.message
+            })
+            this.updatePwdModal = !this.updatePwdModal
+            this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+          }).catch(err => {
+            console.log(err.message)
+          })
+        } else {
+          this.$notify({
+            title: '提示',
+            message: '表单验证失败！',
+            type: 'error'
+          })
+          return false
+        }
       })
+    },
+    logout() {
       this.$store.dispatch('user/logout').then(res => {
         this.$router.push(`/login?redirect=${this.$route.fullPath}`)
-        loading.close()
-      }).catch(() => {
-        loading.close()
+      }).catch(err => {
+        console.log(err)
       })
     }
   }

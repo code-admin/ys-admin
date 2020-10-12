@@ -3,7 +3,7 @@
     <div id="print_box" v-loading="loading" class="print-box">
       <div style="width:100%;height:100%;">
 
-        <div class="company">浙江亚设塑业有限公司</div>
+        <div class="company">温州亚迦布科技有限公司 </div>
         <div class="title">
           <el-select v-model="bill.feeType" placeholder="请选择收款类型" filterable style="text-align:left">
             <el-option :value="1" label="收袋款" />

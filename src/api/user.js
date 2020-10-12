@@ -106,3 +106,10 @@ export function getStaffList() {
     method: 'post'
   })
 }
+export function changePwd(data) {
+  return request({
+    url: `/user/changePwd`,
+    method: 'post',
+    data
+  })
+}
