@@ -58,7 +58,9 @@
 </template>
 
 <script>
-import { submitStaffProductRecords } from '@/api/produce'
+import {
+  submitStaffProductRecords
+} from '@/api/produce'
 export default {
   data() {
     return {

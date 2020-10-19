@@ -6,7 +6,7 @@
         <div class="company">浙江亚设塑业有限公司</div>
         <div class="title">退筒单</div>
 
-        <img class="logo" src="../../../assets/imgs/arsh_logo.png">
+        <img class="logo" src="../../assets/imgs/arsh_logo.png">
 
         <div class="print">
           <el-button type="text" size="mini" icon="el-icon-close" style="color:#F56C6C" @click="$router.back()">关闭</el-button>

@@ -9,8 +9,8 @@ module.exports = {
     node: true,
     es6: true,
   },
-  extends: ['plugin:vue/recommended', 'eslint:recommended'],
-  // extends: ['plugin:vue/essential', 'eslint:recommended'],
+  // extends: ['plugin:vue/recommended', 'eslint:recommended'],
+  extends: ['plugin:vue/essential', 'eslint:recommended'],
 
 
   // add your custom rules here

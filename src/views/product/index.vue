@@ -120,14 +120,14 @@
         <el-form :model="exchange">
           <el-form-item label="入库产品" :label-width="formLabelWidth">
             <el-select v-model="exchange.plusStockProductId" filterable remote reserve-keyword :remote-method="getProductList1" :loading="loading" placeholder="请选择入库产品" style="width:100%">
-              <el-option v-for="(product,index) in productList" :key="index" :label="`${product.name} / ${product.productNo}[${product.stockNumber}]`" :value="product.id" />
+              <el-option v-for="(product, index) in productList" :key="index" :label="`${product.name} / ${product.productNo}[${product.stockNumber}]`" :value="product.id" />
             </el-select>
           </el-form-item>
         </el-form>
         <el-form :model="exchange">
           <el-form-item label="出库商品" :label-width="formLabelWidth">
             <el-select v-model="exchange.reduceStockProductId" filterable remote reserve-keyword :remote-method="getProductList2" :loading="loading" placeholder="请选择入库产品" style="width:100%">
-              <el-option v-for="(product,index) in productList2" :key="index" :label="`${product.name} / ${product.productNo}[${product.stockNumber}]`" :value="product.id" />
+              <el-option v-for="(product, index) in productList2" :key="index" :label="`${product.name} / ${product.productNo}[${product.stockNumber}]`" :value="product.id" />
             </el-select>
           </el-form-item>
           <el-form-item label="重量" :label-width="formLabelWidth">
