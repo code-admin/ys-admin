@@ -197,8 +197,8 @@ export default {
       bill: {
         feeType: 5,
         collectionTime: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
-        preReturnNumber: this.$route.params.number | 0,
-        preReturnWeight: this.$route.params.weight | 0,
+        preReturnNumber: this.$route.params.number,
+        preReturnWeight: this.$route.params.weight,
         price: 0,
         totalPrice: 0,
         orderExpressList: [],
