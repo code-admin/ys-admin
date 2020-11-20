@@ -13,6 +13,13 @@
           <el-button type="text" size="mini" icon="el-icon-printer" @click="clickPrinting">打印</el-button>
         </div>
 
+        <ul class="sign">
+          <li>白: 存根联</li>
+          <li>红: 客户联</li>
+          <li>蓝: 仓库联</li>
+          <li>黄: 财务联</li>
+        </ul>
+
         <div class="bar flex justify-between">
           <div class="tac"><span>客户:</span><span class="text">{{ print.customerName }}</span></div>
           <div class="tac"><span>日期:</span><span class="text">{{ print.functionTime | moment('YYYY-MM-DD') }}</span></div>
@@ -157,6 +164,10 @@ export default {
     },
     clickPrinting() {
       const printBtn = document.getElementsByClassName('print')[0]
+      const sign = document.getElementsByClassName('sign')[0]
+      //  显示纸张备注
+      sign.style.cssText = 'display:inline'
+
       printBtn.classList.add('printHideCss')
 
       window.print() //  调用打印功能
@@ -242,6 +253,16 @@ export default {
         position: absolute;
         top: 10px;
         right: 20px;
+    }
+
+    .sign {
+        display: none;
+        position: absolute;
+        top: 0px;
+        right: 5px;
+        font-size: 12px;
+        font-weight: 500;
+        color: #888888;
     }
 }
 </style>

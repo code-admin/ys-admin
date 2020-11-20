@@ -13,6 +13,13 @@
           <el-button type="text" size="mini" icon="el-icon-printer" @click="saveData">保存并打印</el-button>
         </div>
 
+        <ul class="sign">
+          <li>白: 存根联</li>
+          <li>红: 客户联</li>
+          <li>蓝: 仓库联</li>
+          <li>黄: 财务联</li>
+        </ul>
+
         <div class="bar">
           <el-row :gutter="10">
             <el-col :span="4" style="text-align: right">
@@ -291,6 +298,7 @@ export default {
       //  找到需要隐藏的DOM节点
       const head = document.getElementsByClassName('navbar')[0]
       const printBtn = document.getElementsByClassName('print')[0]
+      const sign = document.getElementsByClassName('sign')[0]
       const leftNav = document.getElementsByClassName('el-scrollbar')[0]
       const sidebarContainer = document.getElementsByClassName('sidebar-container')[0]
       const mainContainer = document.getElementsByClassName('main-container')[0]
@@ -303,6 +311,8 @@ export default {
       leftNav.classList.add('printHideCss')
       sidebarContainer.classList.add('printHideCss')
       mainContainer.classList.add('clearCss')
+      //  显示纸张备注
+      sign.style.cssText = 'display:inline'
 
       print_box.style.cssText = 'border: 0px;'
 
@@ -407,6 +417,15 @@ export default {
         position: absolute;
         top: 10px;
         right: 20px;
+    }
+    .sign {
+        display: none;
+        position: absolute;
+        top: 0px;
+        right: 5px;
+        font-size: 12px;
+        font-weight: 500;
+        color: #888888;
     }
 }
 </style>

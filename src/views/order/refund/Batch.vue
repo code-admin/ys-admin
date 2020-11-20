@@ -13,6 +13,13 @@
           <el-button type="text" size="mini" icon="el-icon-printer" @click="saveData">保存并打印</el-button>
         </div>
 
+        <ul class="sign">
+          <li>白: 存根联</li>
+          <li>红: 客户联</li>
+          <li>蓝: 仓库联</li>
+          <li>黄: 财务联</li>
+        </ul>
+
         <div class="bar flex justify-between">
           <div class="tac"><span>客户:</span><span class="text">&nbsp;{{ bill.orderRefunds[0] ? bill.orderRefunds[0].customerName : '' }}</span></div>
           <div class="tac"><span>日期:</span><span class="text">&nbsp;{{ bill.collectionTime | moment('YYYY-MM-DD') }}</span></div>
@@ -252,7 +259,9 @@ export default {
         //   type: 'error',
         //   message: '请先选择需要退筒的产品！！'
         // })
-        this.$router.replace({ name: 'OrderRefund' })
+        this.$router.replace({
+          name: 'OrderRefund'
+        })
       }
     },
     saveData() {
@@ -290,6 +299,7 @@ export default {
       //  找到需要隐藏的DOM节点
       const head = document.getElementsByClassName('navbar')[0]
       const printBtn = document.getElementsByClassName('print')[0]
+      const sign = document.getElementsByClassName('sign')[0]
       const leftNav = document.getElementsByClassName('el-scrollbar')[0]
       const sidebarContainer = document.getElementsByClassName('sidebar-container')[0]
       const mainContainer = document.getElementsByClassName('main-container')[0]
@@ -300,6 +310,9 @@ export default {
       //  给对应DOM添加class
       head.classList.add('printHideCss')
       printBtn.classList.add('printHideCss')
+      //  显示纸张备注
+      sign.style.cssText = 'display:inline'
+
       leftNav.classList.add('printHideCss')
       sidebarContainer.classList.add('printHideCss')
       tableBox.classList.add('printHideCss')
@@ -453,9 +466,20 @@ export default {
         top: 10px;
         right: 20px;
     }
+
+    .sign {
+        display: none;
+        position: absolute;
+        top: 0px;
+        right: 5px;
+        font-size: 12px;
+        font-weight: 500;
+        color: #888888;
+    }
 }
-.table-box{
-  margin-top: 20px;
-  padding: 20px;
+
+.table-box {
+    margin-top: 20px;
+    padding: 20px;
 }
 </style>

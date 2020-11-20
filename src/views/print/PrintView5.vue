@@ -18,6 +18,13 @@
           <el-button type="text" size="mini" icon="el-icon-printer" @click="clickPrinting">保存并打印</el-button>
         </div>
 
+        <ul class="sign">
+          <li>白: 存根联</li>
+          <li>红: 客户联</li>
+          <li>蓝: 仓库联</li>
+          <li>黄: 财务联</li>
+        </ul>
+
         <div class="bar">
           <el-row :gutter="10">
             <el-col :span="4" style="text-align: right">
@@ -72,7 +79,9 @@
 </template>
 
 <script>
-import { getPrintInfos } from '@/api/print'
+import {
+  getPrintInfos
+} from '@/api/print'
 
 export default {
   data() {
@@ -98,6 +107,9 @@ export default {
     clickPrinting() {
       const printBtn = document.getElementsByClassName('print')[0]
       printBtn.classList.add('printHideCss')
+      const sign = document.getElementsByClassName('sign')[0]
+      //  显示纸张备注
+      sign.style.cssText = 'display:inline'
 
       window.print() //  调用打印功能
       window.location.reload() //  点击取消打印后刷新页面，恢复点击打印按钮之前的原始数据
@@ -198,6 +210,16 @@ export default {
         position: absolute;
         top: 10px;
         right: 20px;
+    }
+
+    .sign {
+        display: none;
+        position: absolute;
+        top: 0px;
+        right: 5px;
+        font-size: 12px;
+        font-weight: 500;
+        color: #888888;
     }
 }
 </style>
