@@ -78,201 +78,201 @@
 
 <script>
 import {
-    returnOrderDetailList
+  returnOrderDetailList
 } from '@/api/order'
 import {
-    getCustomes
+  getCustomes
 } from '@/api/user'
 export default {
-    data() {
-        return {
-            listLoading: true,
-            tableKey: 0,
-            total: 0,
-            customerList: [],
-            showCustomer: true,
-            filter: {
-                customerId: null,
-                isNeedFlag: true,
-                queryDate: [],
-                pageIndex: 1,
-                pageSize: 10
-            },
-            orderList: [],
-            returnList: [],
-            batchData: {
-                productNumber: 0,
-                acceptableNumber: 0,
-                returnNumber: 0,
-                returnWeight: 0,
-                returnWeight1: 0,
-                returnWeight2: 0
-            }
-        }
-    },
-    computed: {
-        returnWeight() {
-            let weight = 0
-            if (this.batchData.returnWeight1 >= 0) {
-                weight = this.batchData.returnWeight1 - this.batchData.returnWeight2
-            }
-            return weight
-        }
-    },
-    created() {
-        this.filter = JSON.parse(sessionStorage.getItem('returnOrderDetailList')).params === undefined ? {
-            pageIndex: 1,
-            pageSize: 10
-        } : JSON.parse(sessionStorage.getItem('returnOrderDetailList')).params
-    },
-    mounted() {
-        this.filter.customerId = null
-        this.fetchCustomer()
-        this.getOrderList()
-    },
-    methods: {
-        // 搜索客户
-        fetchCustomer() {
-            this.customerList = []
-            getCustomes().then(res => {
-                this.customerList = res.data
-                this.showCustomer = !this.showCustomer
-            })
-        },
-        selectTable(select) {
-            this.batchData.productNumber = select.length // 退筒个数;
-            let tempNumber = 0
-            select.length && select.map(item => {
-                tempNumber = tempNumber + (item.checkOutNumber - item.returnNumber)
-            })
-            this.batchData.acceptableNumber = tempNumber
-            this.returnList = select
-            window.localStorage.setItem('returnList', JSON.stringify(select))
-        },
-        batchSubmit() {
-            this.batchData.returnWeight = this.batchData.returnWeight1 - this.batchData.returnWeight2
-            if (this.returnList.length < 1) {
-                this.$notify({
-                    title: '提示',
-                    message: '您还未选择任何数据',
-                    type: 'warning'
-                })
-                return
-            }
-            const customerId = this.returnList[0].customerId
-            const status = this.returnList && this.returnList.some(item => {
-                return customerId !== item.customerId
-            })
-            if (status) {
-                this.$notify({
-                    title: '提示',
-                    message: '请先过滤客户信息',
-                    type: 'warning'
-                })
-                return
-            } else if (this.batchData.acceptableNumber === 0) {
-                this.$notify({
-                    title: '提示',
-                    message: '没有选择可退产品！！',
-                    type: 'warning'
-                })
-                return
-            } else if (this.batchData.acceptableNumber < this.batchData.returnNumber) {
-                this.$notify({
-                    title: '提示',
-                    message: '您选择的产品达不到您批量退筒的个数',
-                    type: 'warning'
-                })
-                return
-            } else if (this.batchData.returnWeight <= 0) {
-                this.$notify({
-                    title: '提示',
-                    message: '退筒净重不能为空！！',
-                    type: 'warning'
-                })
-                return
-            }
-            this.$router.push({
-                name: 'OrderRefundBatch',
-                params: {
-                    number: this.batchData.returnNumber,
-                    weight: this.batchData.returnWeight
-                }
-            })
-        },
-        addReturn() {
-            if (this.returnList.length < 1) {
-                this.$notify({
-                    title: '提示',
-                    message: '您还未选择任何数据',
-                    type: 'warning'
-                })
-                return
-            }
-            const customerId = this.returnList[0].customerId
-            const status = this.returnList && this.returnList.some(item => {
-                return customerId !== item.customerId
-            })
-            if (status) {
-                this.$notify({
-                    title: '提示',
-                    message: '请先过滤客户信息',
-                    type: 'warning'
-                })
-                return
-            } else if (this.returnList.length > 0 && this.returnList.length <= 5) {
-                this.$router.push({
-                    name: 'OrderRefundAdd'
-                })
-            } else if (this.returnList.length > 5) {
-                this.$notify({
-                    title: '提示',
-                    message: '一次不得超过5个产品',
-                    type: 'warning'
-                })
-            } else {
-                this.$notify({
-                    title: '提示',
-                    message: '您还没有选择需要退筒的产品',
-                    type: 'warning'
-                })
-            }
-        },
-        getOrderList() {
-            this.listLoading = true
-            const params = {
-                ...this.filter
-            }
-            sessionStorage.setItem('returnOrderDetailList', JSON.stringify({
-                params: {
-                    ...this.filter
-                }
-            }))
-            returnOrderDetailList(params).then(res => {
-                if (res.code === 10000) {
-                    this.orderList = res.data
-                    this.total = res.total
-                }
-                this.listLoading = false
-                window.localStorage.removeItem('returnList')
-            })
-        },
-        showAll() {
-            this.getOrderList()
-        },
-        queryData() {
-            this.filter.pageIndex = 1
-            this.getOrderList()
-        },
-        handleSizeChange(val) {
-            this.filter.pageSize = val
-            this.getOrderList()
-        },
-        handleCurrentChange(val) {
-            this.filter.pageIndex = val
-            this.getOrderList()
-        }
+  data() {
+    return {
+      listLoading: true,
+      tableKey: 0,
+      total: 0,
+      customerList: [],
+      showCustomer: true,
+      filter: {
+        customerId: null,
+        isNeedFlag: true,
+        queryDate: [],
+        pageIndex: 1,
+        pageSize: 10
+      },
+      orderList: [],
+      returnList: [],
+      batchData: {
+        productNumber: 0,
+        acceptableNumber: 0,
+        returnNumber: 0,
+        returnWeight: 0,
+        returnWeight1: 0,
+        returnWeight2: 0
+      }
     }
+  },
+  computed: {
+    returnWeight() {
+      let weight = 0
+      if (this.batchData.returnWeight1 >= 0) {
+        weight = this.batchData.returnWeight1 - this.batchData.returnWeight2
+      }
+      return weight
+    }
+  },
+  created() {
+    this.filter = JSON.parse(sessionStorage.getItem('returnOrderDetailList')).params === undefined ? {
+      pageIndex: 1,
+      pageSize: 10
+    } : JSON.parse(sessionStorage.getItem('returnOrderDetailList')).params
+  },
+  mounted() {
+    this.filter.customerId = null
+    this.fetchCustomer()
+    this.getOrderList()
+  },
+  methods: {
+    // 搜索客户
+    fetchCustomer() {
+      this.customerList = []
+      getCustomes().then(res => {
+        this.customerList = res.data
+        this.showCustomer = !this.showCustomer
+      })
+    },
+    selectTable(select) {
+      this.batchData.productNumber = select.length // 退筒个数;
+      let tempNumber = 0
+      select.length && select.map(item => {
+        tempNumber = tempNumber + (item.checkOutNumber - item.returnNumber)
+      })
+      this.batchData.acceptableNumber = tempNumber
+      this.returnList = select
+      window.localStorage.setItem('returnList', JSON.stringify(select))
+    },
+    batchSubmit() {
+      this.batchData.returnWeight = this.batchData.returnWeight1 - this.batchData.returnWeight2
+      if (this.returnList.length < 1) {
+        this.$notify({
+          title: '提示',
+          message: '您还未选择任何数据',
+          type: 'warning'
+        })
+        return
+      }
+      const customerId = this.returnList[0].customerId
+      const status = this.returnList && this.returnList.some(item => {
+        return customerId !== item.customerId
+      })
+      if (status) {
+        this.$notify({
+          title: '提示',
+          message: '请先过滤客户信息',
+          type: 'warning'
+        })
+        return
+      } else if (this.batchData.acceptableNumber === 0) {
+        this.$notify({
+          title: '提示',
+          message: '没有选择可退产品！！',
+          type: 'warning'
+        })
+        return
+      } else if (this.batchData.acceptableNumber < this.batchData.returnNumber) {
+        this.$notify({
+          title: '提示',
+          message: '您选择的产品达不到您批量退筒的个数',
+          type: 'warning'
+        })
+        return
+      } else if (this.batchData.returnWeight <= 0) {
+        this.$notify({
+          title: '提示',
+          message: '退筒净重不能为空！！',
+          type: 'warning'
+        })
+        return
+      }
+      this.$router.push({
+        name: 'OrderRefundBatch',
+        params: {
+          number: this.batchData.returnNumber,
+          weight: this.batchData.returnWeight
+        }
+      })
+    },
+    addReturn() {
+      if (this.returnList.length < 1) {
+        this.$notify({
+          title: '提示',
+          message: '您还未选择任何数据',
+          type: 'warning'
+        })
+        return
+      }
+      const customerId = this.returnList[0].customerId
+      const status = this.returnList && this.returnList.some(item => {
+        return customerId !== item.customerId
+      })
+      if (status) {
+        this.$notify({
+          title: '提示',
+          message: '请先过滤客户信息',
+          type: 'warning'
+        })
+        return
+      } else if (this.returnList.length > 0 && this.returnList.length <= 5) {
+        this.$router.push({
+          name: 'OrderRefundAdd'
+        })
+      } else if (this.returnList.length > 5) {
+        this.$notify({
+          title: '提示',
+          message: '一次不得超过5个产品',
+          type: 'warning'
+        })
+      } else {
+        this.$notify({
+          title: '提示',
+          message: '您还没有选择需要退筒的产品',
+          type: 'warning'
+        })
+      }
+    },
+    getOrderList() {
+      this.listLoading = true
+      const params = {
+        ...this.filter
+      }
+      sessionStorage.setItem('returnOrderDetailList', JSON.stringify({
+        params: {
+          ...this.filter
+        }
+      }))
+      returnOrderDetailList(params).then(res => {
+        if (res.code === 10000) {
+          this.orderList = res.data
+          this.total = res.total
+        }
+        this.listLoading = false
+        window.localStorage.removeItem('returnList')
+      })
+    },
+    showAll() {
+      this.getOrderList()
+    },
+    queryData() {
+      this.filter.pageIndex = 1
+      this.getOrderList()
+    },
+    handleSizeChange(val) {
+      this.filter.pageSize = val
+      this.getOrderList()
+    },
+    handleCurrentChange(val) {
+      this.filter.pageIndex = val
+      this.getOrderList()
+    }
+  }
 }
 </script>
 
