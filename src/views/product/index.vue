@@ -20,9 +20,9 @@
     <el-table :key="tableKey" v-loading="listLoading" :data="productList" border fit highlight-current-row style="width: 100%;">
         <el-table-column type="index" width="50" align="center" />
         <el-table-column label="产品编号" prop="productNo" align="center" show-overflow-tooltip width="120" />
-        <el-table-column label="所属品类" prop="className" align="center" show-overflow-tooltip width="150">
+        <el-table-column label="所属品类" prop="productTypeName" align="center" show-overflow-tooltip width="150">
             <template slot-scope="{row}">
-                <el-tag size="mini" type="info" effect="plain">{{ row.className }}</el-tag>
+                <el-tag size="mini" type="info" effect="plain">{{ row.productTypeName }}</el-tag>
             </template>
         </el-table-column>
         <el-table-column label="产品名称" prop="name" align="center" show-overflow-tooltip width="150" />
