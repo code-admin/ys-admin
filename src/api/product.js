@@ -42,6 +42,15 @@ export function saveProductType(data) {
   })
 }
 
+// 提交调价
+export function effectPrice(data) {
+  return request({
+    url: '/productType/effectPrice',
+    method: 'post',
+    data
+  })
+}
+
 // 获取产品上下架
 export function disable(data) {
   return request({

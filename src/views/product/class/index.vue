@@ -54,8 +54,8 @@
                 <el-input v-model="executeModel.name" autocomplete="on" placeholder="请输入品类名称" />
             </el-form-item>
             <el-form-item label="执行规则" :label-width="formLabelWidth">
-                <el-select v-model="executeModel.ruleId" placeholder="请输选择调价规则" style="width:100%">
-                    <el-option label="测试规则" value="1"></el-option>
+                <el-select v-model="executeModel.productRuleId" placeholder="请输选择调价规则" style="width:100%">
+                    <el-option v-for="rule in ruleList" :key="rule.id" :label="rule.ruleName" :value="rule.id"></el-option>
                 </el-select>
             </el-form-item>
         </el-form>
@@ -72,11 +72,17 @@
 import {
   queryTypeList,
   saveProductType,
-  deleteProductType
+  deleteProductType,
+  effectPrice
 } from '@/api/product.js'
+import {
+  queryList
+} from '@/api/adjusted.js'
+
 export default {
   data() {
     return {
+      ruleList: [],
       filter: {
         pageIndex: 1,
         pageSize: 10
@@ -95,6 +101,7 @@ export default {
   },
   mounted() {
     this.getDataList()
+    this.getRuleList()
   },
   methods: {
     getDataList() {
@@ -106,6 +113,14 @@ export default {
       }).catch((err) => {
         console.log(err)
         this.listLoading = !this.listLoading
+      })
+    },
+    getRuleList() {
+      queryList({
+        pageIndex: 1,
+        pageSize: 10000000
+      }).then(res => {
+        this.ruleList = res.data
       })
     },
     // 新增初始化
@@ -148,12 +163,20 @@ export default {
       this.executeModel = {
         productTypeId: obj.id,
         name: obj.name,
-        ruleId: null
+        productRuleId: null
       }
       this.dialogFormVisible2 = !this.dialogFormVisible2
     },
 
-    submitData() {},
+    submitData() {
+      effectPrice(this.executeModel).then(res => {
+        this.$message({
+          type: 'success',
+          message: res.message
+        })
+        this.dialogFormVisible2 = !this.dialogFormVisible2
+      })
+    },
 
     handleSizeChange(val) {
       this.filter.pageSize = val
