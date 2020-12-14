@@ -20,9 +20,9 @@
     <el-table :key="tableKey" v-loading="listLoading" :data="productList" border fit highlight-current-row style="width: 100%;">
         <el-table-column type="index" width="50" align="center" />
         <el-table-column label="产品编号" prop="productNo" align="center" show-overflow-tooltip width="120" />
-        <el-table-column label="所属品类" prop="productTypeName" align="center" show-overflow-tooltip width="150">
+        <el-table-column label="所属品类" prop="typeName" align="center" show-overflow-tooltip width="150">
             <template slot-scope="{row}">
-                <el-tag size="mini" type="info" effect="plain">{{ row.productTypeName }}</el-tag>
+                <el-tag size="mini" type="info" effect="plain">{{ row.typeName }}</el-tag>
             </template>
         </el-table-column>
         <el-table-column label="产品名称" prop="name" align="center" show-overflow-tooltip width="150" />
@@ -65,8 +65,8 @@
         <div class="demo-drawer__content">
             <el-form :model="product">
                 <el-form-item label="所属品类" :label-width="formLabelWidth">
-                    <el-select v-model="product.classId" placeholder="请选择品类" style="width:100%">
-                        <el-option v-for="item in classList" :key="item.id" :value="itme.id" :label="item.name"></el-option>
+                    <el-select v-model="product.type" placeholder="请选择品类" style="width:100%">
+                        <el-option v-for="productType in productTypeList" :key="productType.id" :value="productType.id" :label="productType.name"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="产品名称" :label-width="formLabelWidth">
@@ -174,7 +174,6 @@ export default {
         pageIndex: 1,
         pageSize: 10
       },
-      classList: [],
       productList: [],
       productList1: [],
       productList2: [],
@@ -211,10 +210,9 @@ export default {
 
     getProductTypeList() {
       getProductTypes().then(res => {
-        if (res.code === 10000) this.productTypeList = res.data
+        this.productTypeList = res.data
       })
     },
-
     handleEnable(obj) {
       const params = {
         enable: obj.enable,

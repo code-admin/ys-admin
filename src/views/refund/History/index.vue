@@ -40,15 +40,15 @@
         <el-table-column label="制单人" prop="createByName" align="center" width="80" />
         <el-table-column label="操作" align="center" width="220">
             <template slot-scope="{row}">
-                <el-button slot="reference" type="text" icon="el-icon-zoom-in">明细</el-button>
+                <el-button type="text" icon="el-icon-zoom-in">明细</el-button>
                 <el-divider direction="vertical"></el-divider>
-                <el-popconfirm :key="row.id" confirm-button-text="确定" confirm-button-type="danger" cancel-button-text="取消" icon="el-icon-info" icon-color="red" title="您确定要删除该退筒单吗?" @onConfirm="handleDelete(row)">
+                <el-popconfirm :key="row.id" confirm-button-text="确定" confirm-button-type="danger" cancel-button-text="取消" icon="el-icon-info" icon-color="red" title="您确定要删除该退筒单吗?" @confirm="handleDelete(row)">
                     <el-button slot="reference" type="text" icon="el-icon-delete" size="small">
                         删除
                     </el-button>
                 </el-popconfirm>
                 <el-divider direction="vertical"></el-divider>
-                <el-button slot="reference" type="text" size="small" icon="el-icon-printer">打印</el-button>
+                <el-button type="text" size="small" icon="el-icon-printer">打印</el-button>
             </template>
         </el-table-column>
     </el-table>

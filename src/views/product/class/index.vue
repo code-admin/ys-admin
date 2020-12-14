@@ -172,7 +172,7 @@ export default {
       effectPrice(this.executeModel).then(res => {
         this.$message({
           type: 'success',
-          message: res.message
+          message: `共更新 ${res.data.updateNumber}个产品；耗时${res.data.useTime} 秒！`
         })
         this.dialogFormVisible2 = !this.dialogFormVisible2
       })
