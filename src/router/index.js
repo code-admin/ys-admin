@@ -194,6 +194,15 @@ export const constantRoutes = [{
     }
   },
   {
+    path: '/refund/detail/:id',
+    name: 'OrderRefundDetail',
+    component: () => import('@/views/refund/Detail/index'),
+    meta: {
+      title: '退筒明细'
+    },
+    hidden: true
+  },
+  {
     path: '/refund/history/list',
     name: 'OrderRefundHistoryList',
     component: () => import('@/views/refund/History/List'),

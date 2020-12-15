@@ -40,7 +40,7 @@
         <el-table-column label="制单人" prop="createByName" align="center" width="80" />
         <el-table-column label="操作" align="center" width="220">
             <template slot-scope="{row}">
-                <el-button type="text" icon="el-icon-zoom-in">明细</el-button>
+                <el-button type="text" icon="el-icon-zoom-in" @click="getDetailListById(row)">明细</el-button>
                 <el-divider direction="vertical"></el-divider>
                 <el-popconfirm :key="row.id" confirm-button-text="确定" confirm-button-type="danger" cancel-button-text="取消" icon="el-icon-info" icon-color="red" title="您确定要删除该退筒单吗?" @confirm="handleDelete(row)">
                     <el-button slot="reference" type="text" icon="el-icon-delete" size="small">
@@ -48,7 +48,7 @@
                     </el-button>
                 </el-popconfirm>
                 <el-divider direction="vertical"></el-divider>
-                <el-button type="text" size="small" icon="el-icon-printer">打印</el-button>
+                <el-button type="text" size="small" icon="el-icon-printer" @click="print(row)">打印</el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -61,8 +61,7 @@
 <script>
 import {
   refundList,
-  cancelRefund,
-  getRefundOrderDetails
+  cancelRefund
 } from '@/api/refund'
 import {
   getCustomes
@@ -123,11 +122,26 @@ export default {
       })
     },
 
-    // 根据ID获取明细
-    getDetailListById(id) {
-      getRefundOrderDetails(id).then(res => {
-        console.log(res.data)
+    // 打印
+    print(obj) {
+      const routeData = this.$router.resolve({
+        name: 'PrintHistoryView3',
+        params: {
+          id: obj.printNo
+        }
       })
+      window.open(routeData.href, '_blank')
+    },
+
+    // 根据ID获取明细
+    getDetailListById(obj) {
+      const routeData = this.$router.resolve({
+        name: 'OrderRefundDetail',
+        params: {
+          id: obj.id
+        }
+      })
+      window.open(routeData.href, '_blank')
     },
 
     queryData() {
