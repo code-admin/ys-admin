@@ -1,60 +1,60 @@
 <template>
-  <div class="app-container">
+<div class="app-container">
 
     <div v-if="!!tempData" class="filter-container">
 
-      <el-popover ref="confirmSubmit" placement="top" width="150" trigger="click">
-        <p>确定要提交入库吗？</p>
-        <div style="text-align: right; margin: 0">
-          <el-button size="mini" type="text" @click="()=>{$refs['confirmSubmit'].doClose()}">取消</el-button>
-          <el-button type="primary" size="mini" @click="confirmSubmit()">确定</el-button>
-        </div>
-        <el-button slot="reference" class="filter-item" type="primary" size="mini" icon="el-icon-check">提交数据</el-button>
-      </el-popover>
+        <el-popover ref="confirmSubmit" placement="top" width="150" trigger="click">
+            <p>确定要提交入库吗？</p>
+            <div style="text-align: right; margin: 0">
+                <el-button size="mini" type="text" @click="()=>{$refs['confirmSubmit'].doClose()}">取消</el-button>
+                <el-button type="primary" size="mini" @click="confirmSubmit()">确定</el-button>
+            </div>
+            <el-button slot="reference" class="filter-item" type="primary" size="mini" icon="el-icon-check">提交数据</el-button>
+        </el-popover>
 
-      <el-popover ref="resetData" placement="top" width="150" trigger="click">
-        <p>确定要重新导入吗？</p>
-        <div style="text-align: right; margin: 0">
-          <el-button size="mini" type="text" @click="()=>{$refs['resetData'].doClose()}">取消</el-button>
-          <el-button type="danger" size="mini" @click="resetData()">确定</el-button>
-        </div>
-        <el-button slot="reference" type="danger" size="mini" class="filter-item" icon="el-icon-close">重新导入</el-button>
-      </el-popover>
-      <el-button size="mini" class="filter-item" icon="el-icon-back" @click="$router.back()">返回</el-button>
+        <el-popover ref="resetData" placement="top" width="150" trigger="click">
+            <p>确定要重新导入吗？</p>
+            <div style="text-align: right; margin: 0">
+                <el-button size="mini" type="text" @click="()=>{$refs['resetData'].doClose()}">取消</el-button>
+                <el-button type="danger" size="mini" @click="resetData()">确定</el-button>
+            </div>
+            <el-button slot="reference" type="danger" size="mini" class="filter-item" icon="el-icon-close">重新导入</el-button>
+        </el-popover>
+        <el-button size="mini" class="filter-item" icon="el-icon-back" @click="$router.back()">返回</el-button>
     </div>
     <el-button v-else size="mini" class="filter-item" icon="el-icon-back" @click="$router.back()">返回</el-button>
 
     <el-table v-if="!!tempData" :data="tempData" border style="width: 100%" :row-class-name="tableRowClassName">
-      <el-table-column type="index" width="50" align="center" />
-      <el-table-column prop="className" label="班次" align="center" width="50" />
-      <el-table-column prop="productDate" label="日期" align="center" width="100" />
-      <el-table-column prop="deviceNo" label="机号" align="center" width="50" />
-      <el-table-column prop="staffNumber" label="员工编号" align="center" width="80" />
-      <el-table-column prop="staffName" label="姓名" align="center" width="80" />
-      <el-table-column prop="productName" label="名称" align="center" width="100" />
-      <el-table-column prop="requirement" label="要求" align="center" width="120" />
-      <el-table-column prop="productWidth" label="宽" align="center" width="40" />
-      <el-table-column prop="productWeight" label="克重" align="center" width="50" />
-      <el-table-column prop="productLength" label="米数" align="center" width="80" />
-      <el-table-column prop="totalWeight" label="重量/公斤" align="center" width="90" />
-      <el-table-column prop="realWeight" label="实际克重" align="center" width="80" />
-      <el-table-column prop="diffWeight" label="克重差" align="center" width="70" />
-      <el-table-column prop="salaryRate" label="工资率" align="center" width="80" />
-      <el-table-column prop="salary" label="工资" align="center" width="70" />
-      <el-table-column prop="bonus" label="奖金" align="center" width="70" />
-      <el-table-column prop="penalty" label="罚款" align="center" width="70" />
-      <el-table-column prop="realSalary" label="实际工资" align="center" width="80" />
-      <el-table-column prop="errMsg" label="解析说明" align="left" show-overflow-tooltip />
+        <el-table-column type="index" width="50" align="center" />
+        <el-table-column prop="className" label="班次" align="center" width="50" />
+        <el-table-column prop="productDate" label="日期" align="center" width="100" />
+        <el-table-column prop="deviceNo" label="机号" align="center" width="50" />
+        <el-table-column prop="staffNumber" label="员工编号" align="center" width="80" />
+        <el-table-column prop="staffName" label="姓名" align="center" width="80" />
+        <el-table-column prop="productName" label="名称" align="center" width="100" />
+        <el-table-column prop="requirement" label="要求" align="center" width="120" />
+        <el-table-column prop="productWidth" label="宽" align="center" width="40" />
+        <el-table-column prop="productWeight" label="克重" align="center" width="50" />
+        <el-table-column prop="productLength" label="米数" align="center" width="80" />
+        <el-table-column prop="totalWeight" label="重量/公斤" align="center" width="90" />
+        <el-table-column prop="realWeight" label="实际克重" align="center" width="80" />
+        <el-table-column prop="diffWeight" label="克重差" align="center" width="70" />
+        <el-table-column prop="salaryRate" label="工资率" align="center" width="80" />
+        <el-table-column prop="salary" label="工资" align="center" width="70" />
+        <el-table-column prop="bonus" label="奖金" align="center" width="70" />
+        <el-table-column prop="penalty" label="罚款" align="center" width="70" />
+        <el-table-column prop="realSalary" label="实际工资" align="center" width="80" />
+        <el-table-column prop="errMsg" label="解析说明" align="left" show-overflow-tooltip />
     </el-table>
 
     <div v-else class="upload-wrap">
-      <el-upload class="upload-demo" :show-file-list="false" :multiple="false" :with-credentials="true" drag action="/yase-backend/staffProduct/uploadFile" :before-upload="beforeUpload" :on-success="uploadSucess" :on-error="uploadError">
-        <i class="el-icon-upload" />
-        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-      </el-upload>
+        <el-upload class="upload-demo" :show-file-list="false" :multiple="false" :with-credentials="true" drag action="/yase-backend/staffProduct/uploadFile" :before-upload="beforeUpload" :on-success="uploadSucess" :on-error="uploadError">
+            <i class="el-icon-upload" />
+            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        </el-upload>
     </div>
 
-  </div>
+</div>
 </template>
 
 <script>
@@ -153,7 +153,7 @@ export default {
       let stu = true
       this.tempData.map(item => {
         if (item.errMsgFlag) {
-          return stu = false
+          stu = false
         }
       })
       return stu

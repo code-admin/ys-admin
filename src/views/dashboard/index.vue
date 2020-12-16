@@ -1,151 +1,172 @@
 <template>
-  <div v-loading="loading" class="dashboard-content">
+<div v-loading="loading" class="dashboard-content">
     <el-row :gutter="20">
-      <el-col :sm="24" :md="6">
-        <div class="total-card">
-          <span>本年销重量: </span>
-          <span>{{ totalData && totalData.year ? (totalData.year/1000).toFixed(3) : 0 }} </span>
-          <span>(吨)</span>
-        </div>
-      </el-col>
-      <el-col :sm="24" :md="6">
-        <div class="total-card">
-          <span>本月销售总重量: </span>
-          <span>{{ totalData && totalData.month ? (totalData.month/1000).toFixed(3) : 0 }} </span>
-          <span>(吨)</span></div>
-      </el-col>
-      <el-col :sm="24" :md="6">
-        <div class="total-card">
-          <span>今日销售总重量: </span>
-          <span>{{ totalData && totalData.dayWeight ? (totalData.dayWeight/1000).toFixed(3) : 0 }}</span>
-          <span>(吨)</span>
-        </div>
-      </el-col>
-      <el-col :sm="24" :md="6">
-        <div class="total-card">
-          <span>今日销售数量: </span>
-          <span>{{ totalData && totalData.dayNumber ? totalData.dayNumber : 0 }} </span>
-          <span> (个)</span>
-        </div>
-      </el-col>
-      <el-col :sm="24" :md="8">
-        <div class="card">
-          <div class="box">
-            <div class="number-card flex justify-between">
-              <div class="content" style="background:	#87CEFA;color:#ffffff;">
-                <svg-icon icon-class="order" class="icon" />
-              </div>
-              <div class="right">
-                <div class="box">
-                  <p>当前待审核订单</p>
-                  <router-link :to="{name:'OrderApproval'}"> <span>{{ ringData && ringData.totalAuditOrder ? ringData.totalAuditOrder : 0 }}</span></router-link>
-                </div>
-              </div>
+        <el-col :sm="24" :md="6">
+            <div class="total-card">
+                <span>本年销重量: </span>
+                <countTo :startVal='0' :endVal='transitionNumber(totalData.year,1000,3)' :duration='1000' :decimals='3'></countTo>
+                <span>(吨)</span>
             </div>
-
-            <div class="number-card mt20 flex justify-between">
-              <div class="content" style="background:#FFA500; color:#ffffff;">
-                <svg-icon icon-class="feed_back" class="icon" />
-              </div>
-              <div class="right">
-                <div class="box">
-                  <p>当前待回馈</p>
-                  <router-link :to="{name:'FeedbackList'}">
-                    <span>{{ ringData && ringData.totalFeedback ? ringData.totalFeedback : 0 }}</span>
-                  </router-link>
-                </div>
-              </div>
+        </el-col>
+        <el-col :sm="24" :md="6">
+            <div class="total-card">
+                <span>本月销售总重量: </span>
+                <countTo :startVal='0' :endVal='transitionNumber(totalData.month,1000,3) ' :duration='1000' :decimals='3'></countTo>
+                <span>(吨)</span>
             </div>
+        </el-col>
+        <el-col :sm="24" :md="6">
+            <div class="total-card">
+                <span>今日销售总重量: </span>
+                <countTo :startVal='0' :endVal='transitionNumber(totalData.dayWeight,1000,3)' :duration='1000' :decimals='3'></countTo>
+                <span>(吨)</span>
+            </div>
+        </el-col>
+        <el-col :sm="24" :md="6">
+            <div class="total-card">
+                <span>今日销售数量: </span>
+                <countTo :startVal='0' :endVal='transitionNumber(totalData.dayNumber,1,0)' :duration='1000'></countTo>
+                <span> (个)</span>
+            </div>
+        </el-col>
+        <el-col :sm="24" :md="8">
+            <div class="card">
+                <div class="box">
+                    <div class="number-card flex justify-between">
+                        <div class="content" style="background:	#87CEFA;color:#ffffff;">
+                            <svg-icon icon-class="order" class="icon" />
+                        </div>
+                        <div class="right">
+                            <div class="box">
+                                <p>当前待审核订单</p>
+                                <router-link :to="{name:'OrderApproval'}"> <span>{{ ringData && ringData.totalAuditOrder ? ringData.totalAuditOrder : 0 }}</span></router-link>
+                            </div>
+                        </div>
+                    </div>
 
-          </div>
-        </div>
-      </el-col>
-      <el-col :sm="24" :md="8">
-        <div class="card">
-          <ring-chart v-if="ringData" title="订单类型占比" :repot-data="ringData" />
-        </div>
-      </el-col>
-      <el-col :sm="24" :md="8">
-        <div class="card">
-          <pillar-chart v-if="pillarData" title="过去7天反馈统计" :repot-data="pillarData" />
-        </div>
-      </el-col>
+                    <div class="number-card mt20 flex justify-between">
+                        <div class="content" style="background:#FFA500; color:#ffffff;">
+                            <svg-icon icon-class="feed_back" class="icon" />
+                        </div>
+                        <div class="right">
+                            <div class="box">
+                                <p>当前待回馈</p>
+                                <router-link :to="{name:'FeedbackList'}">
+                                    <span>{{ ringData && ringData.totalFeedback ? ringData.totalFeedback : 0 }}</span>
+                                </router-link>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </el-col>
+        <el-col :sm="24" :md="8">
+            <div class="card">
+                <ring-chart v-if="ringData" title="订单类型占比" :repot-data="ringData" />
+            </div>
+        </el-col>
+        <el-col :sm="24" :md="8">
+            <div class="card">
+                <pillar-chart v-if="pillarData" title="过去7天反馈统计" :repot-data="pillarData" />
+            </div>
+        </el-col>
     </el-row>
     <el-row :gutter="20">
-      <el-col :span="24">
-        <div class="card">
-          <line-chart v-if="lineData" title="过去10天订单数增长趋势" :repot-data="lineData" />
-        </div>
-      </el-col>
+        <el-col :span="24">
+            <div class="card">
+                <line-chart v-if="lineData" title="过去10天订单数增长趋势" :repot-data="lineData" />
+            </div>
+        </el-col>
     </el-row>
-  </div>
+</div>
 </template>
 
 <script>
 import RingChart from './RingChart'
 import PillarChart from './PillarChart'
 import LineChart from './LineChart'
+import countTo from 'vue-count-to'
+
 import {
-  weightRepor,
-  getTotalReport,
-  getFeedbackReport,
-  getOrderReport
+    weightRepor,
+    getTotalReport,
+    getFeedbackReport,
+    getOrderReport
 } from '@/api/dashboard'
+
 export default {
-  name: 'Dashboard',
-  components: {
-    RingChart,
-    PillarChart,
-    LineChart
-  },
-  data() {
-    return {
-      loading: false,
-      ringData: null,
-      reportData: null,
-      pillarData: null,
-      lineData: null,
-      totalData: null
+    name: 'Dashboard',
+    components: {
+        countTo,
+        RingChart,
+        PillarChart,
+        LineChart
+    },
+    data() {
+        return {
+            loading: false,
+            ringData: null,
+            reportData: null,
+            pillarData: null,
+            lineData: null,
+            totalData: {
+                year: 0,
+                month: 0,
+                dayWeight: 0,
+                dayNumber: 0
+            }
+        }
+    },
+    computed: {
+        transitionNumber: (num, params, fixed) => {
+            return function (num, params, fixed) {
+                let val = 0
+                if (num && params) {
+                    val = (num / params).toFixed(fixed)
+                }
+                return parseFloat(val)
+            }
+
+        }
+    },
+    mounted() {
+        this.getRingData()
+        this.getPillarData()
+        this.getLineData()
+        this.getTotalData()
+    },
+    methods: {
+        getTotalData() {
+            weightRepor({}).then(res => {
+                if (res.code === 10000) {
+                    this.totalData = res.data
+                }
+            })
+        },
+        getRingData() {
+            this.loading = !this.loading
+            getTotalReport().then(res => {
+                if (res.code === 10000) {
+                    this.ringData = res.data
+                }
+            })
+        },
+        getPillarData() {
+            getFeedbackReport({}).then(res => {
+                if (res.code === 10000) {
+                    this.pillarData = res.data
+                }
+            })
+        },
+        getLineData() {
+            getOrderReport({}).then(res => {
+                if (res.code === 10000) {
+                    this.lineData = res.data
+                }
+                this.loading = !this.loading
+            })
+        }
     }
-  },
-  mounted() {
-    this.getRingData()
-    this.getPillarData()
-    this.getLineData()
-    this.getTotalData()
-  },
-  methods: {
-    getTotalData() {
-      weightRepor({}).then(res => {
-        if (res.code === 10000) {
-          this.totalData = res.data
-        }
-      })
-    },
-    getRingData() {
-      this.loading = !this.loading
-      getTotalReport().then(res => {
-        if (res.code === 10000) {
-          this.ringData = res.data
-        }
-      })
-    },
-    getPillarData() {
-      getFeedbackReport({}).then(res => {
-        if (res.code === 10000) {
-          this.pillarData = res.data
-        }
-      })
-    },
-    getLineData() {
-      getOrderReport({}).then(res => {
-        if (res.code === 10000) {
-          this.lineData = res.data
-        }
-        this.loading = !this.loading
-      })
-    }
-  }
 }
 </script>
 

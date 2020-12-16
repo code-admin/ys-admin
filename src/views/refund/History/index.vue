@@ -60,103 +60,103 @@
 
 <script>
 import {
-  refundList,
-  cancelRefund
+    refundList,
+    cancelRefund
 } from '@/api/refund'
 import {
-  getCustomes
+    getCustomes
 } from '@/api/user'
 
 export default {
-  name: '',
-  data() {
-    return {
-      showCustomer: true,
-      customerList: [],
-      filter: {
-        refundNo: null,
-        customerId: null,
-        queryDate: [],
-        pageIndex: 1,
-        pageSize: 15
-      },
-      listLoading: false,
-      dataList: [],
-      total: 0
-    }
-  },
-  mounted() {
-    this.fetchCustomer()
-    this.getDataList()
-  },
-  methods: {
-    // 搜索客户
-    fetchCustomer() {
-      this.customerList = []
-      getCustomes().then(res => {
-        this.customerList = res.data
-        this.showCustomer = !this.showCustomer
-      })
+    name: '',
+    data() {
+        return {
+            showCustomer: true,
+            customerList: [],
+            filter: {
+                refundNo: null,
+                customerId: null,
+                queryDate: [],
+                pageIndex: 1,
+                pageSize: 15
+            },
+            listLoading: false,
+            dataList: [],
+            total: 0
+        }
     },
-    getDataList() {
-      this.listLoading = !this.listLoading
-      refundList(this.filter).then(res => {
-        this.dataList = res.data
-        this.total = res.total
-        this.listLoading = !this.listLoading
-      }).catch(err => {
-        this.$message({
-          message: err.message,
-          type: 'error'
-        })
-        this.listLoading = !this.listLoading
-      })
-    },
-    handleDelete(obj) {
-      cancelRefund(obj.id).then(res => {
-        this.$message({
-          type: 'success',
-          message: res.message
-        })
+    mounted() {
+        this.fetchCustomer()
         this.getDataList()
-      })
     },
+    methods: {
+        // 搜索客户
+        fetchCustomer() {
+            this.customerList = []
+            getCustomes().then(res => {
+                this.customerList = res.data
+                this.showCustomer = !this.showCustomer
+            })
+        },
+        getDataList() {
+            this.listLoading = !this.listLoading
+            refundList(this.filter).then(res => {
+                this.dataList = res.data
+                this.total = res.total
+                this.listLoading = !this.listLoading
+            }).catch(err => {
+                this.$message({
+                    message: err.message,
+                    type: 'error'
+                })
+                this.listLoading = !this.listLoading
+            })
+        },
+        handleDelete(obj) {
+            cancelRefund(obj.id).then(res => {
+                this.$message({
+                    type: 'success',
+                    message: res.message
+                })
+                this.getDataList()
+            })
+        },
 
-    // 打印
-    print(obj) {
-      const routeData = this.$router.resolve({
-        name: 'PrintHistoryView3',
-        params: {
-          id: obj.printNo
+        // 打印
+        print(obj) {
+            const routeData = this.$router.resolve({
+                name: 'PrintHistoryView3',
+                params: {
+                    id: obj.printNo
+                }
+            })
+            window.open(routeData.href, '_blank')
+        },
+
+        // 根据ID获取明细
+        getDetailListById(obj) {
+            const routeData = this.$router.resolve({
+                name: 'OrderRefundDetail',
+                params: {
+                    id: obj.id
+                }
+            })
+            window.open(routeData.href, '_blank')
+        },
+
+        queryData() {
+            this.filter.pageIndex = 1
+            this.getDataList()
+        },
+        handleSizeChange(val) {
+            this.filter.pageSize = val
+            this.getDataList()
+        },
+        handleCurrentChange(val) {
+            this.filter.pageIndex = val
+            this.getDataList()
         }
-      })
-      window.open(routeData.href, '_blank')
-    },
-
-    // 根据ID获取明细
-    getDetailListById(obj) {
-      const routeData = this.$router.resolve({
-        name: 'OrderRefundDetail',
-        params: {
-          id: obj.id
-        }
-      })
-      window.open(routeData.href, '_blank')
-    },
-
-    queryData() {
-      this.filter.pageIndex = 1
-      this.getDataList()
-    },
-    handleSizeChange(val) {
-      this.filter.pageSize = val
-      this.getDataList()
-    },
-    handleCurrentChange(val) {
-      this.filter.pageIndex = val
-      this.getDataList()
     }
-  }
 }
 </script>
 
