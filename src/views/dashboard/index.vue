@@ -4,14 +4,14 @@
         <el-col :sm="24" :md="6">
             <div class="total-card">
                 <span>本年销重量: </span>
-                <countTo :startVal='0' :endVal='transitionNumber(totalData.year,1000,3)' :duration='1000' :decimals='3'></countTo>
+                <countTo :startVal='0' :endVal='transitionNumber(totalData.year,1000,3)' :duration='3000' :decimals='3'></countTo>
                 <span>(吨)</span>
             </div>
         </el-col>
         <el-col :sm="24" :md="6">
             <div class="total-card">
                 <span>本月销售总重量: </span>
-                <countTo :startVal='0' :endVal='transitionNumber(totalData.month,1000,3) ' :duration='1000' :decimals='3'></countTo>
+                <countTo :startVal='0' :endVal='transitionNumber(totalData.month,1000,3) ' :duration='2000' :decimals='3'></countTo>
                 <span>(吨)</span>
             </div>
         </el-col>
@@ -38,8 +38,10 @@
                         </div>
                         <div class="right">
                             <div class="box">
-                                <p>当前待审核订单</p>
-                                <router-link :to="{name:'OrderApproval'}"> <span>{{ ringData && ringData.totalAuditOrder ? ringData.totalAuditOrder : 0 }}</span></router-link>
+                                <p>待出库</p>
+                                <router-link :to="{name:'OrderApproval'}">
+                                    <countTo :startVal='0' :endVal='transitionNumber(orderStatusCount.totalDeliver,1,0)' :duration='2000'></countTo>
+                                </router-link>
                             </div>
                         </div>
                     </div>
@@ -50,9 +52,9 @@
                         </div>
                         <div class="right">
                             <div class="box">
-                                <p>当前待回馈</p>
+                                <p>未完成</p>
                                 <router-link :to="{name:'FeedbackList'}">
-                                    <span>{{ ringData && ringData.totalFeedback ? ringData.totalFeedback : 0 }}</span>
+                                    <countTo :startVal='0' :endVal='transitionNumber(orderStatusCount.totalSaleConfirm,1,0)' :duration='3000'></countTo>
                                 </router-link>
                             </div>
                         </div>
@@ -62,19 +64,19 @@
         </el-col>
         <el-col :sm="24" :md="8">
             <div class="card">
-                <ring-chart v-if="ringData" title="订单类型占比" :repot-data="ringData" />
+                <ring-chart v-if="ringDataLoading" title="订单类型占比" :repot-data="ringData" />
             </div>
         </el-col>
         <el-col :sm="24" :md="8">
             <div class="card">
-                <pillar-chart v-if="pillarData" title="过去7天反馈统计" :repot-data="pillarData" />
+                <line-chart v-if="orderNumberCountLoading" title="过去7天销售个统计" :repot-data="orderNumberCount" />
             </div>
         </el-col>
     </el-row>
     <el-row :gutter="20">
         <el-col :span="24">
             <div class="card">
-                <line-chart v-if="lineData" title="过去10天订单数增长趋势" :repot-data="lineData" />
+                <pillar-chart v-if="orderWeightCountLoading" title="过去30天销售重量统计" :repot-data="orderWeightCount" />
             </div>
         </el-col>
     </el-row>
@@ -91,7 +93,11 @@ import {
     weightRepor,
     getTotalReport,
     getFeedbackReport,
-    getOrderReport
+    getOrderReport,
+
+    newTotalReport,
+    orderNumberReport,
+    orderWeightReport
 } from '@/api/dashboard'
 
 export default {
@@ -105,16 +111,21 @@ export default {
     data() {
         return {
             loading: false,
+            ringDataLoading: false,
+            orderNumberCountLoading: false,
+            orderWeightCountLoading: false,
             ringData: null,
-            reportData: null,
-            pillarData: null,
             lineData: null,
+            // 头部数据统计
             totalData: {
                 year: 0,
                 month: 0,
                 dayWeight: 0,
                 dayNumber: 0
-            }
+            },
+            orderStatusCount: {}, // 订单状态 数量统计
+            orderNumberCount: {}, // 过去7天销售个数统计
+            orderWeightCount: {} //  过去30天销售重量统计
         }
     },
     computed: {
@@ -131,11 +142,15 @@ export default {
     },
     mounted() {
         this.getRingData()
-        this.getPillarData()
-        this.getLineData()
+        // this.getPillarData()
+        // this.getLineData()
         this.getTotalData()
+        this.getOrderStatusCount();
+        this.getOrderNumberCount();
+        this.getOrderWeightCount();
     },
     methods: {
+        // 销售数据统计
         getTotalData() {
             weightRepor({}).then(res => {
                 if (res.code === 10000) {
@@ -143,27 +158,48 @@ export default {
                 }
             })
         },
+
+        // 订单类型占比
         getRingData() {
             this.loading = !this.loading
             getTotalReport().then(res => {
-                if (res.code === 10000) {
-                    this.ringData = res.data
-                }
+                this.ringData = res.data
+                this.loading = !this.loading
+                this.ringDataLoading = !this.ringDataLoading;
             })
         },
+        // 反馈统计
         getPillarData() {
             getFeedbackReport({}).then(res => {
-                if (res.code === 10000) {
-                    this.pillarData = res.data
-                }
+                this.pillarData = res.data
             })
         },
+
+        // 订单增长趋势
         getLineData() {
             getOrderReport({}).then(res => {
-                if (res.code === 10000) {
-                    this.lineData = res.data
-                }
-                this.loading = !this.loading
+                this.lineData = res.data
+            })
+        },
+
+        // 订单状态 数量统计
+        getOrderStatusCount() {
+            newTotalReport().then(res => {
+                this.orderStatusCount = res.data;
+            })
+        },
+        // 过去7天销售个数统计
+        getOrderNumberCount() {
+            orderNumberReport({}).then(res => {
+                this.orderNumberCount = res.data;
+                this.orderNumberCountLoading = !this.orderNumberCountLoading;
+            })
+        },
+        //  过去30天销售重量统计
+        getOrderWeightCount() {
+            orderWeightReport({}).then(res => {
+                this.orderWeightCount = res.data;
+                this.orderWeightCountLoading = !this.orderWeightCountLoading;
             })
         }
     }
