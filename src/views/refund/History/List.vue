@@ -45,7 +45,7 @@
         <el-table-column label="制单人" prop="createByName" align="center" />
         <el-table-column label="操作" align="center" width="80">
             <template slot-scope="{row}">
-                <el-popconfirm :key="row.id" confirm-button-text="确定" confirm-button-type="danger" cancel-button-text="取消" icon="el-icon-info" icon-color="red" title="您确定要删除该记录吗?" @onConfirm="handleDelete(row)">
+                <el-popconfirm :key="row.id" confirm-button-text="确定" confirm-button-type="danger" cancel-button-text="取消" icon="el-icon-info" icon-color="red" title="您确定要删除该记录吗?" @confirm="handleDelete(row)">
                     <el-button slot="reference" type="text" icon="el-icon-delete" size="small">
                         删除
                     </el-button>
