@@ -370,7 +370,16 @@ export const constantRoutes = [{
     component: () => import('@/views/product/adjusted/index'),
     meta: {
       title: '调价规则'
-    }
+    },
+  },
+  {
+    path: '/product/adjusted/:id',
+    name: 'ProductAdjustedDetail',
+    component: () => import('@/views/product/adjusted/Detail'),
+    meta: {
+      title: '规则详情'
+    },
+    hidden: true
   },
   {
     path: '/product/iostock',

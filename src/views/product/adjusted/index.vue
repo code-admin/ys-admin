@@ -41,10 +41,10 @@
             </el-form-item>
             <el-divider content-position="left">调价规则</el-divider>
             <el-form-item label="基础单价">
-                <el-input v-model="rule.basicPrice" autocomplete="off" placeholder="请输入基础单价" ><template slot="append">元/吨</template></el-input>
+                <el-input v-model="rule.basicPrice" autocomplete="off" placeholder="请输入基础单价"><template slot="append">元/吨</template></el-input>
             </el-form-item>
             <el-form-item label="其他">
-                <el-input v-model="rule.otherPrice" autocomplete="off" placeholder="请输入其他" ><template slot="append">元</template></el-input>
+                <el-input v-model="rule.otherPrice" autocomplete="off" placeholder="请输入其他"><template slot="append">元</template></el-input>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -57,13 +57,13 @@
     <el-dialog title="规则详情" :visible.sync="dialogFormVisible2">
         <el-form :model="executeModel">
             <el-form-item label="规则名称:" :label-width="formLabelWidth">
-              {{rule.ruleName}}
+                {{rule.ruleName}}
             </el-form-item>
             <el-form-item label="基础单价:" :label-width="formLabelWidth">
-                {{rule.basicPrice  ? `${rule.basicPrice} 元/吨` : '--'}}
+                {{rule.basicPrice ? `${rule.basicPrice} 元/吨` : '--'}}
             </el-form-item>
             <el-form-item label="其他:" :label-width="formLabelWidth">
-               {{rule.otherPrice  ? `${rule.otherPrice} 元` : '--'}}
+                {{rule.otherPrice ? `${rule.otherPrice} 元` : '--'}}
             </el-form-item>
             <el-form-item label="备注:" :label-width="formLabelWidth">
                 {{rule.description}}
@@ -79,111 +79,119 @@
 
 <script>
 import {
-  queryList,
-  saveRule,
-  deleteRuleById
+    queryList,
+    saveRule,
+    deleteRuleById
 } from '@/api/adjusted.js'
 export default {
-  name: 'Adjusted',
-  data() {
-    return {
-      filter: {
-        pageIndex: 1,
-        pageSize: 10
-      },
-      listLoading: true,
-      ruleList: [],
-      total: 0,
-      title: null,
-      dialogFormVisible: false,
-      formLabelWidth: '80px',
-      rule: {},
+    name: 'Adjusted',
+    data() {
+        return {
+            filter: {
+                pageIndex: 1,
+                pageSize: 10
+            },
+            listLoading: true,
+            ruleList: [],
+            total: 0,
+            title: null,
+            dialogFormVisible: false,
+            formLabelWidth: '80px',
+            rule: {},
 
-      dialogFormVisible2: false,
-      executeModel: {}
-    }
-  },
-  mounted() {
-    this.getDataList()
-  },
-  methods: {
-    getDataList() {
-      this.listLoading = true
-      queryList(this.filter).then(res => {
-        this.ruleList = res.data
-        this.total = res.total
-        this.listLoading = !this.listLoading
-      }).catch((err) => {
-        console.log(err)
-        this.listLoading = !this.listLoading
-      })
+            dialogFormVisible2: false,
+            executeModel: {}
+        }
     },
-    // 新增初始化
-    addInit() {
-      this.title = '新增规则'
-      this.rule = {
-        ruleName: null,
-        description: null,
-        basicPrice: null,
-        otherPrice: 0
-      }
-      this.dialogFormVisible = !this.dialogFormVisible
-    },
-    // 修改初始化
-    editInit(obj) {
-      this.title = '修改规则'
-      this.rule = {
-        ...obj
-      }
-      this.dialogFormVisible = !this.dialogFormVisible
-    },
-
-    // 保存品类
-    saveData() {
-      saveRule(this.rule).then(res => {
-        this.$message({
-          type: 'success',
-          message: res.message
-        })
-        this.dialogFormVisible = !this.dialogFormVisible
+    mounted() {
         this.getDataList()
-      })
     },
+    methods: {
+        getDataList() {
+            this.listLoading = true
+            queryList(this.filter).then(res => {
+                this.ruleList = res.data
+                this.total = res.total
+                this.listLoading = !this.listLoading
+            }).catch((err) => {
+                console.log(err)
+                this.listLoading = !this.listLoading
+            })
+        },
+        // 新增初始化
+        addInit() {
+            this.title = '新增规则'
+            this.rule = {
+                ruleName: null,
+                description: null,
+                basicPrice: null,
+                otherPrice: 0
+            }
+            this.dialogFormVisible = !this.dialogFormVisible
+        },
+        // 修改初始化
+        editInit(obj) {
+            // this.title = '修改规则'
+            // this.rule = {
+            //     ...obj
+            // }
+            // this.dialogFormVisible = !this.dialogFormVisible
+            this.$router.push({
+                name: 'ProductAdjustedDetail',
+                params: {
+                    id: obj.id
+                }
+            })
+        },
 
-    // 删除品类
-    confirmDelete(obj) {
-      deleteRuleById(obj.id).then(res => {
-        this.$message({
-          type: 'success',
-          message: res.message
-        })
-        this.getDataList()
-      })
-    },
+        // 保存品类
+        saveData() {
+            saveRule(this.rule).then(res => {
+                this.$message({
+                    type: 'success',
+                    message: res.message
+                })
+                this.dialogFormVisible = !this.dialogFormVisible
+                this.getDataList()
+            })
+        },
 
-    // 查询
-    queryData() {
-      this.filter.pageIndex = 1
-      this.getDataList()
-    },
+        // 删除品类
+        confirmDelete(obj) {
+            deleteRuleById(obj.id).then(res => {
+                this.$message({
+                    type: 'success',
+                    message: res.message
+                })
+                this.getDataList()
+            })
+        },
 
-    // 执行确认
-    detail(obj) {
-      this.rule = { ...obj }
-      this.dialogFormVisible2 = !this.dialogFormVisible2
-    },
+        // 查询
+        queryData() {
+            this.filter.pageIndex = 1
+            this.getDataList()
+        },
 
-    submitData() {},
+        // 执行确认
+        detail(obj) {
+            this.rule = {
+                ...obj
+            }
+            this.dialogFormVisible2 = !this.dialogFormVisible2
+        },
 
-    handleSizeChange(val) {
-      this.filter.pageSize = val
-      this.getDataList()
-    },
-    handleCurrentChange(val) {
-      this.filter.pageIndex = val
-      this.getDataList()
+        submitData() {},
+
+        handleSizeChange(val) {
+            this.filter.pageSize = val
+            this.getDataList()
+        },
+        handleCurrentChange(val) {
+            this.filter.pageIndex = val
+            this.getDataList()
+        }
     }
-  }
 }
 </script>
 
