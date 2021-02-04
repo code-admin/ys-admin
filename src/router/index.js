@@ -373,6 +373,24 @@ export const constantRoutes = [{
     },
   },
   {
+    path: '/product/adjusted/add',
+    name: 'ProductAdjustedAdd',
+    component: () => import('@/views/product/adjusted/Add'),
+    meta: {
+      title: '添加规则'
+    },
+    hidden: true
+  },
+  {
+    path: '/product/adjusted/edit/:id',
+    name: 'ProductAdjustedEdit',
+    component: () => import('@/views/product/adjusted/Edit'),
+    meta: {
+      title: '修改规则'
+    },
+    hidden: true
+  },
+  {
     path: '/product/adjusted/:id',
     name: 'ProductAdjustedDetail',
     component: () => import('@/views/product/adjusted/Detail'),

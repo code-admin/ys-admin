@@ -2,160 +2,58 @@
   <div class="app-container">
     <div class="title">
       <h3>规则详情</h3>
-      <p>{{this.rule.ruleName}}</p>
+      <p>{{ this.rule.ruleName }}</p>
     </div>
     <el-divider content-position="left">调价规则</el-divider>
     <div>
-      <el-form>
-        <el-collapse v-model="activeNames">
-          <el-collapse-item title="品类" name="1">
-            <el-row :gutter="20">
-              <el-col :span="11">品类名称</el-col>
-              <el-col :span="11">单价</el-col>
-              <el-col :span="2"></el-col>
-            </el-row>
-            <el-row :gutter="20">
-              <el-col :span="11">
-                <el-input
-                  placeholder="请输入品类名称"
-                  v-model="rule.className.name"
-                ></el-input>
-              </el-col>
-              <el-col :span="11">
-                <el-input
-                  placeholder="请输入基础价"
-                  v-model="rule.className.price"
-                ></el-input>
-              </el-col>
-              <el-col :span="2"></el-col>
-            </el-row>
-          </el-collapse-item>
-          <el-collapse-item title="要求" name="2">
-            <el-row :gutter="20">
-              <el-col :span="11">要求名称</el-col>
-              <el-col :span="11">单价</el-col>
-              <el-col :span="2"></el-col>
-            </el-row>
-            <el-row
-              class="rl-t10"
-              :gutter="20"
-              v-for="(requirement, index) in rule.requirement"
-              :key="index"
-            >
-              <el-col :span="11">
-                <el-input
-                  placeholder="请输入要求名称"
-                  v-model="rule.requirement[index].name"
-                ></el-input>
-              </el-col>
-              <el-col :span="11">
-                <el-input
-                  placeholder="请输入单价"
-                  v-model="rule.requirement[index].price"
-                ></el-input>
-              </el-col>
-              <el-col :span="2">
-                <el-button
-                  v-if="index + 1 === rule.requirement.length"
-                  icon="el-icon-plus"
-                  circle
-                  @click="addRequirement()"
-                ></el-button>
-                <el-button
-                  v-else
-                  icon="el-icon-minus"
-                  circle
-                  @click="delRequirement(index)"
-                ></el-button>
-              </el-col>
-            </el-row>
-          </el-collapse-item>
-          <el-collapse-item title="宽度" name="3">
-            <el-row :gutter="20">
-              <el-col :span="11">宽度</el-col>
-              <el-col :span="11">单价</el-col>
-              <el-col :span="2"></el-col>
-            </el-row>
-            <el-row
-              class="rl-t10"
-              :gutter="20"
-              v-for="(width, index) in rule.width"
-              :key="index"
-            >
-              <el-col :span="11">
-                <el-input
-                  placeholder="请输入宽度"
-                  v-model="rule.width[index].name"
-                ></el-input>
-              </el-col>
-              <el-col :span="11">
-                <el-input
-                  placeholder="请输入单价"
-                  v-model="rule.width[index].price"
-                ></el-input>
-              </el-col>
-              <el-col :span="2">
-                <el-button
-                  v-if="index + 1 === rule.width.length"
-                  icon="el-icon-plus"
-                  circle
-                  @click="addWidth()"
-                ></el-button>
-                <el-button
-                  v-else
-                  icon="el-icon-minus"
-                  circle
-                  @click="delWidth(index)"
-                ></el-button>
-              </el-col>
-            </el-row>
-          </el-collapse-item>
-          <el-collapse-item title="克重" name="4">
-            <el-row :gutter="20">
-              <el-col :span="11">克重</el-col>
-              <el-col :span="11">单价</el-col>
-              <el-col :span="2"></el-col>
-            </el-row>
-            <el-row
-              :gutter="20"
-              class="rl-t10"
-              v-for="(weight, index) in rule.weight"
-              :key="index"
-            >
-              <el-col :span="11">
-                <el-input
-                  placeholder="请输入克重"
-                  v-model="rule.weight[index].name"
-                ></el-input>
-              </el-col>
-              <el-col :span="11">
-                <el-input
-                  placeholder="请输入单价"
-                  v-model="rule.weight[index].price"
-                ></el-input>
-              </el-col>
-              <el-col :span="2">
-                <el-button
-                  v-if="index + 1 === rule.weight.length"
-                  icon="el-icon-plus"
-                  circle
-                  @click="addWeight()"
-                ></el-button>
-                <el-button
-                  v-else
-                  icon="el-icon-minus"
-                  circle
-                  @click="delWeight(index)"
-                ></el-button>
-              </el-col>
-            </el-row>
-          </el-collapse-item>
-        </el-collapse>
-        <el-form-item style="margin-top: 20px">
-          <el-button type="primary" @click="saveData()">保存</el-button>
-          <el-button @click="resetForm('numberValidateForm')">重置</el-button>
-        </el-form-item>
-      </el-form>
+      <el-row :gutter="10">
+        <el-col :span="3">品类</el-col>
+        <el-col :span="3">价格</el-col>
+        <el-col :span="3">要求</el-col>
+        <el-col :span="3">价格</el-col>
+        <el-col :span="3">宽度</el-col>
+        <el-col :span="3">价格</el-col>
+        <el-col :span="3">克重</el-col>
+        <el-col :span="3">价格</el-col>
+      </el-row>
+      <el-row :gutter="10">
+        <el-col :span="3"
+          ><p>{{ rule.typeName[0].name }}</p></el-col
+        >
+        <el-col :span="3"
+          ><p>{{ rule.typeName[0].price }}</p></el-col
+        >
+        <el-col :span="3">
+          <p v-for="(requirement, index) in rule.requirement" :key="index">
+            {{ requirement.name }}
+          </p>
+        </el-col>
+        <el-col :span="3"
+          ><p v-for="(requirement, index) in rule.requirement" :key="index">
+            {{ requirement.price }}
+          </p></el-col
+        >
+        <el-col :span="3">
+          <p v-for="(width, index) in rule.width" :key="index">
+            {{ width.name }}
+          </p></el-col
+        >
+        <el-col :span="3">
+          <p v-for="(width, index) in rule.width" :key="index">
+            {{ width.price}}
+          </p></el-col
+        >
+        <el-col :span="3">
+          <p v-for="(weight, index) in rule.weight" :key="index">
+            {{ weight.name }}
+          </p>
+        </el-col>
+        <el-col :span="3">
+          <p v-for="(weight, index) in rule.weight" :key="index">
+            {{ weight.price }}
+          </p>
+        </el-col>
+      </el-row>
     </div>
   </div>
 </template>
@@ -168,10 +66,7 @@ export default {
       activeNames: ["1", "2", "3", "4"],
       rule: {
         ruleName: "",
-        className: {
-          name: "增白",
-          price: 8500,
-        },
+        typeName: [{ name: "增白", price: 8500 }],
         requirement: [
           {
             name: "中开",
@@ -216,42 +111,8 @@ export default {
     initData() {
       const productRuleId = this.$route.params.id;
       getRuleById(productRuleId).then((res) => {
-        this.rule.ruleName = res.data.ruleName;
-        this.rule.className = {
-          name: res.data.ruleName,
-          price: res.data.basicPrice,
-        };
+        this.rule = res.data;
       });
-    },
-    addRequirement() {
-      this.rule.requirement.push({
-        name: null,
-        price: null,
-      });
-    },
-    delRequirement(i) {
-      this.rule.requirement.splice(i, 1);
-    },
-    addWidth() {
-      this.rule.width.push({
-        name: null,
-        price: null,
-      });
-    },
-    delWidth(i) {
-      this.rule.width.splice(i, 1);
-    },
-    addWeight() {
-      this.rule.weight.push({
-        name: null,
-        price: null,
-      });
-    },
-    delWeight(i) {
-      this.rule.weight.splice(i, 1);
-    },
-    saveData() {
-      console.log("data:=====>", this.rule);
     },
   },
 };
