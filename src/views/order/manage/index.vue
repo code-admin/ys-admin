@@ -3,7 +3,7 @@
     <div class="filter-container">
       <el-input v-model="filter.orderNo" placeholder="订单编号" style="width: 200px;" class="filter-item" clearable />
       <el-select v-model="filter.customerId" :loading="showCustomer" filterable default-first-option clearable placeholder="客户" @change="queryData">
-        <el-option v-for="customer in customerList" :key="customer.id" :value="customer.id" :label="`${customer.userName}[${customer.customerNo}]`" />
+        <el-option v-for="customer in customerList" :key="customer.id" :value="customer.id" :label="customer.userName" />
       </el-select>
       <!-- <el-input v-model="filter.customerName" placeholder="客户" style="width: 200px;" class="filter-item" clearable /> -->
       <el-input v-model="filter.createName" placeholder="制单人" style="width: 200px;" class="filter-item" clearable />

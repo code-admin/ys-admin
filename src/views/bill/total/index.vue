@@ -3,7 +3,7 @@
     <div class="filter-container">
       <!-- <el-input v-model="filter.customerName" placeholder="客户名称" style="width: 200px;" class="filter-item" clearable /> -->
       <el-select v-model="filter.userId" filterable placeholder="请选择付款人" style="width: 200px;" class="filter-item" clearable>
-        <el-option v-for="user in customeList" :key="user.loginName" :label="`${user.userName}[${user.customerNo}]`" :value="user.id" />
+        <el-option v-for="user in customeList" :key="user.loginName" :label="user.userName" :value="user.id" />
       </el-select>
       <el-date-picker v-model="filter.queryDate" clearable class="filter-item" value-format="yyyy-MM-dd" :format="'yyyy-MM-dd'" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" />
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="queryData">查询</el-button>

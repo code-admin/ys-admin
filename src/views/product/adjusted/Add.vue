@@ -6,17 +6,8 @@
     <el-divider content-position="left">调价规则</el-divider>
     <div>
       <el-form>
-        <el-form-item>
-          <el-row :gutter="20">
-            <el-col :span="22">规则名称</el-col>
-            <el-col :span="2"></el-col>
-            <el-col :span="22">
-              <el-input v-model="rule.ruleName"></el-input>
-            </el-col>
-            <el-col :span="2">
-              <el-button type="text" icon="el-icon-download" @click="getTemplet">规则模版</el-button>
-            </el-col>
-          </el-row>
+        <el-form-item label="规则名称">
+          <el-input v-model="rule.ruleName"></el-input>
         </el-form-item>
 
         <el-collapse v-model="activeNames">
@@ -39,20 +30,7 @@
                   v-model="rule.typeName[0].price"
                 ></el-input>
               </el-col>
-              <el-col :span="2">
-                 <el-upload
-                :headers="rqh"
-                :show-file-list="false"
-                action="/yase-backend/productRule/uploadRuleExcel"
-                :on-success="onSuccess"
-                :on-error="onError"
-                :before-upload="beforeUpload"
-              >
-                <el-button type="primary" size="mini" icon="el-icon-upload"
-                  >导入规则</el-button
-                >
-              </el-upload>
-              </el-col>
+              <el-col :span="2"></el-col>
             </el-row>
           </el-collapse-item>
           <el-collapse-item title="要求" name="2">
@@ -186,14 +164,10 @@
 </template>
 
 <script>
-import { getToken } from "@/utils/auth";
 import { saveRule } from "@/api/adjusted.js";
 export default {
   data() {
     return {
-      rqh: {
-        "YS-USER-TOKEN-ID": getToken() || "",
-      },
       activeNames: ["1", "2", "3", "4"], // 折叠控制
       rule: {
         ruleName: "",
@@ -216,53 +190,11 @@ export default {
             price: null,
           },
         ],
-      },
-      loading: null,
+      }
     };
   },
   mounted() {},
   methods: {
-    beforeUpload() {
-      this.loading = this.$loading({
-        lock: true,
-        text: "正在解析文件……",
-        spinner: "el-icon-loading",
-        background: "rgba(0, 0, 0, 0.7)",
-      });
-    },
-    onError(res) {
-      this.loading.close();
-    },
-    onSuccess(res) {
-      if (res.code === 10000) {
-        this.rule = res.data;
-        if (!res.data.requirement.length) {
-          this.rule.requirement = [
-            {
-              name: null,
-              price: null,
-            },
-          ];
-        }
-        if (!res.data.width.length) {
-          this.rule.width = [
-            {
-              name: null,
-              price: null,
-            },
-          ];
-        }
-        if (!res.data.weight.length) {
-          this.rule.weight = [
-            {
-              name: null,
-              price: null,
-            },
-          ];
-        }
-      }
-      this.loading.close();
-    },
     addRequirement() {
       this.rule.requirement.push({
         name: null,
@@ -291,15 +223,15 @@ export default {
       this.rule.weight.splice(i, 1);
     },
     saveData() {
-      saveRule(this.rule).then((res) => {
+      saveRule(this.rule).then(res => {
         this.$message({
-          type: "success",
-          message: "保存成功！",
-        });
+          type:'success',
+          message: '保存成功！'
+        })
         this.$router.back();
-      });
+      })
     },
-    reset() {
+    reset(){
       this.rule = {
         ruleName: "",
         typeName: [{ name: null, price: null }],
@@ -321,12 +253,9 @@ export default {
             price: null,
           },
         ],
-      };
-    },
-    getTemplet(){
-      window.open('http://asher.cn-sh2.ufileos.com/template.xlsx');
+      }
     }
-  }
+  },
 };
 </script>
 
