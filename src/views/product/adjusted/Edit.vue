@@ -6,7 +6,7 @@
     <el-divider content-position="left">调价规则</el-divider>
     <div>
       <el-form>
-        <el-form-item >
+        <el-form-item>
           <el-row :gutter="20">
             <el-col :span="22">规则名称</el-col>
             <el-col :span="2"></el-col>
@@ -14,7 +14,9 @@
               <el-input v-model="rule.ruleName"></el-input>
             </el-col>
             <el-col :span="2">
-              <el-button type="text" icon="el-icon-download" @click="getTemplet">规则模版</el-button>
+              <el-button type="text" icon="el-icon-download" @click="getTemplet"
+                >规则模版</el-button
+              >
             </el-col>
           </el-row>
         </el-form-item>
@@ -338,10 +340,10 @@ export default {
       }
       this.loading.close();
     },
-     getTemplet(){
-      window.open('http://asher.cn-sh2.ufileos.com/template.xlsx');
-    }
-  }
+    getTemplet() {
+      window.open("http://asher.cn-sh2.ufileos.com/template.xlsx");
+    },
+  },
 };
 </script>
 

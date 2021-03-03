@@ -106,3 +106,12 @@ export function getStaffList() {
     method: 'post'
   })
 }
+// 修改密码
+export function changePwd(data) {
+  return request({
+    url: `/user/changePwd`,
+    method: 'post',
+    data
+  })
+}
+
