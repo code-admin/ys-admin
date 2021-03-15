@@ -12,8 +12,42 @@ export function getProducts(data) {
 // 获取产品类型
 export function getProductTypes() {
   return request({
-    url: '/product/getProductTypes',
+    url: '/productType/getProductTypes',
     method: 'post'
+  })
+}
+// 品类列表
+export function queryTypeList(data) {
+  return request({
+    url: '/productType/queryTypeList',
+    method: 'post',
+    data
+  })
+}
+
+// 获取产品类型
+export function deleteProductType(productTypeId) {
+  return request({
+    url: `/productType/deleteProductType/${productTypeId}`,
+    method: 'post'
+  })
+}
+
+// 品类保存
+export function saveProductType(data) {
+  return request({
+    url: '/productType/saveProductType',
+    method: 'post',
+    data
+  })
+}
+
+// 提交调价
+export function effectPrice(data) {
+  return request({
+    url: '/productType/effectPrice',
+    method: 'post',
+    data
   })
 }
 

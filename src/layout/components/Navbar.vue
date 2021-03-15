@@ -20,17 +20,17 @@
           <!-- <a target="_blank" href="https://github.com/PanJiaChen/vue-admin-template/">
             <el-dropdown-item>Github</el-dropdown-item>
           </a>
-          -->
+          <a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">
+            <el-dropdown-item>Docs</el-dropdown-item>
+          </a> -->
           <div @click="updatePwdModal=true, updatePwd = {}">
             <el-dropdown-item icon="el-icon-key">
               <span>修改密码</span>
             </el-dropdown-item>
           </div>
-          <div @click="logout">
-            <el-dropdown-item icon="el-icon-switch-button" divided>
-              <span>退出</span>
-            </el-dropdown-item>
-          </div>
+          <el-dropdown-item icon="el-icon-switch-button" divided>
+            <span @click="logout">退出</span>
+          </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
@@ -65,10 +65,6 @@ import Hamburger from '@/components/Hamburger'
 import { changePwd } from '@/api/user'
 
 export default {
-  components: {
-    Breadcrumb,
-    Hamburger
-  },
   data() {
     return {
       updatePwdModal: false,
@@ -95,6 +91,10 @@ export default {
         }]
       }
     }
+  },
+  components: {
+    Breadcrumb,
+    Hamburger
   },
   computed: {
     ...mapGetters([
@@ -131,10 +131,17 @@ export default {
       })
     },
     logout() {
+      const loading = this.$loading({
+        lock: true,
+        text: '正在注销退出',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
       this.$store.dispatch('user/logout').then(res => {
         this.$router.push(`/login?redirect=${this.$route.fullPath}`)
-      }).catch(err => {
-        console.log(err)
+        loading.close()
+      }).catch(() => {
+        loading.close()
       })
     }
   }
