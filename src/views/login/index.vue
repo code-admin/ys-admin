@@ -4,7 +4,7 @@
 
       <div class="title-container">
         <div>
-          <!-- <img src="../../assets/imgs/logo.png" class="img-logo"> -->
+          <img src="../../assets/imgs/agabus.png" class="img-logo">
         </div>
         <div>
           <h3 class="title">亚迦布科技销售系统</h3>

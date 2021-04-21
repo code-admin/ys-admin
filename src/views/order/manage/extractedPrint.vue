@@ -5,7 +5,7 @@
         <div class="company">温州亚迦布科技有限公司 </div>
         <div class="title">提货单</div>
 
-        <!-- <img class="logo" src="../../../assets/imgs/arsh_logo.png"> -->
+        <img class="logo" src="../../../assets/imgs/agabus_logo.png">
 
         <div class="print">
           <el-button type="text" size="mini" icon="el-icon-close" style="color:#F56C6C" @click="$router.back()">关闭</el-button>
@@ -243,10 +243,8 @@ export default {
     }
 
     .logo {
-        widows: 65px;
-        height: 56px;
         position: absolute;
-        top: 30px;
+        top: 0;
         left: 100px;
     }
 

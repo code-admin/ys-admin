@@ -9,12 +9,18 @@ import Layout from '@/layout'
 export const constantRoutes = [{
   path: '/login',
   component: () => import('@/views/login/index'),
+  meta:{
+    title: '系统登录',
+  },
   hidden: true
 },
 
 {
   path: '/404',
   component: () => import('@/views/404'),
+  meta:{
+    title: '哎呀～，页面丢失！',
+  },
   hidden: true
 },
 

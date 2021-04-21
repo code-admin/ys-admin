@@ -11,7 +11,7 @@
 
         </div>
 
-        <!-- <img class="logo" src="../../assets/imgs/arsh_logo.png"> -->
+        <img class="logo" src="../../assets/imgs/agabus_logo.png">
 
         <div class="print">
           <el-button type="text" size="mini" icon="el-icon-close" style="color:#F56C6C" @click="closeWindow">关闭</el-button>
@@ -198,11 +198,9 @@ export default {
         font-weight: 500;
     }
 
-    .logo {
-        widows: 65px;
-        height: 56px;
+  .logo {
         position: absolute;
-        top: 20px;
+        top: 0;
         left: 100px;
     }
 

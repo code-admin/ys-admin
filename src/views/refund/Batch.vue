@@ -3,10 +3,10 @@
     <div id="print_box" v-loading="loading" class="print-box">
       <div style="width:100%;height:100%;">
 
-        <div class="company">浙江亚设塑业有限公司</div>
+        <div class="company">温州亚迦布科技有限公司</div>
         <div class="title">退筒单</div>
 
-        <img class="logo" src="../../assets/imgs/arsh_logo.png">
+        <img class="logo" src="../../assets/imgs/agabus_logo.png">
 
         <div class="print">
           <el-button type="text" size="mini" icon="el-icon-close" style="color:#F56C6C" @click="$router.back()">关闭</el-button>
@@ -129,7 +129,7 @@
           </tr>
           <tr class="tr">
             <td class="foot" colspan="11">
-              注：请客户仔细核对货物数量、重量、金额等信息再签字 销售电话：18868270138 传真电话：0577-80818808
+             注：请客户仔细核对货物数量、重量、金额等信息再签字 销售电话：13858762566、13255770088
             </td>
           </tr>
         </table>
@@ -441,10 +441,8 @@ export default {
     }
 
     .logo {
-        widows: 65px;
-        height: 56px;
         position: absolute;
-        top: 20px;
+        top: 0;
         left: 100px;
     }
 

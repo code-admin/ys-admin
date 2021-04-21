@@ -3,22 +3,15 @@
     <div id="print_box" v-loading="loading" class="print-box">
       <div style="width:100%;height:100%;">
 
-        <div class="company">温州亚迦布科技有限公司 </div>
+        <div class="company">温州亚迦布科技有限公司</div>
         <div class="title">退筒单</div>
 
-        <img class="logo" src="../../../assets/imgs/agabus_logo.png">
+        <img class="logo" src="../../assets/imgs/agabus_logo.png">
 
         <div class="print">
           <el-button type="text" size="mini" icon="el-icon-close" style="color:#F56C6C" @click="$router.back()">关闭</el-button>
           <el-button type="text" size="mini" icon="el-icon-printer" @click="saveData">保存并打印</el-button>
         </div>
-
-        <ul class="sign">
-          <li>白: 存根联</li>
-          <li>红: 客户联</li>
-          <li>蓝: 仓库联</li>
-          <li>黄: 财务联</li>
-        </ul>
 
         <div class="bar flex justify-between">
           <div class="tac"><span>客户:</span><span class="text">&nbsp;{{ bill.orderRefunds[0] ? bill.orderRefunds[0].customerName : '' }}</span></div>
@@ -136,7 +129,7 @@
           </tr>
           <tr class="tr">
             <td class="foot" colspan="11">
-              注：请客户仔细核对货物数量、重量、金额等信息再签字 销售电话：13858762566、13255770088
+             注：请客户仔细核对货物数量、重量、金额等信息再签字 销售电话：13858762566、13255770088
             </td>
           </tr>
         </table>
@@ -259,9 +252,7 @@ export default {
         //   type: 'error',
         //   message: '请先选择需要退筒的产品！！'
         // })
-        this.$router.replace({
-          name: 'OrderRefund'
-        })
+        this.$router.replace({ name: 'OrderRefund' })
       }
     },
     saveData() {
@@ -299,7 +290,6 @@ export default {
       //  找到需要隐藏的DOM节点
       const head = document.getElementsByClassName('navbar')[0]
       const printBtn = document.getElementsByClassName('print')[0]
-      const sign = document.getElementsByClassName('sign')[0]
       const leftNav = document.getElementsByClassName('el-scrollbar')[0]
       const sidebarContainer = document.getElementsByClassName('sidebar-container')[0]
       const mainContainer = document.getElementsByClassName('main-container')[0]
@@ -310,9 +300,6 @@ export default {
       //  给对应DOM添加class
       head.classList.add('printHideCss')
       printBtn.classList.add('printHideCss')
-      //  显示纸张备注
-      sign.style.cssText = 'display:inline'
-
       leftNav.classList.add('printHideCss')
       sidebarContainer.classList.add('printHideCss')
       tableBox.classList.add('printHideCss')
@@ -464,20 +451,9 @@ export default {
         top: 10px;
         right: 20px;
     }
-
-    .sign {
-        display: none;
-        position: absolute;
-        top: 0px;
-        right: 5px;
-        font-size: 12px;
-        font-weight: 500;
-        color: #888888;
-    }
 }
-
-.table-box {
-    margin-top: 20px;
-    padding: 20px;
+.table-box{
+  margin-top: 20px;
+  padding: 20px;
 }
 </style>
