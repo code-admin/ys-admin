@@ -14,17 +14,18 @@
     <el-table :key="tableKey" v-loading="listLoading" :data="userList" border fit highlight-current-row style="width: 100%;">
       <el-table-column type="selection" align="center" width="55" />
       <el-table-column type="index" width="50" align="center" />
-      <el-table-column label="客户编号" prop="customerNo" align="center" />
-      <el-table-column label="登录账号" prop="loginName" align="center" />
-      <el-table-column label="姓名" prop="userName" align="center" />
+      <el-table-column label="客户编号" prop="customerNo" align="center" width="120"/>
+      <el-table-column label="登录账号" prop="loginName" align="center" width="120"/>
+      <el-table-column label="姓名" prop="userName" align="center" width="120"/>
       <el-table-column label="性别" prop="gender" align="center">
         <template slot-scope="scope">
           <i>{{ scope.row.gender ? '男' : '女' }}</i>
           <svg-icon :icon-class="scope.row.gender ? 'male' : 'female'" />
         </template>
       </el-table-column>
-      <el-table-column label="手机号" prop="phone" align="center" />
-      <el-table-column label="公司名称" prop="companyName" align="center" />
+      <el-table-column label="手机号" prop="phone" align="center" width="120"/>
+      <el-table-column label="公众服务号" prop="mpOpenId" align="center" width="260"/>
+      <el-table-column label="公司名称" prop="companyName" align="center" width="180"/>
       <el-table-column label="身份证" prop="identityCard" align="center" />
       <el-table-column label="客户类型" prop="customerTypeName" align="center" />
       <el-table-column label="操作" prop="id" align="center" width="120">

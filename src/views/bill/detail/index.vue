@@ -153,11 +153,8 @@ export default {
         background: 'rgba(0, 0, 0, 0.7)'
       })
       exportBillDetail(this.filter).then(res => {
-        if (res.code === 10000) {
           loading.close()
           window.open(res.data)
-          return
-        }
       }).catch(err => {
         loading.close()
         this.$message({

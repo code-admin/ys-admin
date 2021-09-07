@@ -272,6 +272,9 @@
         </div>
       </el-dialog>
 
+      <div style="text-align:right; margin-bottom:10px;">
+        <el-button type="primary" size="mini" @click="getDelivery()">获取出库数据</el-button>
+      </div>
       <el-table :data="outStockList" size="mini">
         <el-table-column property="name" label="产品编号/名称" align="center" width="140" show-overflow-tooltip />
         <el-table-column property="requirement" label="要求" align="center" show-overflow-tooltip />
@@ -510,6 +513,9 @@
 </template>
 
 <script>
+import axios from 'axios'
+import {MESConfig} from '../../../settings.js'
+
 import {
   getOrderById,
   saveDeliveryOrder,
@@ -1111,8 +1117,25 @@ export default {
           this.showAddProduct = false
         }
       })
+    },
+
+    getDelivery(){
+      const orderId = this.$route.params.id || ''
+      axios.get(`${MESConfig.baseUrl}/aps/foreign/sale/getDelivery?orderNumber=${orderId}&companyId=${MESConfig.companyId}`).then(res => {
+        if(res.status === 200){
+          if(res.data.code === 200){
+            console.log('tag', res.data.data)
+          }
+        }
+      }).catch(err => {
+        this.$message({
+          type:'error',
+          message:err.data.msg
+        })
+      })
     }
   }
+
 }
 </script>
 

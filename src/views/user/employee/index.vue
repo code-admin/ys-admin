@@ -24,6 +24,7 @@
       </el-table-column>
       <el-table-column label="身份证" prop="identityCard" align="center" />
       <el-table-column label="手机号" prop="phone" align="center" />
+      <el-table-column label="公众服务号" prop="mpOpenId" align="center" />
       <el-table-column label="所属部门" prop="departmentName" align="center" sortable="custom" />
       <el-table-column label="所属职位" prop="jobName" align="center" sortable="custom" />
       <el-table-column label="班次" prop="className" align="center" sortable="custom" />

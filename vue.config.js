@@ -42,6 +42,7 @@ module.exports = {
       '^/yase-backend': {
         // target: 'http://192.168.2.192:8090',
         target: 'http://121.40.234.44:18090',
+        // target: 'https://manage.agabus.shop/',
         changeOrigin: true
       },
       [process.env.VUE_APP_BASE_API]: {

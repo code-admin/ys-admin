@@ -12,5 +12,24 @@ module.exports = {
    * @type {boolean} true | false
    * @description Whether show the logo in sidebar
    */
-  sidebarLogo: false
+  sidebarLogo: false,
+
+  /**
+   *  打印设置对象
+   */
+  print:{
+    heade: '',
+    footer: ''
+  },
+
+  /**
+   * MES系统对接配置
+   */
+  MESConfig:{
+    baseUrl: 'https://mes.emcshare.com',
+    companyId: '7376958070263518323',
+    // companyId: '98955607272325340'
+  }
+
+
 }
