@@ -14,19 +14,49 @@
     <div class="card mt20">
       <div class="title">基本信息</div>
       <div class="content mt20">
-        <el-form label-position="right" label-width="80px" :model="orderInfo">
+        <el-form
+          label-position="right"
+          label-width="80px"
+          :model="orderInfo"
+          size="mini"
+        >
           <el-form-item label="客户">
-            <el-select v-model="orderInfo.orderUser" placeholder="请选择客户" filterable style="width:100%;">
-              <el-option v-for="user in customeList" :key="user.loginName" :label="user.userName" :value="user.loginName" />
+            <el-select
+              v-model="orderInfo.orderUser"
+              placeholder="请选择客户"
+              filterable
+              style="width: 100%"
+            >
+              <el-option
+                v-for="user in customeList"
+                :key="user.loginName"
+                :label="user.userName"
+                :value="user.loginName"
+              />
             </el-select>
           </el-form-item>
           <el-form-item label="销售类型">
-            <el-select v-model="orderInfo.orderType" placeholder="销售类型" style="width:100%;">
-              <el-option v-for="(orderType,index) in orderTypeList" :key="index" :label="orderType.name" :value="orderType.id" />
+            <el-select
+              v-model="orderInfo.orderType"
+              placeholder="销售类型"
+              style="width: 100%"
+            >
+              <el-option
+                v-for="(orderType, index) in orderTypeList"
+                :key="index"
+                :label="orderType.name"
+                :value="orderType.id"
+              />
             </el-select>
           </el-form-item>
           <el-form-item label="下单日期">
-            <el-date-picker v-model="orderInfo.orderTime" type="date" placeholder="请选择下单日期" value-format="yyyy-MM-dd" style="width:100%;" />
+            <el-date-picker
+              v-model="orderInfo.orderTime"
+              type="date"
+              placeholder="请选择下单日期"
+              value-format="yyyy-MM-dd"
+              style="width: 100%"
+            />
           </el-form-item>
           <el-form-item v-if="currentData !== orderInfo.orderTime">
             <el-alert
@@ -43,87 +73,161 @@
       <div class="title">产品信息</div>
       <div class="content mt20">
         <el-row :gutter="20">
-          <el-col v-for="(goods,index) in orderInfo.orderExts" :key="index" :sm="24" :md="12" :lg="8" :xl="6">
-            <el-card shadow="hover" style="min-height:600px">
-              <el-form label-position="right" label-width="80px" :model="orderInfo">
+          <el-col
+            v-for="(goods, index) in orderInfo.orderExts"
+            :key="index"
+            :sm="24"
+            :md="12"
+            :lg="8"
+            :xl="6"
+          >
+            <el-card shadow="hover" style="min-height: 600px">
+              <el-form
+                label-position="right"
+                label-width="80px"
+                :model="orderInfo"
+                size="mini"
+              >
                 <el-form-item label="产品编号">
-                  <el-input v-model="orderInfo.orderExts[index].productNo" placeholder="产品编号" disabled />
+                  <el-input
+                    v-model="orderInfo.orderExts[index].productNo"
+                    placeholder="产品编号"
+                    disabled
+                  />
                 </el-form-item>
                 <el-form-item label="产品名称">
-                  <el-select v-model="orderInfo.orderExts[index].productId" placeholder="请选择产品" filterable style="width:100%;" @change="changeProduct(index)">
-                    <el-option v-for="product in productList" :key="product.id" :label="`${product.name}${product.width}${product.weight}(${product.productNo})`" :value="product.id" />
+                  <el-select
+                    v-model="orderInfo.orderExts[index].productId"
+                    placeholder="请选择产品"
+                    filterable
+                    style="width: 100%"
+                    @change="changeProduct(index)"
+                  >
+                    <el-option
+                      v-for="product in productList"
+                      :key="product.id"
+                      :label="`${product.name}${product.width}${product.weight}(${product.productNo})`"
+                      :value="product.id"
+                    />
                   </el-select>
                 </el-form-item>
 
-                <div v-if="orderInfo.orderExts[index].productId" class="poros-box">
+                <div
+                  v-if="orderInfo.orderExts[index].productId"
+                  class="poros-box"
+                >
                   <el-row :gutter="2">
                     <el-col :span="3">
                       <div class="lab">要求:</div>
                     </el-col>
                     <el-col :span="15">
-                      <div class="val">{{ orderInfo.orderExts[index].requirement }}</div>
+                      <div class="val">
+                        {{ orderInfo.orderExts[index].requirement }}
+                      </div>
                     </el-col>
                     <el-col :span="6">
                       <div class="val">
-                        <el-button type="text" size="mini" @click="changeNumber(index,orderInfo.orderExts[index])">调换货</el-button>
+                        <el-button
+                          type="text"
+                          size="mini"
+                          @click="
+                            changeNumber(index, orderInfo.orderExts[index])
+                          "
+                          >调换货</el-button
+                        >
                       </div>
                     </el-col>
                     <el-col :span="3">
                       <div class="lab">宽度:</div>
                     </el-col>
                     <el-col :span="5">
-                      <div class="val">{{ orderInfo.orderExts[index].width }} cm</div>
+                      <div class="val">
+                        {{ orderInfo.orderExts[index].width }} cm
+                      </div>
                     </el-col>
                     <el-col :span="3">
                       <div class="lab">克重:</div>
                     </el-col>
                     <el-col :span="5">
-                      <div class="val">{{ orderInfo.orderExts[index].weight }} g</div>
+                      <div class="val">
+                        {{ orderInfo.orderExts[index].weight }} g
+                      </div>
                     </el-col>
                     <div v-if="orderInfo.orderType === 2">
                       <el-col :span="3">
                         <div class="lab">米数:</div>
                       </el-col>
                       <el-col :span="5">
-                        <div class="val">{{ orderInfo.orderExts[index].length }} 米</div>
+                        <div class="val">
+                          {{ orderInfo.orderExts[index].length }} 米
+                        </div>
                       </el-col>
                     </div>
                     <el-col :span="3">
                       <div class="lab">库存:</div>
                     </el-col>
                     <el-col :span="5">
-                      <div class="val">{{ orderInfo.orderExts[index].stockNumber }} 个</div>
+                      <div class="val">
+                        {{ orderInfo.orderExts[index].stockNumber }} 个
+                      </div>
                     </el-col>
                   </el-row>
                 </div>
 
                 <div v-if="orderInfo.orderType === 1">
                   <el-form-item label="长度">
-                    <el-input v-model="orderInfo.orderExts[index].goodsLength" placeholder="长度(cm)/条" />
+                    <el-input
+                      v-model="orderInfo.orderExts[index].goodsLength"
+                      placeholder="长度(cm)/条"
+                    />
                   </el-form-item>
                   <el-form-item label="条数">
-                    <el-input-number v-model="orderInfo.orderExts[index].number" :min="1" placeholder="下单条数" style="width:100%" />
+                    <el-input-number
+                      v-model="orderInfo.orderExts[index].number"
+                      :min="1"
+                      placeholder="下单条数"
+                      style="width: 100%"
+                    />
                   </el-form-item>
                 </div>
                 <el-form-item label="个数">
-                  <el-input-number v-model="orderInfo.orderExts[index].goodsNumber" :min="1" placeholder="下单数量" style="width:100%" />
+                  <el-input-number
+                    v-model="orderInfo.orderExts[index].goodsNumber"
+                    :min="1"
+                    placeholder="下单数量"
+                    style="width: 100%"
+                  />
                 </el-form-item>
                 <el-form-item label="单价">
-                  <el-input v-model="orderInfo.orderExts[index].price" type="number" placeholder="单价(元)" />
+                  <el-input
+                    v-model="orderInfo.orderExts[index].price"
+                    type="number"
+                    placeholder="单价(元)"
+                  />
                 </el-form-item>
                 <el-form-item label="备注">
-                  <el-input v-model="orderInfo.orderExts[index].remark" placeholder="请输入备注" />
+                  <el-input
+                    v-model="orderInfo.orderExts[index].remark"
+                    placeholder="请输入备注"
+                  />
                 </el-form-item>
               </el-form>
-              <div v-if="index > 0" style="text-align: center;">
-                <el-button icon="el-icon-delete" @click="deleteGoods(index)">删除</el-button>
+              <div v-if="index > 0" style="text-align: center">
+                <el-button icon="el-icon-delete" @click="deleteGoods(index)"
+                  >删除</el-button
+                >
               </div>
             </el-card>
           </el-col>
           <el-col :sm="24" :md="12" :lg="8" :xl="6">
             <el-card shadow="hover">
               <div class="plus">
-                <el-tooltip class="item" effect="dark" content="点击添加" placement="top">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  content="点击添加"
+                  placement="top"
+                >
                   <i class="el-icon-plus" @click="addGoods" />
                 </el-tooltip>
               </div>
@@ -136,54 +240,165 @@
     <div class="card mt20">
       <div class="title">收货信息</div>
       <div class="content mt20">
-        <el-form label-position="right" label-width="100px" :model="orderInfo">
-          <el-form-item label="发货方式">
-            <!-- <el-select v-model="orderInfo.deliveryType" placeholder="请选择发货方式" filterable style="width:100%;">
-              <el-option v-for="expres in expresList" :key="expres.id" :label="expres.name" :value="expres.id" />
-            </el-select> -->
-            <el-input v-model="orderInfo.deliveryName" placeholder="请输入发货方式" />
-          </el-form-item>
-          <el-form-item label="收货地址">
-            <!-- <el-cascader v-model="orderInfo.pcc" :props="props" clearable placeholder="省/市/区" style="width:100%;" /> -->
-            <el-input v-model="orderInfo.address" class="mt5" placeholder="请输入详细地址" />
-          </el-form-item>
-          <el-form-item label="收货人">
-            <el-input v-model="orderInfo.customerName" placeholder="请输入收货人" />
-          </el-form-item>
-          <el-form-item label="收货人电话">
-            <el-input v-model="orderInfo.phone" placeholder="请输入收货人电话" />
-          </el-form-item>
-          <el-form-item label="备注">
-            <el-input v-model="orderInfo.remark" placeholder="请输入备注" type="textarea" :rows="2" />
-          </el-form-item>
-        </el-form>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-form
+              label-position="right"
+              label-width="100px"
+              :model="orderInfo"
+              size="mini"
+            >
+              <el-form-item label="发货地址">
+                <el-select
+                  v-model="orderInfo.shippingSource"
+                  placeholder="请选择发货"
+                  filterable
+                  style="width: 100%"
+                >
+                  <el-option
+                    v-for="source in sourceList"
+                    :key="source.id"
+                    :label="source.address"
+                    :value="source.id"
+                  />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="收货地址">
+                <el-input
+                  v-model="orderInfo.address"
+                  clearable
+                  :id="'pickerInput'"
+                  class="mt5"
+                  placeholder="选择收获地址"
+                />
+              </el-form-item>
+              <el-form-item label="收货人">
+                <el-input
+                  v-model="orderInfo.customerName"
+                  placeholder="请输入收货人"
+                />
+              </el-form-item>
+              <el-form-item label="收货人电话">
+                <el-input
+                  v-model="orderInfo.phone"
+                  placeholder="请输入收货人电话"
+                />
+              </el-form-item>
+              <el-form-item label="备注">
+                <el-input
+                  v-model="orderInfo.remark"
+                  placeholder="请输入备注"
+                  type="textarea"
+                  :rows="2"
+                />
+              </el-form-item>
+            </el-form>
+          </el-col>
+          <el-col :span="12">
+            <div class="amap-box">
+              <el-amap
+                vid="project-map"
+                mapStyle="fresh"
+                :expandZoomRange="false"
+                :amapManager="amapManager"
+                :center="mapCenter"
+                :zoom="zoom"
+                :plugin="mapPlugin"
+                :events="mapEvents"
+              >
+                <el-amap-marker
+                  :position="[120.426486, 27.525621]"
+                  :content="`<img src='http://asher.cn-sh2.ufileos.com/agabus.png' style='width:60px;height:60px;'></img>`"
+                />
+              </el-amap>
+              <div
+                style="
+                  font-family: 'Hiragino Sans GB';
+                  font-size: 12px;
+                  color: #909399;
+                  margin-top: 10px;
+                "
+              >
+                <span> 当前地址：{{ orderInfo.address }} </span>
+                <span>
+                  {{ distance ? distance: ''}}{{time ? time:'' }}
+                </span>
+              </div>
+            </div>
+          </el-col>
+        </el-row>
       </div>
     </div>
 
     <div class="card mt20">
       <!-- <el-button type="primary" icon="el-icon-edit-outline" :loading="saveOrderInfoLoading" @click="saveOrderInfo">保存</el-button> -->
-      <el-button type="primary" icon="el-icon-position" :loading="saveOrSubmitOrderInfoloading" @click="saveOrSubmitOrderInfo">保存</el-button>
+      <el-button
+        type="primary"
+        icon="el-icon-position"
+        :loading="saveOrSubmitOrderInfoloading"
+        @click="saveOrSubmitOrderInfo"
+        >保存</el-button
+      >
       <el-button icon="el-icon-back" @click="$router.back()">返回</el-button>
     </div>
 
-    <el-dialog ref="drawer2" title="产品调换货" :visible.sync="showExchange" direction="ltr" custom-class="demo-drawer">
-      <div style="padding:20px">
+    <el-dialog
+      ref="drawer2"
+      title="产品调换货"
+      :visible.sync="showExchange"
+      direction="ltr"
+      custom-class="demo-drawer"
+    >
+      <div style="padding: 20px">
         <el-form :model="exchange">
           <el-form-item label="入库产品" :label-width="formLabelWidth">
-            <el-select v-model="exchange.plusStockProductId" filterable disabled placeholder="请选择入库产品" style="width:100%">
-              <el-option v-for="product in productList" :key="product.id" :label="`${product.name}${product.width}${product.weight}/[${product.todaySaledNumber ? product.todaySaledNumber : 0}]/[${product.stockNumber}]`" :value="product.id" />
+            <el-select
+              v-model="exchange.plusStockProductId"
+              filterable
+              disabled
+              placeholder="请选择入库产品"
+              style="width: 100%"
+            >
+              <el-option
+                v-for="product in productList"
+                :key="product.id"
+                :label="`${product.name}${product.width}${product.weight}/[${
+                  product.todaySaledNumber ? product.todaySaledNumber : 0
+                }]/[${product.stockNumber}]`"
+                :value="product.id"
+              />
             </el-select>
           </el-form-item>
           <el-form-item label="出库商品" :label-width="formLabelWidth">
-            <el-select v-model="exchange.reduceStockProductId" filterable placeholder="请选择入库产品" style="width:100%">
-              <el-option v-for="product in productList" :key="product.id" :label="`${product.name}${product.width}${product.weight}/[${product.todaySaledNumber ? product.todaySaledNumber : 0}]/[${product.stockNumber}]`" :value="product.id" />
+            <el-select
+              v-model="exchange.reduceStockProductId"
+              filterable
+              placeholder="请选择入库产品"
+              style="width: 100%"
+            >
+              <el-option
+                v-for="product in productList"
+                :key="product.id"
+                :label="`${product.name}${product.width}${product.weight}/[${
+                  product.todaySaledNumber ? product.todaySaledNumber : 0
+                }]/[${product.stockNumber}]`"
+                :value="product.id"
+              />
             </el-select>
           </el-form-item>
           <el-form-item label="重量" :label-width="formLabelWidth">
-            <el-input-number v-model="exchange.netWeight" :min="1" placeholder="重量(KG)" />
+            <el-input-number
+              v-model="exchange.netWeight"
+              :min="1"
+              placeholder="重量(KG)"
+            />
           </el-form-item>
           <el-form-item label="数量" :label-width="formLabelWidth">
-            <el-input-number v-model="exchange.stockNumber" :min="1" placeholder="克重(个)" />
+            <el-input-number
+              v-model="exchange.stockNumber"
+              :min="1"
+              placeholder="克重(个)"
+            />
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -196,149 +411,268 @@
 </template>
 
 <script>
-import {
-  getCustomes
-} from '@/api/user'
-import {
-  getOrderTypes,
-  getExpress,
-  saveOrder,
-  submitOrder
-} from '@/api/order'
-import {
-  getValidateProducts
-} from '@/api/product'
-import {
-  getProvinces,
-  getCitys,
-  getCountrys
-} from '@/api/common'
-import {
-  exchangeProductStock
-} from '@/api/product'
-const date = new Date()
-const today = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+import axios from "axios";
+import { getOrgId } from "@/utils/auth";
+import map from "@/config/map";
+import { AMapManager, lazyAMapApiLoaderInstance } from "vue-amap";
+const amapManager = new AMapManager();
+import { getCustomes } from "@/api/user";
+import { getShippingAddress } from "@/api/org";
+import { getOrderTypes, getExpress, saveOrder, submitOrder } from "@/api/order";
+import { getValidateProducts } from "@/api/product";
+import { getProvinces, getCitys, getCountrys } from "@/api/common";
+import { exchangeProductStock } from "@/api/product";
+const date = new Date();
+const today = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 export default {
   data() {
+    let that = this;
     return {
+      orgId: getOrgId() || "1",
+      sourceList: [],
       saveOrderInfoLoading: false,
       saveOrSubmitOrderInfoloading: false,
       currentData: today,
       props: {
         lazy: true,
-        lazyLoad: (node, resolve) => this.loadPCC(node, resolve)
+        lazyLoad: (node, resolve) => this.loadPCC(node, resolve),
       },
       orderInfo: {
         makingType: 1,
         orderType: 2,
         orderTime: today,
-        orderExts: [{
-          length: null,
-          number: null,
-          price: null,
-          productId: null,
-          requirement: null,
-          goodsLength: null,
-          goodsNumber: 1,
-          weight: null,
-          width: null,
-          remark: null,
-          stockNumber: null
-        }],
-        pcc: null
+        orderExts: [
+          {
+            length: null,
+            number: null,
+            price: null,
+            productId: null,
+            requirement: null,
+            goodsLength: null,
+            goodsNumber: 1,
+            weight: null,
+            width: null,
+            remark: null,
+            stockNumber: null,
+          },
+        ],
+        pcc: null,
+        shippingSource: 1,
+        shippingLongitude: 120.426486,
+        shippingLatitude: 27.525621,
+        shippingAddress: "亚迦布科技",
+
+        address: "",
       },
       customeList: [],
       orderTypeList: [],
       productList: [],
       expresList: [],
       showExchange: false,
-      formLabelWidth: '90px',
+      formLabelWidth: "90px",
       exchange: {},
-      tempIndex: null
-    }
+      tempIndex: null,
+      companyS: [],
+      ////////////////地图相关///////////////////////
+      selectPostion: [], // 选择的地图位置坐标
+      distance:0,
+      time:0,
+      amapManager,
+      mapCenter: [121.604673, 31.171047],
+      zoom: 10,
+      mapEvents: {
+        init() {
+          // 驾车路线规划
+          var driving = new AMap.Driving({
+              // 驾车路线规划策略，AMap.DrivingPolicy.LEAST_TIME是最快捷模式
+              policy: AMap.DrivingPolicy.LEAST_TIME,
+              // map 指定将路线规划方案绘制到对应的AMap.Map对象上
+              map: amapManager.getMap(),
+          })
+
+          // 拖拽选址 & POI
+          setTimeout(() => {
+            AMapUI.loadUI( ["misc/PositionPicker", "misc/PoiPicker"],  (PositionPicker, PoiPicker) => {
+                console.log('地图选址', PositionPicker)
+                // const positionPicker = new PositionPicker({
+                //   mode: "dragMap", //设定为拖拽地图模式，可选'dragMap'、'dragMarker'，默认为'dragMap'
+                //   map: amapManager.getMap(), //依赖地图对象
+                // });
+                const poiPicker = new PoiPicker({
+                  input: "pickerInput", //输入框id
+                });
+                // positionPicker.on("success", (positionResult) => {
+                //   // console.log("positionResult", positionResult);
+                //   that.orderInfo.address = positionResult.address;
+                //   that.orderInfo.longitude = positionResult.position.lng;
+                //   that.orderInfo.latitude = positionResult.position.lat;
+                //   that.companyS = positionResult.regeocode.pois;
+                //   that.selectPostion = [
+                //     positionResult.position.lng,
+                //     positionResult.position.lat,
+                //   ];
+
+                // });
+                // // 注意一定要调用这个方法，不然没有效果的。
+                // positionPicker.start();
+
+                //监听poi选中信息
+                poiPicker.on("poiPicked", function (poiResult) {
+                  //用户选中的poi点信息
+                  that.zoom = 17;
+                  that.orderInfo.address = `${poiResult.item.district}${poiResult.item.address}${poiResult.item.name}`;
+                  that.mapCenter = [
+                    poiResult.item.location.lng,
+                    poiResult.item.location.lat,
+                  ];
+                  that.selectPostion = [
+                    poiResult.item.location.lng,
+                    poiResult.item.location.lat,
+                  ];
+                  var origin = new AMap.LngLat(120.42638, 27.52558) // 起点
+                  var destination = new AMap.LngLat(poiResult.item.location.lng, poiResult.item.location.lat) // 终点
+                  // 划线路
+                  driving.search(origin, destination, (status ,result)=>{
+                    if(status === 'complete'){
+                      that.distance = `全程 ${result.routes[0].distance / 1000}（公里）`
+                      that.time =   `大约需要 ${(result.routes[0].time /60/60).toFixed(2)}（小时）`
+                    }
+                  })
+                });
+              }
+            );
+          }, 300);
+        },
+      },
+      mapPlugin: [
+        {
+          pName: "Scale",
+        },
+        {
+          pName: "Driving",
+        },
+      ],
+    };
   },
   mounted() {
-    this.getCustomeList()
-    this.getOrderTypeList()
-    this.getValidateProductList()
-    this.getExpresList()
+    this.getMapCenterByIP();
+    this.getCustomeList();
+    this.getOrderTypeList();
+    this.getValidateProductList();
+    this.getExpresList();
+    this.getSourceList();
   },
   methods: {
+    getSourceList() {
+      getShippingAddress(this.orgId).then((res) => {
+        if (res.code === 10000) {
+          this.sourceList = res.data;
+        }
+      });
+    },
+    // IP定位设置地图中心点
+    getMapCenterByIP() {
+      const ip = returnCitySN["cip"];
+      axios
+        .get(
+          `https://restapi.amap.com/v5/ip?output=json&ip=${ip}&type=4&key=${map.amap.WEB_KEY}`
+        )
+        .then((res) => {
+          if (res.data.infocode === "10000") {
+            this.mapCenter = res.data.location.split(",");
+          }
+        });
+    },
+
+    // 驾车线路
+    getDriving(origin, destination) {
+      axios
+        .get(
+          `https://restapi.amap.com/v5/direction/driving?key=${map.amap.WEB_KEY}&origin=${origin}&destination=${destination}`
+        )
+        .then((res) => {
+          if (res.data.infocode === "10000") {
+            console.log(
+              "大约",
+              res.data.route.paths[0].distance / 1000,
+              "公里"
+            );
+          }
+        });
+    },
+
     loadPCC(node, resolve) {
-      const {
-        level,
-        value
-      } = node
+      const { level, value } = node;
       if (level === 0) {
-        getProvinces().then(res => {
-          const nodes = []
+        getProvinces().then((res) => {
+          const nodes = [];
           if (res.code === 10000 && res.data.length) {
-            res.data.map(item => {
+            res.data.map((item) => {
               nodes.push({
                 value: item.provinceId,
-                label: item.name
-              })
-            })
-            resolve(nodes)
+                label: item.name,
+              });
+            });
+            resolve(nodes);
           }
-        })
+        });
       } else if (level === 1) {
-        getCitys(value).then(res => {
-          const nodes = []
+        getCitys(value).then((res) => {
+          const nodes = [];
           if (res.code === 10000 && res.data.length) {
-            res.data.map(item => {
+            res.data.map((item) => {
               nodes.push({
                 value: item.cityId,
-                label: item.name
-              })
-            })
-            resolve(nodes)
+                label: item.name,
+              });
+            });
+            resolve(nodes);
           }
-        })
+        });
       } else if (level === 2) {
-        getCountrys(value).then(res => {
-          const nodes = []
+        getCountrys(value).then((res) => {
+          const nodes = [];
           if (res.code === 10000 && res.data.length) {
-            res.data.map(item => {
+            res.data.map((item) => {
               nodes.push({
                 value: item.countryId,
                 label: item.name,
-                leaf: level >= 2
-              })
-            })
-            resolve(nodes)
+                leaf: level >= 2,
+              });
+            });
+            resolve(nodes);
           }
-        })
+        });
       }
     },
     getCustomeList() {
-      getCustomes().then(res => {
-        if (res.code === 10000) this.customeList = res.data
-      })
+      getCustomes().then((res) => {
+        if (res.code === 10000) this.customeList = res.data;
+      });
     },
     getOrderTypeList() {
-      getOrderTypes().then(res => {
-        if (res.code === 10000) this.orderTypeList = res.data
-      })
+      getOrderTypes().then((res) => {
+        if (res.code === 10000) this.orderTypeList = res.data;
+      });
     },
     getValidateProductList() {
       const loading = this.$loading({
         lock: true,
-        text: '正在加载产品数据……',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      })
-      getValidateProducts().then(res => {
+        text: "正在加载产品数据……",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+      getValidateProducts().then((res) => {
         if (res.code === 10000) {
-          this.productList = res.data
+          this.productList = res.data;
         }
-        loading.close()
-      })
+        loading.close();
+      });
     },
     getExpresList() {
-      getExpress().then(res => {
-        if (res.code === 10000) this.expresList = res.data
-      })
+      getExpress().then((res) => {
+        if (res.code === 10000) this.expresList = res.data;
+      });
     },
     addGoods() {
       this.orderInfo.orderExts.push({
@@ -353,157 +687,168 @@ export default {
         weight: null,
         width: null,
         remark: null,
-        stockNumber: null
-      })
+        stockNumber: null,
+      });
     },
     deleteGoods(index) {
-      if (this.orderInfo.orderExts < 2) return
-      this.orderInfo.orderExts.splice(index, 1)
+      if (this.orderInfo.orderExts < 2) return;
+      this.orderInfo.orderExts.splice(index, 1);
     },
     saveOrderInfo() {
       const params = {
-        ...this.orderInfo
+        ...this.orderInfo,
         // province: this.orderInfo.pcc[0],
         // city: this.orderInfo.pcc[1],
         // district: this.orderInfo.pcc[2]
-      }
-      this.saveOrderInfoLoading = !this.saveOrderInfoLoading
-      saveOrder(params).then(res => {
-        if (res.code === 10000) {
-          this.$message({
-            message: '保存成功！',
-            type: 'success'
-          })
-          this.$router.back()
-        }
-        this.saveOrderInfoLoading = !this.saveOrderInfoLoading
-      }).catch(() => {
-        this.saveOrderInfoLoading = !this.saveOrderInfoLoading
-      })
+      };
+      this.saveOrderInfoLoading = !this.saveOrderInfoLoading;
+      saveOrder(params)
+        .then((res) => {
+          if (res.code === 10000) {
+            this.$message({
+              message: "保存成功！",
+              type: "success",
+            });
+            this.$router.back();
+          }
+          this.saveOrderInfoLoading = !this.saveOrderInfoLoading;
+        })
+        .catch(() => {
+          this.saveOrderInfoLoading = !this.saveOrderInfoLoading;
+        });
     },
     saveOrSubmitOrderInfo() {
       const params = {
-        ...this.orderInfo
+        ...this.orderInfo,
         // province: this.orderInfo.pcc[0],
         // city: this.orderInfo.pcc[1],
         // district: this.orderInfo.pcc[2]
-      }
-      this.saveOrSubmitOrderInfoloading = !this.saveOrSubmitOrderInfoloading
-      submitOrder(params).then(res => {
-        if (res.code === 10000) {
-          this.$message({
-            message: '保存成功！',
-            type: 'success'
-          })
-          this.$router.back()
-        }
-        this.saveOrSubmitOrderInfoloading = !this.saveOrSubmitOrderInfoloading
-      }).catch(() => {
-        this.saveOrSubmitOrderInfoloading = !this.saveOrSubmitOrderInfoloading
-      })
+      };
+      this.saveOrSubmitOrderInfoloading = !this.saveOrSubmitOrderInfoloading;
+      submitOrder(params)
+        .then((res) => {
+          if (res.code === 10000) {
+            this.$message({
+              message: "保存成功！",
+              type: "success",
+            });
+            this.$router.back();
+          }
+          this.saveOrSubmitOrderInfoloading =
+            !this.saveOrSubmitOrderInfoloading;
+        })
+        .catch(() => {
+          this.saveOrSubmitOrderInfoloading =
+            !this.saveOrSubmitOrderInfoloading;
+        });
     },
     changeProduct(index) {
       // const changeId = this.orderInfo.orderExts[index].productId
       // this.orderInfo.orderExts[index] = { ...(this.productList.find(item => item.id === changeId)) }
 
-      const changeId = this.orderInfo.orderExts[index].productId
-      const product = this.productList.find(item => item.id === changeId)
-      this.orderInfo.orderExts[index].productNo = product.productNo
-      this.orderInfo.orderExts[index].requirement = product.requirement
-      this.orderInfo.orderExts[index].width = product.width
-      this.orderInfo.orderExts[index].weight = product.weight
-      this.orderInfo.orderExts[index].length = product.length
-      this.orderInfo.orderExts[index].goodsLength = null
-      this.orderInfo.orderExts[index].number = null
-      this.orderInfo.orderExts[index].goodsNumber = 1
-      this.orderInfo.orderExts[index].price = product.price
-      this.orderInfo.orderExts[index].remark = null
-      this.orderInfo.orderExts[index].stockNumber = product.stockNumber
+      const changeId = this.orderInfo.orderExts[index].productId;
+      const product = this.productList.find((item) => item.id === changeId);
+      this.orderInfo.orderExts[index].productNo = product.productNo;
+      this.orderInfo.orderExts[index].requirement = product.requirement;
+      this.orderInfo.orderExts[index].width = product.width;
+      this.orderInfo.orderExts[index].weight = product.weight;
+      this.orderInfo.orderExts[index].length = product.length;
+      this.orderInfo.orderExts[index].goodsLength = null;
+      this.orderInfo.orderExts[index].number = null;
+      this.orderInfo.orderExts[index].goodsNumber = 1;
+      this.orderInfo.orderExts[index].price = product.price;
+      this.orderInfo.orderExts[index].remark = null;
+      this.orderInfo.orderExts[index].stockNumber = product.stockNumber;
     },
     changeNumber(index, obj) {
       this.exchange = {
         plusStockProductId: obj.productId,
         reduceStockProductId: null,
         netWeight: 1,
-        stockNumber: 1
-      }
-      this.tempIndex = index
-      this.showExchange = !this.showExchange
+        stockNumber: 1,
+      };
+      this.tempIndex = index;
+      this.showExchange = !this.showExchange;
     },
     saveExchange() {
-      exchangeProductStock(this.exchange).then(res => {
+      exchangeProductStock(this.exchange).then((res) => {
         if (res.code === 10000) {
-          const i = this.tempIndex
-          this.orderInfo.orderExts[i].stockNumber = this.orderInfo.orderExts[i].stockNumber + this.exchange.stockNumber
-          this.getValidateProductList()
+          const i = this.tempIndex;
+          this.orderInfo.orderExts[i].stockNumber =
+            this.orderInfo.orderExts[i].stockNumber + this.exchange.stockNumber;
+          this.getValidateProductList();
           this.$message({
-            message: '操作成功！',
-            type: 'success'
-          })
+            message: "操作成功！",
+            type: "success",
+          });
           // todo
-          this.showExchange = !this.showExchange
+          this.showExchange = !this.showExchange;
         }
-      })
-    }
-  }
-}
+      });
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
 .page {
+  padding: 20px;
+  background: #f2f2f2;
+
+  .card {
     padding: 20px;
-    background: #f2f2f2;
+    background: #ffffff;
+    border-radius: 4px;
 
-    .card {
-        padding: 20px;
-        background: #ffffff;
-        border-radius: 4px;
-
-        .title {
-            font-weight: 500;
-        }
-
-        .poros-box {
-            margin-bottom: 20px;
-            padding-left: 10px;
-            font-size: 13px;
-            background: #f2f2f2;
-            border-radius: 4px;
-
-            .lab {
-                text-align: right;
-                height: 30px;
-                line-height: 30px;
-                color: #888888;
-            }
-
-            .val {
-                text-align: left;
-                height: 30px;
-                line-height: 30px;
-                color: #444444;
-            }
-        }
-
+    .title {
+      font-weight: 500;
     }
 
-    .plus {
-        min-height: 560px;
-        line-height: 525px;
-        text-align: center;
-        font-size: 48px;
+    .poros-box {
+      margin-bottom: 20px;
+      padding-left: 10px;
+      font-size: 13px;
+      background: #f2f2f2;
+      border-radius: 4px;
 
-        i {
-            cursor: pointer;
-        }
+      .lab {
+        text-align: right;
+        height: 30px;
+        line-height: 30px;
+        color: #888888;
+      }
+
+      .val {
+        text-align: left;
+        height: 30px;
+        line-height: 30px;
+        color: #444444;
+      }
     }
+  }
+
+  .plus {
+    min-height: 560px;
+    line-height: 525px;
+    text-align: center;
+    font-size: 48px;
+
+    i {
+      cursor: pointer;
+    }
+  }
+
+  .amap-box {
+    width: 100%;
+    height: 240px;
+  }
 }
 
 .mt5 {
-    margin-top: 5px;
+  margin-top: 5px;
 }
 
 .mt20 {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 </style>

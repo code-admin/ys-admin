@@ -6,6 +6,8 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale/lang/zh-CN' // lang i18n
 import moment from 'vue-moment'
+import VueAMap from 'vue-amap'
+import map from '@/config/map'
 
 // import Echarts from 'echarts'
 import VueECharts from 'vue-echarts' // 在 webpack 环境下指向 components/ECharts.vue
@@ -36,9 +38,17 @@ if (process.env.NODE_ENV === 'production') {
   mockXHR()
 }
 
+VueAMap.initAMapApiLoader({
+  key: `${map.amap.WEB_API_KEY}`,
+  plugin: ['AMap.MarkerClusterer', 'AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor', 'AMap.Scale', 'AMap.Driving', 'AMap.PoiPicker'],
+  uiVersion: '1.0.11', // ui库版本，不配置不加载,
+  v: '1.4.15' // 默认高德 sdk 版本为 1.4.4
+})
+
 // set ElementUI lang to EN
 Vue.use(ElementUI, { locale })
-
+// set amap
+Vue.use(VueAMap)
 Vue.use(moment)
 
 Vue.use(filters)
@@ -48,9 +58,4 @@ Vue.component('v-chart', VueECharts)
 
 Vue.config.productionTip = false
 
-new Vue({
-  el: '#app',
-  router,
-  store,
-  render: h => h(App)
-})
+new Vue( { el: '#app',  router, store, render: h => h(App) } )

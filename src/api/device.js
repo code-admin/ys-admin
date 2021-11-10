@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 // 获取设备列表
-export function getDeviceList(data) {
+export function getDeviceList (data) {
   return request({
     url: '/device/getDeviceList',
     method: 'post',
@@ -10,7 +10,7 @@ export function getDeviceList(data) {
 }
 
 // 保存设备
-export function saveDevice(data) {
+export function saveDevice (data) {
   return request({
     url: '/device/saveDevice',
     method: 'post',
