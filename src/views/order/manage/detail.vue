@@ -263,8 +263,41 @@
       >
         <el-form label-position="right" label-width="80px" :model="orderProduct">
           <el-form-item label="出库日期">
-            <el-date-picker v-model="expressTime" type="date" placeholder="选择日期" />
+            <el-date-picker v-model="expressTime" type="date" placeholder="选择日期" style="width:100%" />
           </el-form-item>
+          <el-form-item label="运费(元)">
+            <el-input-number v-model="amount" type="nunber" placeholder="请输入运费" style="width:100%" />
+          </el-form-item>
+          <div class="amap-box" style="width:100%;height:300px;">
+             <div
+                style="
+                  font-family: 'Hiragino Sans GB';
+                  font-size: 12px;
+                  color: #909399;
+                  margin-top: 10px;
+                "
+              >
+                <span> 当前地址：{{ orderInfo.address }} </span>
+                <span>
+                  {{ orderInfo.distance ? `全程 ${orderInfo.distance}（公里）`: ''}}{{orderInfo.requireTime ?  `大约需要 ${orderInfo.requireTime}（小时）`:'' }}
+                </span>
+              </div>
+            <el-amap
+                vid="shipping_map"
+                mapStyle="fresh"
+                :expandZoomRange="false"
+                :amapManager="amapManager"
+                :mapCenter="[120.426486, 27.525621]"
+                :zoom="8"
+                :plugin="mapPlugin"
+                :events="mapEvents"
+              >
+                <el-amap-marker
+                  :position="[120.426486, 27.525621]"
+                  :content="`<img src='http://asher.cn-sh2.ufileos.com/agabus.png' style='width:60px;height:60px;'></img>`"
+                />
+              </el-amap>
+          </div>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button size="mini" @click="innerVisible = false">取 消</el-button>
@@ -326,7 +359,7 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="outStockVisible = false">取 消</el-button>
         <el-button type="primary" icon="el-icon-edit-outline" :loading="saveOutStockLoading" @click="saveOutStock">保 存</el-button>
-        <el-button type="primary" icon="el-icon-finished" @click="innerVisible=true, expressTime=new Date()">保存并出库</el-button>
+        <el-button type="primary" icon="el-icon-finished" @click="saveExpress()">保存并出库</el-button>
       </div>
     </el-dialog>
 
@@ -515,6 +548,8 @@
 <script>
 import axios from 'axios'
 import {MESConfig} from '../../../settings.js'
+import { AMapManager } from "vue-amap";
+const amapManager = new AMapManager();
 
 import {
   getOrderById,
@@ -573,7 +608,32 @@ export default {
         priceChangeList: []
       },
       expressTime: new Date(),
-      innerVisible: false
+      amount:0,
+      innerVisible: false,
+
+      amapManager,
+      mapEvents: {
+        init() {
+          // 驾车路线规划
+          // var driving = new AMap.Driving({
+          //     // 驾车路线规划策略，AMap.DrivingPolicy.LEAST_TIME是最快捷模式
+          //     policy: AMap.DrivingPolicy.LEAST_TIME,
+          //     // map 指定将路线规划方案绘制到对应的AMap.Map对象上
+          //     map: amapManager.getMap(),
+          // })
+        },
+      },
+      mapPlugin: [
+        {
+          pName: "Scale",
+        },
+        {
+          pName: "Driving",
+        },
+      ],
+
+
+
     }
   },
   mounted() {
@@ -586,8 +646,6 @@ export default {
       this.loading = !this.loading
       getOrderById(id).then(res => {
         if (res.code === 10000) this.orderInfo = res.data
-        // 合并行
-        // this.rowspan(this.orderInfo.orderExts)
         this.loading = !this.loading
       })
     },
@@ -655,6 +713,13 @@ export default {
 
       this.submitOutstockLoading = !this.submitOutstockLoading
       submitDeliveryOrder({
+        deliver:{
+          address: this.orderInfo.address,
+          distance: this.orderInfo.distance,
+          latitude: this.orderInfo.latitude,
+          longitude: this.orderInfo.longitude,
+          requireTime: this.orderInfo.requireTime
+        },
         orderExpressList: expressList
       }).then(res => {
         if (res.code === 10000) {
@@ -1133,7 +1198,29 @@ export default {
           message:err.data.msg
         })
       })
-    }
+    },
+
+    saveExpress(){
+      this.innerVisible=true;
+      this.expressTime=new Date();
+      this.amount = 0;
+      setTimeout(()=> {
+        this.getDriving([this.orderInfo.shippingLongitude,this.orderInfo.shippingLatitude],[this.orderInfo.longitude,this.orderInfo.latitude])
+      },200)
+    },
+
+    getDriving(origin,destination){
+      const org = new AMap.LngLat(...origin) // 起点
+      const det = new AMap.LngLat(...destination) // 终点
+      const driving = new AMap.Driving({
+            // 驾车路线规划策略，AMap.DrivingPolicy.LEAST_TIME是最快捷模式
+            policy: AMap.DrivingPolicy.LEAST_TIME,
+            // map 指定将路线规划方案绘制到对应的AMap.Map对象上
+            map: this.amapManager.getMap(),
+      })
+      // 划线路
+      driving.search(org, det)
+    },
   }
 
 }

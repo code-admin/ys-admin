@@ -321,7 +321,7 @@
               >
                 <span> 当前地址：{{ orderInfo.address }} </span>
                 <span>
-                  {{ distance ? distance: ''}}{{time ? time:'' }}
+                  {{ orderInfo.distance ? `全程 ${orderInfo.distance}（公里）`: ''}}{{orderInfo.requireTime ?  `大约需要 ${orderInfo.requireTime}（小时）`:'' }}
                 </span>
               </div>
             </div>
@@ -461,8 +461,9 @@ export default {
         shippingLongitude: 120.426486,
         shippingLatitude: 27.525621,
         shippingAddress: "亚迦布科技",
-
         address: "",
+        distance:0,
+        requireTime:0,
       },
       customeList: [],
       orderTypeList: [],
@@ -475,8 +476,6 @@ export default {
       companyS: [],
       ////////////////地图相关///////////////////////
       selectPostion: [], // 选择的地图位置坐标
-      distance:0,
-      time:0,
       amapManager,
       mapCenter: [121.604673, 31.171047],
       zoom: 10,
@@ -529,13 +528,17 @@ export default {
                     poiResult.item.location.lng,
                     poiResult.item.location.lat,
                   ];
+
+                  that.orderInfo.longitude = poiResult.item.location.lng;
+                  that.orderInfo.latitude = poiResult.item.location.lat;
+
                   var origin = new AMap.LngLat(120.42638, 27.52558) // 起点
                   var destination = new AMap.LngLat(poiResult.item.location.lng, poiResult.item.location.lat) // 终点
                   // 划线路
                   driving.search(origin, destination, (status ,result)=>{
                     if(status === 'complete'){
-                      that.distance = `全程 ${result.routes[0].distance / 1000}（公里）`
-                      that.time =   `大约需要 ${(result.routes[0].time /60/60).toFixed(2)}（小时）`
+                      that.orderInfo.distance = result.routes[0].distance / 1000
+                      that.orderInfo.requireTime =   (result.routes[0].time /60/60).toFixed(2)
                     }
                   })
                 });
