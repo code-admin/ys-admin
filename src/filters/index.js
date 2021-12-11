@@ -1,7 +1,8 @@
 import { capitalAmount } from './capitalAmount'
+import { deliveryStatus } from './status'
 
 const Filters = {
-  capitalAmount
+  capitalAmount, deliveryStatus
 }
 export default function install(Vue) {
   if (!Vue) {

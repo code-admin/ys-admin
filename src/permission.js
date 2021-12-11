@@ -10,10 +10,9 @@ NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
 const whiteList = ['/login'] // no redirect whitelist
 
-router.beforeEach(async(to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   if (from.name !== null) {
-    console.log('第一次跳转页面')
-    sessionStorage.setItem('filter', JSON.stringify({ filter: { pageIndex: 1, pageSize: 10 }}))
+    window.sessionStorage.setItem('filter', JSON.stringify({ filter: { pageIndex: 1, pageSize: 10 } }))
   }
   // start progress bar
   NProgress.start()

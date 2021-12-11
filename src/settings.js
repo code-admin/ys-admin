@@ -17,7 +17,7 @@ module.exports = {
   /**
    *  打印设置对象
    */
-  print:{
+  print: {
     heade: '',
     footer: ''
   },
@@ -25,11 +25,9 @@ module.exports = {
   /**
    * MES系统对接配置
    */
-  MESConfig:{
+  MESConfig: {
     baseUrl: 'https://mes.emcshare.com',
-    companyId: '7376958070263518323',
+    companyId: '7376958070263518323'
     // companyId: '98955607272325340'
   }
-
-
 }

@@ -133,8 +133,7 @@
                           @click="
                             changeNumber(index, orderInfo.orderExts[index])
                           "
-                          >调换货</el-button
-                        >
+                        >调换货</el-button>
                       </div>
                     </el-col>
                     <el-col :span="3">
@@ -213,9 +212,10 @@
                 </el-form-item>
               </el-form>
               <div v-if="index > 0" style="text-align: center">
-                <el-button icon="el-icon-delete" @click="deleteGoods(index)"
-                  >删除</el-button
-                >
+                <el-button
+                  icon="el-icon-delete"
+                  @click="deleteGoods(index)"
+                >删除</el-button>
               </div>
             </el-card>
           </el-col>
@@ -265,9 +265,9 @@
               </el-form-item>
               <el-form-item label="收货地址">
                 <el-input
+                  :id="'pickerInput'"
                   v-model="orderInfo.address"
                   clearable
-                  :id="'pickerInput'"
                   class="mt5"
                   placeholder="选择收获地址"
                 />
@@ -298,9 +298,9 @@
             <div class="amap-box">
               <el-amap
                 vid="project-map"
-                mapStyle="fresh"
-                :expandZoomRange="false"
-                :amapManager="amapManager"
+                map-style="fresh"
+                :expand-zoom-range="false"
+                :amap-manager="amapManager"
                 :center="mapCenter"
                 :zoom="zoom"
                 :plugin="mapPlugin"
@@ -321,7 +321,7 @@
               >
                 <span> 当前地址：{{ orderInfo.address }} </span>
                 <span>
-                  {{ orderInfo.distance ? `全程 ${orderInfo.distance}（公里）`: ''}}{{orderInfo.requireTime ?  `大约需要 ${orderInfo.requireTime}（小时）`:'' }}
+                  {{ orderInfo.distance ? `全程 ${orderInfo.distance}（公里）`: '' }}{{ orderInfo.requireTime ? `大约需要 ${orderInfo.requireTime}（小时）`:'' }}
                 </span>
               </div>
             </div>
@@ -337,8 +337,7 @@
         icon="el-icon-position"
         :loading="saveOrSubmitOrderInfoloading"
         @click="saveOrSubmitOrderInfo"
-        >保存</el-button
-      >
+      >保存</el-button>
       <el-button icon="el-icon-back" @click="$router.back()">返回</el-button>
     </div>
 
@@ -411,31 +410,31 @@
 </template>
 
 <script>
-import axios from "axios";
-import { getOrgId } from "@/utils/auth";
-import map from "@/config/map";
-import { AMapManager, lazyAMapApiLoaderInstance } from "vue-amap";
-const amapManager = new AMapManager();
-import { getCustomes } from "@/api/user";
-import { getShippingAddress } from "@/api/org";
-import { getOrderTypes, getExpress, saveOrder, submitOrder } from "@/api/order";
-import { getValidateProducts } from "@/api/product";
-import { getProvinces, getCitys, getCountrys } from "@/api/common";
-import { exchangeProductStock } from "@/api/product";
-const date = new Date();
-const today = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+import axios from 'axios'
+import { getOrgId } from '@/utils/auth'
+import map from '@/config/map'
+import { AMapManager } from 'vue-amap'
+const amapManager = new AMapManager()
+import { getCustomes } from '@/api/user'
+import { getShippingAddress } from '@/api/org'
+import { getOrderTypes, getExpress, saveOrder, submitOrder } from '@/api/order'
+import { getValidateProducts } from '@/api/product'
+import { getProvinces, getCitys, getCountrys } from '@/api/common'
+import { exchangeProductStock } from '@/api/product'
+const date = new Date()
+const today = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
 export default {
   data() {
-    let that = this;
+    const that = this
     return {
-      orgId: getOrgId() || "1",
+      orgId: getOrgId() || '1',
       sourceList: [],
       saveOrderInfoLoading: false,
       saveOrSubmitOrderInfoloading: false,
       currentData: today,
       props: {
         lazy: true,
-        lazyLoad: (node, resolve) => this.loadPCC(node, resolve),
+        lazyLoad: (node, resolve) => this.loadPCC(node, resolve)
       },
       orderInfo: {
         makingType: 1,
@@ -453,28 +452,28 @@ export default {
             weight: null,
             width: null,
             remark: null,
-            stockNumber: null,
-          },
+            stockNumber: null
+          }
         ],
         pcc: null,
         shippingSource: 1,
         shippingLongitude: 120.426486,
         shippingLatitude: 27.525621,
-        shippingAddress: "亚迦布科技",
-        address: "",
-        distance:0,
-        requireTime:0,
+        shippingAddress: '亚迦布科技',
+        address: '',
+        distance: 0,
+        requireTime: 0
       },
       customeList: [],
       orderTypeList: [],
       productList: [],
       expresList: [],
       showExchange: false,
-      formLabelWidth: "90px",
+      formLabelWidth: '90px',
       exchange: {},
       tempIndex: null,
       companyS: [],
-      ////////////////地图相关///////////////////////
+      // //////////////地图相关///////////////////////
       selectPostion: [], // 选择的地图位置坐标
       amapManager,
       mapCenter: [121.604673, 31.171047],
@@ -483,108 +482,108 @@ export default {
         init() {
           // 驾车路线规划
           var driving = new AMap.Driving({
-              // 驾车路线规划策略，AMap.DrivingPolicy.LEAST_TIME是最快捷模式
-              policy: AMap.DrivingPolicy.LEAST_TIME,
-              // map 指定将路线规划方案绘制到对应的AMap.Map对象上
-              map: amapManager.getMap(),
+            // 驾车路线规划策略，AMap.DrivingPolicy.LEAST_TIME是最快捷模式
+            policy: AMap.DrivingPolicy.LEAST_TIME,
+            // map 指定将路线规划方案绘制到对应的AMap.Map对象上
+            map: amapManager.getMap()
           })
 
           // 拖拽选址 & POI
           setTimeout(() => {
-            AMapUI.loadUI( ["misc/PositionPicker", "misc/PoiPicker"],  (PositionPicker, PoiPicker) => {
-                console.log('地图选址', PositionPicker)
-                // const positionPicker = new PositionPicker({
-                //   mode: "dragMap", //设定为拖拽地图模式，可选'dragMap'、'dragMarker'，默认为'dragMap'
-                //   map: amapManager.getMap(), //依赖地图对象
-                // });
-                const poiPicker = new PoiPicker({
-                  input: "pickerInput", //输入框id
-                });
-                // positionPicker.on("success", (positionResult) => {
-                //   // console.log("positionResult", positionResult);
-                //   that.orderInfo.address = positionResult.address;
-                //   that.orderInfo.longitude = positionResult.position.lng;
-                //   that.orderInfo.latitude = positionResult.position.lat;
-                //   that.companyS = positionResult.regeocode.pois;
-                //   that.selectPostion = [
-                //     positionResult.position.lng,
-                //     positionResult.position.lat,
-                //   ];
+            AMapUI.loadUI(['misc/PositionPicker', 'misc/PoiPicker'], (PositionPicker, PoiPicker) => {
+              console.log('地图选址', PositionPicker)
+              // const positionPicker = new PositionPicker({
+              //   mode: "dragMap", //设定为拖拽地图模式，可选'dragMap'、'dragMarker'，默认为'dragMap'
+              //   map: amapManager.getMap(), //依赖地图对象
+              // });
+              const poiPicker = new PoiPicker({
+                input: 'pickerInput' // 输入框id
+              })
+              // positionPicker.on("success", (positionResult) => {
+              //   // console.log("positionResult", positionResult);
+              //   that.orderInfo.address = positionResult.address;
+              //   that.orderInfo.longitude = positionResult.position.lng;
+              //   that.orderInfo.latitude = positionResult.position.lat;
+              //   that.companyS = positionResult.regeocode.pois;
+              //   that.selectPostion = [
+              //     positionResult.position.lng,
+              //     positionResult.position.lat,
+              //   ];
 
-                // });
-                // // 注意一定要调用这个方法，不然没有效果的。
-                // positionPicker.start();
+              // });
+              // // 注意一定要调用这个方法，不然没有效果的。
+              // positionPicker.start();
 
-                //监听poi选中信息
-                poiPicker.on("poiPicked", function (poiResult) {
-                  //用户选中的poi点信息
-                  that.zoom = 17;
-                  that.orderInfo.address = `${poiResult.item.district}${poiResult.item.address}${poiResult.item.name}`;
-                  that.mapCenter = [
-                    poiResult.item.location.lng,
-                    poiResult.item.location.lat,
-                  ];
-                  that.selectPostion = [
-                    poiResult.item.location.lng,
-                    poiResult.item.location.lat,
-                  ];
+              // 监听poi选中信息
+              poiPicker.on('poiPicked', function(poiResult) {
+                // 用户选中的poi点信息
+                that.zoom = 17
+                that.orderInfo.address = `${poiResult.item.district}${poiResult.item.address}${poiResult.item.name}`
+                that.mapCenter = [
+                  poiResult.item.location.lng,
+                  poiResult.item.location.lat
+                ]
+                that.selectPostion = [
+                  poiResult.item.location.lng,
+                  poiResult.item.location.lat
+                ]
 
-                  that.orderInfo.longitude = poiResult.item.location.lng;
-                  that.orderInfo.latitude = poiResult.item.location.lat;
+                that.orderInfo.longitude = poiResult.item.location.lng
+                that.orderInfo.latitude = poiResult.item.location.lat
 
-                  var origin = new AMap.LngLat(120.42638, 27.52558) // 起点
-                  var destination = new AMap.LngLat(poiResult.item.location.lng, poiResult.item.location.lat) // 终点
-                  // 划线路
-                  driving.search(origin, destination, (status ,result)=>{
-                    if(status === 'complete'){
-                      that.orderInfo.distance = result.routes[0].distance / 1000
-                      that.orderInfo.requireTime =   (result.routes[0].time /60/60).toFixed(2)
-                    }
-                  })
-                });
-              }
-            );
-          }, 300);
-        },
+                var origin = new AMap.LngLat(120.42638, 27.52558) // 起点
+                var destination = new AMap.LngLat(poiResult.item.location.lng, poiResult.item.location.lat) // 终点
+                // 划线路
+                driving.search(origin, destination, (status, result) => {
+                  if (status === 'complete') {
+                    that.orderInfo.distance = result.routes[0].distance / 1000
+                    that.orderInfo.requireTime = (result.routes[0].time / 60 / 60).toFixed(2)
+                  }
+                })
+              })
+            }
+            )
+          }, 300)
+        }
       },
       mapPlugin: [
         {
-          pName: "Scale",
+          pName: 'Scale'
         },
         {
-          pName: "Driving",
-        },
-      ],
-    };
+          pName: 'Driving'
+        }
+      ]
+    }
   },
   mounted() {
-    this.getMapCenterByIP();
-    this.getCustomeList();
-    this.getOrderTypeList();
-    this.getValidateProductList();
-    this.getExpresList();
-    this.getSourceList();
+    this.getMapCenterByIP()
+    this.getCustomeList()
+    this.getOrderTypeList()
+    this.getValidateProductList()
+    this.getExpresList()
+    this.getSourceList()
   },
   methods: {
     getSourceList() {
       getShippingAddress(this.orgId).then((res) => {
         if (res.code === 10000) {
-          this.sourceList = res.data;
+          this.sourceList = res.data
         }
-      });
+      })
     },
     // IP定位设置地图中心点
     getMapCenterByIP() {
-      const ip = returnCitySN["cip"];
+      const ip = returnCitySN['cip']
       axios
         .get(
           `https://restapi.amap.com/v5/ip?output=json&ip=${ip}&type=4&key=${map.amap.WEB_KEY}`
         )
         .then((res) => {
-          if (res.data.infocode === "10000") {
-            this.mapCenter = res.data.location.split(",");
+          if (res.data.infocode === '10000') {
+            this.mapCenter = res.data.location.split(',')
           }
-        });
+        })
     },
 
     // 驾车线路
@@ -594,88 +593,88 @@ export default {
           `https://restapi.amap.com/v5/direction/driving?key=${map.amap.WEB_KEY}&origin=${origin}&destination=${destination}`
         )
         .then((res) => {
-          if (res.data.infocode === "10000") {
+          if (res.data.infocode === '10000') {
             console.log(
-              "大约",
+              '大约',
               res.data.route.paths[0].distance / 1000,
-              "公里"
-            );
+              '公里'
+            )
           }
-        });
+        })
     },
 
     loadPCC(node, resolve) {
-      const { level, value } = node;
+      const { level, value } = node
       if (level === 0) {
         getProvinces().then((res) => {
-          const nodes = [];
+          const nodes = []
           if (res.code === 10000 && res.data.length) {
             res.data.map((item) => {
               nodes.push({
                 value: item.provinceId,
-                label: item.name,
-              });
-            });
-            resolve(nodes);
+                label: item.name
+              })
+            })
+            resolve(nodes)
           }
-        });
+        })
       } else if (level === 1) {
         getCitys(value).then((res) => {
-          const nodes = [];
+          const nodes = []
           if (res.code === 10000 && res.data.length) {
             res.data.map((item) => {
               nodes.push({
                 value: item.cityId,
-                label: item.name,
-              });
-            });
-            resolve(nodes);
+                label: item.name
+              })
+            })
+            resolve(nodes)
           }
-        });
+        })
       } else if (level === 2) {
         getCountrys(value).then((res) => {
-          const nodes = [];
+          const nodes = []
           if (res.code === 10000 && res.data.length) {
             res.data.map((item) => {
               nodes.push({
                 value: item.countryId,
                 label: item.name,
-                leaf: level >= 2,
-              });
-            });
-            resolve(nodes);
+                leaf: level >= 2
+              })
+            })
+            resolve(nodes)
           }
-        });
+        })
       }
     },
     getCustomeList() {
       getCustomes().then((res) => {
-        if (res.code === 10000) this.customeList = res.data;
-      });
+        if (res.code === 10000) this.customeList = res.data
+      })
     },
     getOrderTypeList() {
       getOrderTypes().then((res) => {
-        if (res.code === 10000) this.orderTypeList = res.data;
-      });
+        if (res.code === 10000) this.orderTypeList = res.data
+      })
     },
     getValidateProductList() {
       const loading = this.$loading({
         lock: true,
-        text: "正在加载产品数据……",
-        spinner: "el-icon-loading",
-        background: "rgba(0, 0, 0, 0.7)",
-      });
+        text: '正在加载产品数据……',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
       getValidateProducts().then((res) => {
         if (res.code === 10000) {
-          this.productList = res.data;
+          this.productList = res.data
         }
-        loading.close();
-      });
+        loading.close()
+      })
     },
     getExpresList() {
       getExpress().then((res) => {
-        if (res.code === 10000) this.expresList = res.data;
-      });
+        if (res.code === 10000) this.expresList = res.data
+      })
     },
     addGoods() {
       this.orderInfo.orderExts.push({
@@ -690,107 +689,107 @@ export default {
         weight: null,
         width: null,
         remark: null,
-        stockNumber: null,
-      });
+        stockNumber: null
+      })
     },
     deleteGoods(index) {
-      if (this.orderInfo.orderExts < 2) return;
-      this.orderInfo.orderExts.splice(index, 1);
+      if (this.orderInfo.orderExts < 2) return
+      this.orderInfo.orderExts.splice(index, 1)
     },
     saveOrderInfo() {
       const params = {
-        ...this.orderInfo,
+        ...this.orderInfo
         // province: this.orderInfo.pcc[0],
         // city: this.orderInfo.pcc[1],
         // district: this.orderInfo.pcc[2]
-      };
-      this.saveOrderInfoLoading = !this.saveOrderInfoLoading;
+      }
+      this.saveOrderInfoLoading = !this.saveOrderInfoLoading
       saveOrder(params)
         .then((res) => {
           if (res.code === 10000) {
             this.$message({
-              message: "保存成功！",
-              type: "success",
-            });
-            this.$router.back();
+              message: '保存成功！',
+              type: 'success'
+            })
+            this.$router.back()
           }
-          this.saveOrderInfoLoading = !this.saveOrderInfoLoading;
+          this.saveOrderInfoLoading = !this.saveOrderInfoLoading
         })
         .catch(() => {
-          this.saveOrderInfoLoading = !this.saveOrderInfoLoading;
-        });
+          this.saveOrderInfoLoading = !this.saveOrderInfoLoading
+        })
     },
     saveOrSubmitOrderInfo() {
       const params = {
-        ...this.orderInfo,
+        ...this.orderInfo
         // province: this.orderInfo.pcc[0],
         // city: this.orderInfo.pcc[1],
         // district: this.orderInfo.pcc[2]
-      };
-      this.saveOrSubmitOrderInfoloading = !this.saveOrSubmitOrderInfoloading;
+      }
+      this.saveOrSubmitOrderInfoloading = !this.saveOrSubmitOrderInfoloading
       submitOrder(params)
         .then((res) => {
           if (res.code === 10000) {
             this.$message({
-              message: "保存成功！",
-              type: "success",
-            });
-            this.$router.back();
+              message: '保存成功！',
+              type: 'success'
+            })
+            this.$router.back()
           }
           this.saveOrSubmitOrderInfoloading =
-            !this.saveOrSubmitOrderInfoloading;
+            !this.saveOrSubmitOrderInfoloading
         })
         .catch(() => {
           this.saveOrSubmitOrderInfoloading =
-            !this.saveOrSubmitOrderInfoloading;
-        });
+            !this.saveOrSubmitOrderInfoloading
+        })
     },
     changeProduct(index) {
       // const changeId = this.orderInfo.orderExts[index].productId
       // this.orderInfo.orderExts[index] = { ...(this.productList.find(item => item.id === changeId)) }
 
-      const changeId = this.orderInfo.orderExts[index].productId;
-      const product = this.productList.find((item) => item.id === changeId);
-      this.orderInfo.orderExts[index].productNo = product.productNo;
-      this.orderInfo.orderExts[index].requirement = product.requirement;
-      this.orderInfo.orderExts[index].width = product.width;
-      this.orderInfo.orderExts[index].weight = product.weight;
-      this.orderInfo.orderExts[index].length = product.length;
-      this.orderInfo.orderExts[index].goodsLength = null;
-      this.orderInfo.orderExts[index].number = null;
-      this.orderInfo.orderExts[index].goodsNumber = 1;
-      this.orderInfo.orderExts[index].price = product.price;
-      this.orderInfo.orderExts[index].remark = null;
-      this.orderInfo.orderExts[index].stockNumber = product.stockNumber;
+      const changeId = this.orderInfo.orderExts[index].productId
+      const product = this.productList.find((item) => item.id === changeId)
+      this.orderInfo.orderExts[index].productNo = product.productNo
+      this.orderInfo.orderExts[index].requirement = product.requirement
+      this.orderInfo.orderExts[index].width = product.width
+      this.orderInfo.orderExts[index].weight = product.weight
+      this.orderInfo.orderExts[index].length = product.length
+      this.orderInfo.orderExts[index].goodsLength = null
+      this.orderInfo.orderExts[index].number = null
+      this.orderInfo.orderExts[index].goodsNumber = 1
+      this.orderInfo.orderExts[index].price = product.price
+      this.orderInfo.orderExts[index].remark = null
+      this.orderInfo.orderExts[index].stockNumber = product.stockNumber
     },
     changeNumber(index, obj) {
       this.exchange = {
         plusStockProductId: obj.productId,
         reduceStockProductId: null,
         netWeight: 1,
-        stockNumber: 1,
-      };
-      this.tempIndex = index;
-      this.showExchange = !this.showExchange;
+        stockNumber: 1
+      }
+      this.tempIndex = index
+      this.showExchange = !this.showExchange
     },
     saveExchange() {
       exchangeProductStock(this.exchange).then((res) => {
         if (res.code === 10000) {
-          const i = this.tempIndex;
+          const i = this.tempIndex
           this.orderInfo.orderExts[i].stockNumber =
-            this.orderInfo.orderExts[i].stockNumber + this.exchange.stockNumber;
-          this.getValidateProductList();
+            this.orderInfo.orderExts[i].stockNumber + this.exchange.stockNumber
+          this.getValidateProductList()
           this.$message({
-            message: "操作成功！",
-            type: "success",
-          });
+            message: '操作成功！',
+            type: 'success'
+          })
           // todo
-          this.showExchange = !this.showExchange;
+          this.showExchange = !this.showExchange
         }
-      });
-    },
-  },
-};
+      })
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>

@@ -70,4 +70,3 @@ export function exportBillCustomerSummary(data) {
     data
   })
 }
-

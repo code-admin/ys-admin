@@ -1,16 +1,14 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
 Vue.use(Router)
-
 /* Layout */
 import Layout from '@/layout'
 
 export const constantRoutes = [{
   path: '/login',
   component: () => import('@/views/login/index'),
-  meta:{
-    title: '系统登录',
+  meta: {
+    title: '系统登录'
   },
   hidden: true
 },
@@ -18,8 +16,8 @@ export const constantRoutes = [{
 {
   path: '/404',
   component: () => import('@/views/404'),
-  meta:{
-    title: '哎呀～，页面丢失！',
+  meta: {
+    title: '哎呀～，页面丢失！'
   },
   hidden: true
 },
@@ -158,15 +156,15 @@ export const constantRoutes = [{
 {
   path: '/refund',
   component: Layout,
-  redirect: '/refund',
-  name: 'Order',
+  redirect: '/refund/list',
+  name: 'Refund',
   meta: {
     title: '退筒管理',
     icon: 'tuitong'
   },
   alwaysShow: true,
   children: [{
-    path: '/refund',
+    path: '/refund/list',
     name: 'OrderRefund',
     component: () => import('@/views/refund/index'),
     meta: {
@@ -216,6 +214,43 @@ export const constantRoutes = [{
       title: '退筒明细'
     }
   }
+  ]
+},
+{
+  name: 'delivery',
+  path: '/delivery',
+  component: Layout,
+  meta: { title: '配送管理', icon: 'truck' },
+  redirect: '/delivery/order',
+  alwaysShow: true,
+  children: [
+    {
+      name: 'DeliveryOrder',
+      path: '/delivery/order',
+      component: () => import('@/views/delivery/order/Index.vue'),
+      meta: { title: '配送订单' }
+    },
+    {
+      name: 'DeliveryOrderAdd',
+      path: '/delivery/order/add',
+      hidden: true,
+      component: () => import('@/views/delivery/order/Edit.vue'),
+      meta: { title: '新增订单' }
+    },
+    {
+      name: 'DeliveryOrderEdit',
+      path: '/delivery/order/edit/:id',
+      hidden: true,
+      component: () => import('@/views/delivery/order/Edit.vue'),
+      meta: { title: '编辑订单' }
+    },
+    {
+      name: 'DeliveryOrderDetail',
+      path: '/delivery/order/Detil/:id',
+      hidden: true,
+      component: () => import('@/views/delivery/order/Detail.vue'),
+      meta: { title: '编辑订单' }
+    }
   ]
 },
 {
@@ -376,7 +411,7 @@ export const constantRoutes = [{
     component: () => import('@/views/product/adjusted/index'),
     meta: {
       title: '调价规则'
-    },
+    }
   },
   {
     path: '/product/adjusted/add',
