@@ -285,9 +285,9 @@
         <el-table-column label="制单人" prop="createBy" align="center" />
         <el-table-column label="订购产品" prop="createBy" align="center">
           <template slot-scope="scope">
-            <el-popover placement="right" width="300px" trigger="click" @show="getDetailById(scope.row.id)">
-              <div v-loading="!orderInfo.orderExts">
-                <el-table v-if="!!orderInfo.orderExts" :data="orderInfo.orderExts">
+            <el-popover placement="right" width="300px" trigger="click" @show="getOrderDetailById(scope.row.id)">
+              <div v-loading="!consumerOrder.orderExts">
+                <el-table v-if="!!consumerOrder.orderExts" :data="consumerOrder.orderExts">
                   <el-table-column prop="requirement" label="产品编号/名称" align="center" show-overflow-tooltip width="150">
                     <template slot-scope="scoped">
                       <el-tag type="info" size="mini">{{ `${scoped.row.product && scoped.row.product.productNo} / ${scoped.row.product && scoped.row.product.name}` }}</el-tag>
@@ -315,9 +315,9 @@
         </el-table-column>
         <el-table-column label="出/入 库记录" prop="createBy" align="center">
           <template slot-scope="scope">
-            <el-popover placement="left" width="300px" trigger="click" @show="getDetailById(scope.row.id)">
-              <div v-loading="!orderInfo.orderExpressList">
-                <el-table v-if="!!orderInfo.orderExpressList" :data="orderInfo.orderExpressList">
+            <el-popover placement="left" width="300px" trigger="click" @show="getOrderDetailById(scope.row.id)">
+              <div v-loading="!consumerOrder.orderExpressList">
+                <el-table v-if="!!consumerOrder.orderExpressList" :data="consumerOrder.orderExpressList">
                   <el-table-column prop="productNo" label="产品编号/名称" align="center" width="140" show-overflow-tooltip>
                     <template slot-scope="scoped">
                       <el-tag type="info" size="mini">{{ `${scoped.row.productNo} / ${scoped.row.productName}` }}</el-tag>
@@ -391,13 +391,13 @@ export default {
       orgId: getOrgId() || '1',
       orderInfo: {
         status: 0, // 状态
-        shippingSource: 1, // 发货地址
+        shippingAddressId: 1, // 发货地址
         shippingLongitude: 120.42638,
         shippingLatitude: 27.52558,
         orderList: [] // 关联订单
       },
       rules: {},
-
+      consumerOrder: {},
       consumerOrderList: [],
       dialogVisible: false,
       selectArr: []
@@ -428,9 +428,18 @@ export default {
         }
       })
     },
+
+    // 获取详情信息
     getDetailById(id) {
       detail(id).then(res => {
         this.orderInfo = res.data
+      })
+    },
+
+    // 订单详情
+    getOrderDetailById(id) {
+      getOrderById(id).then(res => {
+        this.consumerOrder = res.data
       })
     },
     // 获取待配送的订单数据
@@ -490,7 +499,11 @@ export default {
     saveData() {
       console.log('orderInfo', this.orderInfo)
       saveData(this.orderInfo).then(res => {
-        console.log('res', res)
+        this.$message({
+          type: 'success',
+          message: res.message
+        })
+        this.$router.back()
       })
     }
 

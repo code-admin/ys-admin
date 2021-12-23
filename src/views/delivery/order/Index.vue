@@ -32,7 +32,9 @@
       <el-table-column label="状态" prop="status" align="left">
         <template slot-scope="{row}">
           <div>
-            {{ row.status | deliveryStatus }}
+            <el-tag size="mini">
+              {{ row.status | deliveryStatus }}
+            </el-tag>
           </div>
         </template>
       </el-table-column>

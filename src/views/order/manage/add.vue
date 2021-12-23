@@ -518,7 +518,7 @@ export default {
               poiPicker.on('poiPicked', function(poiResult) {
                 // 用户选中的poi点信息
                 that.zoom = 17
-                that.orderInfo.address = `${poiResult.item.district}${poiResult.item.address}${poiResult.item.name}`
+                that.orderInfo.address = `${poiResult.item.name}`
                 that.mapCenter = [
                   poiResult.item.location.lng,
                   poiResult.item.location.lat
@@ -527,7 +527,6 @@ export default {
                   poiResult.item.location.lng,
                   poiResult.item.location.lat
                 ]
-
                 that.orderInfo.longitude = poiResult.item.location.lng
                 that.orderInfo.latitude = poiResult.item.location.lat
 
