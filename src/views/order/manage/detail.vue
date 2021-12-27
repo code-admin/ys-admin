@@ -269,34 +269,34 @@
             <el-input-number v-model="amount" type="nunber" placeholder="请输入运费" style="width:100%" />
           </el-form-item>
           <div class="amap-box" style="width:100%;height:300px;">
-             <div
-                style="
+            <div
+              style="
                   font-family: 'Hiragino Sans GB';
                   font-size: 12px;
                   color: #909399;
                   margin-top: 10px;
                 "
-              >
-                <span> 当前地址：{{ orderInfo.address }} </span>
-                <span>
-                  {{ orderInfo.distance ? `全程 ${orderInfo.distance}（公里）`: ''}}{{orderInfo.requireTime ?  `大约需要 ${orderInfo.requireTime}（小时）`:'' }}
-                </span>
-              </div>
+            >
+              <span> 当前地址：{{ orderInfo.address }} </span>
+              <span>
+                {{ orderInfo.distance ? `全程 ${orderInfo.distance}（公里）`: '' }}{{ orderInfo.requireTime ? `大约需要 ${orderInfo.requireTime}（小时）`:'' }}
+              </span>
+            </div>
             <el-amap
-                vid="shipping_map"
-                mapStyle="fresh"
-                :expandZoomRange="false"
-                :amapManager="amapManager"
-                :mapCenter="[120.426486, 27.525621]"
-                :zoom="8"
-                :plugin="mapPlugin"
-                :events="mapEvents"
-              >
-                <el-amap-marker
-                  :position="[120.426486, 27.525621]"
-                  :content="`<img src='http://asher.cn-sh2.ufileos.com/agabus.png' style='width:60px;height:60px;'></img>`"
-                />
-              </el-amap>
+              vid="shipping_map"
+              map-style="fresh"
+              :expand-zoom-range="false"
+              :amap-manager="amapManager"
+              :map-center="[120.426486, 27.525621]"
+              :zoom="8"
+              :plugin="mapPlugin"
+              :events="mapEvents"
+            >
+              <el-amap-marker
+                :position="[120.426486, 27.525621]"
+                :content="`<img src='http://asher.cn-sh2.ufileos.com/agabus.png' style='width:60px;height:60px;'></img>`"
+              />
+            </el-amap>
           </div>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -547,9 +547,9 @@
 
 <script>
 import axios from 'axios'
-import {MESConfig} from '../../../settings.js'
-import { AMapManager } from "vue-amap";
-const amapManager = new AMapManager();
+import { MESConfig } from '../../../settings.js'
+import { AMapManager } from 'vue-amap'
+const amapManager = new AMapManager()
 
 import {
   getOrderById,
@@ -608,7 +608,7 @@ export default {
         priceChangeList: []
       },
       expressTime: new Date(),
-      amount:0,
+      amount: 0,
       innerVisible: false,
 
       amapManager,
@@ -621,18 +621,16 @@ export default {
           //     // map 指定将路线规划方案绘制到对应的AMap.Map对象上
           //     map: amapManager.getMap(),
           // })
-        },
+        }
       },
       mapPlugin: [
         {
-          pName: "Scale",
+          pName: 'Scale'
         },
         {
-          pName: "Driving",
-        },
-      ],
-
-
+          pName: 'Driving'
+        }
+      ]
 
     }
   },
@@ -713,7 +711,7 @@ export default {
 
       this.submitOutstockLoading = !this.submitOutstockLoading
       submitDeliveryOrder({
-        deliver:{
+        deliver: {
           address: this.orderInfo.address,
           distance: this.orderInfo.distance,
           latitude: this.orderInfo.latitude,
@@ -1184,43 +1182,43 @@ export default {
       })
     },
 
-    getDelivery(){
+    getDelivery() {
       const orderId = this.$route.params.id || ''
       axios.get(`${MESConfig.baseUrl}/aps/foreign/sale/getDelivery?orderNumber=${orderId}&companyId=${MESConfig.companyId}`).then(res => {
-        if(res.status === 200){
-          if(res.data.code === 200){
+        if (res.status === 200) {
+          if (res.data.code === 200) {
             console.log('tag', res.data.data)
           }
         }
       }).catch(err => {
         this.$message({
-          type:'error',
-          message:err.data.msg
+          type: 'error',
+          message: err.data.msg
         })
       })
     },
 
-    saveExpress(){
-      this.innerVisible=true;
-      this.expressTime=new Date();
-      this.amount = 0;
-      setTimeout(()=> {
-        this.getDriving([this.orderInfo.shippingLongitude,this.orderInfo.shippingLatitude],[this.orderInfo.longitude,this.orderInfo.latitude])
-      },200)
+    saveExpress() {
+      this.innerVisible = true
+      this.expressTime = new Date()
+      this.amount = 0
+      setTimeout(() => {
+        this.getDriving([this.orderInfo.shippingLongitude, this.orderInfo.shippingLatitude], [this.orderInfo.longitude, this.orderInfo.latitude])
+      }, 200)
     },
 
-    getDriving(origin,destination){
+    getDriving(origin, destination) {
       const org = new AMap.LngLat(...origin) // 起点
       const det = new AMap.LngLat(...destination) // 终点
       const driving = new AMap.Driving({
-            // 驾车路线规划策略，AMap.DrivingPolicy.LEAST_TIME是最快捷模式
-            policy: AMap.DrivingPolicy.LEAST_TIME,
-            // map 指定将路线规划方案绘制到对应的AMap.Map对象上
-            map: this.amapManager.getMap(),
+        // 驾车路线规划策略，AMap.DrivingPolicy.LEAST_TIME是最快捷模式
+        policy: AMap.DrivingPolicy.LEAST_TIME,
+        // map 指定将路线规划方案绘制到对应的AMap.Map对象上
+        map: this.amapManager.getMap()
       })
       // 划线路
       driving.search(org, det)
-    },
+    }
   }
 
 }

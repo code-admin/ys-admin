@@ -58,7 +58,7 @@
           </el-form>
         </el-col>
         <el-col :span="12">
-          <div class="amap-box" style="width: 100%; height: 215px">
+          <div class="amap-box" style="width: 100%; height: 180px">
             <el-amap
               vid="delivery_order_add"
               map-style="fresh"
@@ -74,6 +74,7 @@
                 :content="`<img src='http://asher.cn-sh2.ufileos.com/agabus.png' style='width:60px;height:60px;'></img>`"
               />
             </el-amap>
+            <el-alert v-if="alertTitle" :title="alertTitle" type="warning" show-icon />
           </div>
         </el-col>
       </el-row>
@@ -389,6 +390,7 @@ export default {
       mapEvents: { init() {} },
       sourceList: [],
       orgId: getOrgId() || '1',
+      alertTitle: null,
       orderInfo: {
         status: 0, // 状态
         shippingAddressId: 1, // 发货地址
@@ -477,22 +479,39 @@ export default {
     },
     deleteSelectByIndex(index) {
       this.orderInfo.orderList.splice(index, 1)
+
+      const origin = new window.AMap.LngLat(this.orderInfo.shippingLongitude, this.orderInfo.shippingLatitude)
+      let destination
+      const opts = { waypoints: [] }
+      this.orderInfo.orderIds = []
+      this.orderInfo.orderList.map((item, index) => {
+        this.orderInfo.orderIds.push(item.id)
+        if (index) {
+          opts.waypoints.push(new window.AMap.LngLat(item.longitude, item.latitude))
+        } else {
+          destination = new window.AMap.LngLat(item.longitude, item.latitude)
+        }
+      })
+      this.getRouter(origin, destination, opts) // 驾车线路
     },
     // 获取路线
     getRouter(origin, destination, opts) {
       const that = this
       // 驾车路线规划
-      var driving = new window.AMap.Driving({
+      const driving = new window.AMap.Driving({
         // 驾车路线规划策略，AMap.DrivingPolicy.LEAST_TIME是最快捷模式
         policy: window.AMap.DrivingPolicy.LEAST_TIME,
         // map 指定将路线规划方案绘制到对应的AMap.Map对象上
         map: amapManager.getMap()
       })
-      driving.clear()
+
+      driving.clear() // 清除路线规划
+
       driving.search(origin, destination, opts, (status, result) => {
         if (status === 'complete') {
           that.orderInfo.distance = result.routes[0].distance / 1000
           that.orderInfo.requireTime = (result.routes[0].time / 60 / 60).toFixed(2)
+          this.alertTitle = `全程${result.routes[0].distance / 1000}公里；大约需要${(result.routes[0].time / 60 / 60).toFixed(2)}小时`
         }
       })
     },

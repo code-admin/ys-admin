@@ -91,7 +91,10 @@
               <div class="lable">送货司机:</div>
             </el-col>
             <el-col :span="16">
-              <div class="val">建华 / 13773075845</div>
+              <div class="val">
+                {{ orderDeliver.deliverUserName }} /
+                {{ orderDeliver.deliverUserPhone }}
+              </div>
             </el-col>
           </el-row>
         </el-col>
@@ -100,7 +103,12 @@
 
     <div class="card mt20">
       <el-divider content-position="left">关联订单</el-divider>
-      <el-row :gutter="10" type="flex" justify="space-between">
+      <el-row
+        v-if="orderDeliver.status === 2"
+        :gutter="10"
+        type="flex"
+        justify="space-between"
+      >
         <el-col :span="20">
           <el-alert
             title="完成出库后司机才能开启配送！"
@@ -110,7 +118,7 @@
         </el-col>
         <el-col :span="4">
           <el-popover v-model="showConfirmExpress" placement="top" width="160">
-            <p style="color:#F56C6C;">确认已完成了所有商品的出库了吗？</p>
+            <p style="color: #f56c6c">确认已完成了所有商品的出库了吗？</p>
             <div style="text-align: right; margin: 0">
               <el-button
                 size="mini"
@@ -137,21 +145,32 @@
         :key="order.id"
         class="box-card mt20"
       >
-        <div slot="header" class="clearfix">
-          <span class="title">订单号: {{ order.orderNo }}</span>
-
-          <el-button
-            size="mini"
-            icon="el-icon-printer"
-            @click="extractedGoods(order.id)"
-          >打印提货单</el-button>
-          <el-button
-            v-if="orderDeliver.status === 2"
-            type="primary"
-            size="mini"
-            icon="el-icon-truck"
-            @click="batchInit(order)"
-          >批量出库</el-button>
+        <div slot="header">
+          <el-row type="flex" justify="space-between">
+            <el-col>
+              <span class="title">订单号: {{ order.orderNo }}</span>
+              <el-tag
+                v-if="order.deliverStatus"
+                type="warning"
+                size="mini"
+              >{{ order.deliverStatus === 1 ? "配送中..." : "已送达!" }}
+              </el-tag>
+            </el-col>
+            <el-col>
+              <el-button
+                size="mini"
+                icon="el-icon-printer"
+                @click="extractedGoods(order.id)"
+              >打印提货单</el-button>
+              <el-button
+                v-if="orderDeliver.status === 2"
+                type="primary"
+                size="mini"
+                icon="el-icon-truck"
+                @click="batchInit(order)"
+              >批量出库</el-button>
+            </el-col>
+          </el-row>
         </div>
         <el-row :gutter="20">
           <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
@@ -440,7 +459,7 @@
         <el-col :span="12">
           <div class="amap-box" style="width: 100%; height: 300px">
             <el-amap
-              vid="delivery_order_edit"
+              vid="delivery_order_detail"
               map-style="fresh"
               :expand-zoom-range="false"
               :amap-manager="amapManager"
@@ -622,24 +641,18 @@ export default {
       mapCenter: [120.42638, 27.52558],
       mapPlugin: [{ pName: 'Scale' }, { pName: 'Driving' }],
       mapEvents: {
-        init() {}
+        init(o) {
+          console.log('mapInit', o)
+        }
       },
       orderDeliver: {},
-      activities: [
-        {
-          content: '完成出库',
-          timestamp: '2018-04-15 14:32:21'
-        },
-        {
-          content: '已接单',
-          timestamp: '2018-04-13 14:32:21'
-        },
-        {
-          content: '创建成功',
-          timestamp: '2018-04-11 14:32:21'
-        }
-      ],
+
       order: {},
+
+      // 路线规划
+      origin: null,
+      opts: [],
+      destination: null,
 
       outStockVisible: false,
       innerVisible: false,
@@ -656,6 +669,18 @@ export default {
     getDetailById(id) {
       detail(id).then((res) => {
         this.orderDeliver = res.data
+        this.origin = new window.AMap.LngLat(res.data.shippingAddress.longitude, res.data.shippingAddress.latitude) // 出发点
+        this.opts = { waypoints: [] } // 途径点
+        res.data.orderList.map((item, index) => {
+          if (index) {
+            this.opts.waypoints.push(new window.AMap.LngLat(item.longitude, item.latitude)) // 途径点
+          } else {
+            this.destination = new window.AMap.LngLat(item.longitude, item.latitude) // 终点
+          }
+        })
+        setTimeout(() => {
+          this.getDriving(this.origin, this.destination, this.opts) // 驾车线路
+        }, 1000)
       })
     },
 
@@ -760,6 +785,7 @@ export default {
           })
         })
     },
+    // 打开订单详情
     orderDetail(obj) {
       let routeData = null
       routeData = this.$router.resolve({
@@ -773,13 +799,14 @@ export default {
       })
       window.open(routeData.href, '_blank')
     },
+
     // 确认完成出库
     confirmExpress() {
       const ags = {
         id: this.$route.params.id,
         status: 3
       }
-      updateStatus(ags).then(res => {
+      updateStatus(ags).then((res) => {
         if (res.code === 10000) {
           this.$message({
             type: 'success',
@@ -787,6 +814,23 @@ export default {
           })
           this.getDetailById(this.$route.params.id)
           this.showConfirmExpress = !this.showConfirmExpress
+        }
+      })
+    },
+
+    getDriving(origin, destination, opts) {
+      // 驾车路线规划
+      var driving = new window.AMap.Driving({
+        // 驾车路线规划策略，AMap.DrivingPolicy.LEAST_TIME是最快捷模式
+        policy: window.AMap.DrivingPolicy.LEAST_TIME,
+        // map 指定将路线规划方案绘制到对应的AMap.Map对象上
+        map: amapManager.getMap()
+      })
+
+      driving.clear() // 清除路线规划
+      driving.search(origin, destination, opts, (status, result) => {
+        if (status === 'complete') {
+          console.log('res', result)
         }
       })
     }

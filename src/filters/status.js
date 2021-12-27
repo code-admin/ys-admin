@@ -9,7 +9,7 @@ function deliveryStatus(value) {
     case 3:
       return '待出库'
     case 4:
-      return '配送'
+      return '配送中'
     case 5:
       return '签收'
     case 6:

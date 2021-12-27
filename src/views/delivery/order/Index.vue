@@ -6,7 +6,7 @@
       <el-select v-model="filter.status" placeholder="配送状态" style="width: 200px;" class="filter-item" clearable>
         <el-option v-for="(item,index) in statusList" :key="index" :label="item" :value="index" />
       </el-select>
-      <el-input v-model="filter.userName" placeholder="送货司机" style="width: 200px;" class="filter-item" clearable />
+      <el-input v-model="filter.deliverUserName" placeholder="配送员" style="width: 200px;" class="filter-item" clearable />
       <el-date-picker key="queryDate" v-model="filter.queryDate" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" />
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="queryData">查询</el-button>
       <el-button class="filter-item" icon="el-icon-plus" @click="addData"> 新增 </el-button>
@@ -28,7 +28,13 @@
       </el-table-column>
       <el-table-column label="总件数(个)" prop="totalNumber" align="left" />
       <el-table-column label="总重量(KG)" prop="totalWeight" align="left" />
-      <el-table-column label="配送员/手机" prop="userName" align="left" />
+      <el-table-column label="配送员/手机" prop="userName" align="left">
+        <template slot-scope="{row}">
+          <span>
+            {{ `${row.deliverUserName ? row.deliverUserName:''}/${row.deliverUserPhone ? row.deliverUserPhone : ''}` }}
+          </span>
+        </template>
+      </el-table-column>
       <el-table-column label="状态" prop="status" align="left">
         <template slot-scope="{row}">
           <div>
@@ -54,9 +60,10 @@
                 </div>
                 <el-button slot="reference" type="text" size="mini">发布</el-button>
               </el-popover>
-              <el-divider direction="vertical" />
             </div>
-            <el-button v-if="row.status==1" type="text" size="mini" @click="publishOrderById(row.id,0)">撤消</el-button>
+            <div v-if="row.status==1">
+              <el-button type="text" size="mini" @click="publishOrderById(row.id,0)">撤消</el-button>
+            </div>
           </div>
         </template>
       </el-table-column>
