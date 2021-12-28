@@ -462,7 +462,7 @@ export default {
       this.orderInfo.orderList = this.orderInfo.orderList.concat(this.selectArr)
       this.orderInfo.orderList = arrDistinct(this.orderInfo.orderList)
 
-      const origin = new window.AMap.LngLat(this.orderInfo.shippingLongitude, this.orderInfo.shippingLatitude)
+      const origin = new window.AMap.LngLat(this.orderInfo.shippingAddress.longitude, this.orderInfo.shippingAddress.latitude)
       let destination
       const opts = { waypoints: [] }
       this.orderInfo.orderIds = []
