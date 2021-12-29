@@ -379,7 +379,7 @@ const amapManager = new AMapManager()
 import { getOrders, getOrderById } from '@/api/order'
 import { getShippingAddress } from '@/api/org'
 import { saveData, detail } from '@/api/delivery.js'
-import { arrDistinct } from '@/utils/tools.js'
+import { devide } from '@/utils/tools.js'
 
 export default {
   data() {
@@ -394,8 +394,10 @@ export default {
       orderInfo: {
         status: 0, // 状态
         shippingAddressId: 1, // 发货地址
-        shippingLongitude: 120.42638,
-        shippingLatitude: 27.52558,
+        shippingAddress: {
+          longitude: 120.42638,
+          latitude: 27.52558
+        },
         orderList: [] // 关联订单
       },
       rules: {},
@@ -425,8 +427,8 @@ export default {
       getShippingAddress(this.orgId).then((res) => {
         if (res.code === 10000) {
           this.sourceList = res.data
-          this.orderInfo.shippingLongitude = 120.42638
-          this.orderInfo.shippingLatitude = 27.52558
+          this.orderInfo.shippingAddress.Longitude = 120.42638
+          this.orderInfo.shippingAddress.Latitude = 27.52558
         }
       })
     },
@@ -460,9 +462,9 @@ export default {
     },
     confirmSelect() {
       this.orderInfo.orderList = this.orderInfo.orderList.concat(this.selectArr)
-      this.orderInfo.orderList = arrDistinct(this.orderInfo.orderList)
-
+      this.orderInfo.orderList = devide(this.orderInfo.orderList)
       const origin = new window.AMap.LngLat(this.orderInfo.shippingAddress.longitude, this.orderInfo.shippingAddress.latitude)
+
       let destination
       const opts = { waypoints: [] }
       this.orderInfo.orderIds = []
@@ -483,7 +485,9 @@ export default {
       const origin = new window.AMap.LngLat(this.orderInfo.shippingLongitude, this.orderInfo.shippingLatitude)
       let destination
       const opts = { waypoints: [] }
+
       this.orderInfo.orderIds = []
+
       this.orderInfo.orderList.map((item, index) => {
         this.orderInfo.orderIds.push(item.id)
         if (index) {
