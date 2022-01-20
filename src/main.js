@@ -40,7 +40,7 @@ if (process.env.NODE_ENV === 'production') {
 
 VueAMap.initAMapApiLoader({
   key: `${map.amap.WEB_API_KEY}`,
-  plugin: ['AMap.MarkerClusterer', 'AMap.Geolocation', 'AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor', 'AMap.Scale', 'AMap.Driving', 'AMap.PoiPicker'],
+  plugin: ['Geolocation', 'Autocomplete', 'PlaceSearch', 'Scale', 'ToolBar', 'MapType', 'CircleEditor', 'Driving', 'PoiPicker'],
   uiVersion: '1.0.11', // ui库版本，不配置不加载,
   v: '1.4.15' // 默认高德 sdk 版本为 1.4.4
 })

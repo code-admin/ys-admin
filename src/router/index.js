@@ -612,6 +612,13 @@ export const constantRoutes = [{
     meta: {
       title: '设备维护'
     }
+  }, {
+    path: 'warehouse',
+    name: 'Warehouse',
+    component: () => import('@/views/system/warehouse/Index'),
+    meta: {
+      title: '发货地址'
+    }
   }]
 },
 

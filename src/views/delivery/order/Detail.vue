@@ -459,6 +459,7 @@
         <el-col :span="12">
           <div class="amap-box" style="width: 100%; height: 300px">
             <el-amap
+              v-if="showMap"
               vid="delivery_order_detail"
               map-style="fresh"
               :expand-zoom-range="false"
@@ -469,7 +470,7 @@
               :events="mapEvents"
             >
               <el-amap-marker
-                :position="[120.426486, 27.525621]"
+                :position="werahouse"
                 :content="`<img src='http://asher.cn-sh2.ufileos.com/agabus.png' style='width:60px;height:60px;'></img>`"
               />
             </el-amap>
@@ -639,6 +640,8 @@ export default {
     return {
       amapManager,
       mapCenter: [120.42638, 27.52558],
+      werahouse: [120.42638, 27.52558],
+      showMap: false,
       mapPlugin: [{ pName: 'Scale' }, { pName: 'Driving' }],
       mapEvents: {
         init(o) {
@@ -669,6 +672,7 @@ export default {
     getDetailById(id) {
       detail(id).then((res) => {
         this.orderDeliver = res.data
+        this.werahouse = [res.data.shippingAddress.longitude, res.data.shippingAddress.latitude]
         this.origin = new window.AMap.LngLat(res.data.shippingAddress.longitude, res.data.shippingAddress.latitude) // 出发点
         this.opts = { waypoints: [] } // 途径点
         res.data.orderList.map((item, index) => {
@@ -681,6 +685,7 @@ export default {
         setTimeout(() => {
           this.getDriving(this.origin, this.destination, this.opts) // 驾车线路
         }, 1000)
+        this.showMap = !this.showMap
       })
     },
 

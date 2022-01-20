@@ -254,11 +254,12 @@
                   placeholder="请选择发货"
                   filterable
                   style="width: 100%"
+                  @change="changeShippingSource"
                 >
                   <el-option
                     v-for="source in sourceList"
                     :key="source.id"
-                    :label="source.address"
+                    :label="source.remark"
                     :value="source.id"
                   />
                 </el-select>
@@ -295,35 +296,22 @@
             </el-form>
           </el-col>
           <el-col :span="12">
-            <div class="amap-box">
+            <div v-if="showMap" class="amap-box">
               <el-amap
                 vid="project-map"
                 map-style="fresh"
                 :expand-zoom-range="false"
                 :amap-manager="amapManager"
+                :events="mapEvents"
+                :plugin="mapPlugin"
                 :center="mapCenter"
                 :zoom="zoom"
-                :plugin="mapPlugin"
-                :events="mapEvents"
               >
                 <el-amap-marker
-                  :position="[120.426486, 27.525621]"
+                  :position="warehouse"
                   :content="`<img src='http://asher.cn-sh2.ufileos.com/agabus.png' style='width:60px;height:60px;'></img>`"
                 />
               </el-amap>
-              <div
-                style="
-                  font-family: 'Hiragino Sans GB';
-                  font-size: 12px;
-                  color: #909399;
-                  margin-top: 10px;
-                "
-              >
-                <span> 当前地址：{{ orderInfo.address }} </span>
-                <span>
-                  {{ orderInfo.distance ? `全程 ${orderInfo.distance}（公里）`: '' }}{{ orderInfo.requireTime ? `大约需要 ${orderInfo.requireTime}（小时）`:'' }}
-                </span>
-              </div>
             </div>
           </el-col>
         </el-row>
@@ -417,25 +405,23 @@ import { AMapManager } from 'vue-amap'
 const amapManager = new AMapManager()
 import { getCustomes } from '@/api/user'
 import { getShippingAddress } from '@/api/org'
-import { getOrderTypes, getExpress, saveOrder, submitOrder } from '@/api/order'
-import { getValidateProducts } from '@/api/product'
-import { getProvinces, getCitys, getCountrys } from '@/api/common'
-import { exchangeProductStock } from '@/api/product'
+import { getOrderTypes, saveOrder, submitOrder } from '@/api/order'
+import { getValidateProducts, exchangeProductStock } from '@/api/product'
+
 const date = new Date()
 const today = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+
 export default {
   data() {
     const that = this
     return {
       orgId: getOrgId() || '1',
+      warehouse: [120, 31],
       sourceList: [],
       saveOrderInfoLoading: false,
       saveOrSubmitOrderInfoloading: false,
       currentData: today,
-      props: {
-        lazy: true,
-        lazyLoad: (node, resolve) => this.loadPCC(node, resolve)
-      },
+
       orderInfo: {
         makingType: 1,
         orderType: 2,
@@ -455,125 +441,89 @@ export default {
             stockNumber: null
           }
         ],
-        pcc: null,
-        shippingSource: 1,
-        shippingLongitude: 120.426486,
-        shippingLatitude: 27.525621,
-        shippingAddress: '亚迦布科技',
+
+        shippingSource: null,
+        shippingLongitude: null,
+        shippingLatitude: null,
+        shippingAddress: '',
+
         address: '',
         distance: 0,
         requireTime: 0
       },
+
       customeList: [],
       orderTypeList: [],
       productList: [],
-      expresList: [],
       showExchange: false,
       formLabelWidth: '90px',
       exchange: {},
       tempIndex: null,
-      companyS: [],
+
       // //////////////地图相关///////////////////////
-      selectPostion: [], // 选择的地图位置坐标
-      amapManager,
-      mapCenter: [121.604673, 31.171047],
-      zoom: 10,
+      showMap: false,
       mapEvents: {
         init() {
+          const AMAP = window.AMap
           // 驾车路线规划
-          var driving = new AMap.Driving({
+          var driving = new AMAP.Driving({
             // 驾车路线规划策略，AMap.DrivingPolicy.LEAST_TIME是最快捷模式
-            policy: AMap.DrivingPolicy.LEAST_TIME,
+            policy: AMAP.DrivingPolicy.LEAST_TIME,
             // map 指定将路线规划方案绘制到对应的AMap.Map对象上
             map: amapManager.getMap()
           })
 
-          // 拖拽选址 & POI
-          setTimeout(() => {
-            AMapUI.loadUI(['misc/PositionPicker', 'misc/PoiPicker'], (PositionPicker, PoiPicker) => {
-              console.log('地图选址', PositionPicker)
-              // const positionPicker = new PositionPicker({
-              //   mode: "dragMap", //设定为拖拽地图模式，可选'dragMap'、'dragMarker'，默认为'dragMap'
-              //   map: amapManager.getMap(), //依赖地图对象
-              // });
-              const poiPicker = new PoiPicker({
-                input: 'pickerInput' // 输入框id
+          // 搜索POI
+          window.AMapUI.loadUI(['misc/PoiPicker'], (PoiPicker) => {
+            const poiPicker = new PoiPicker({
+              input: 'pickerInput' // 输入框id
+            })
+            // 监听poi选中信息
+            poiPicker.on('poiPicked', function(poiResult) {
+              // 用户选中的poi点信息
+              that.zoom = 17
+              that.mapCenter = [
+                poiResult.item.location.lng,
+                poiResult.item.location.lat
+              ]
+
+              // 收货地址
+              that.orderInfo.longitude = poiResult.item.location.lng
+              that.orderInfo.latitude = poiResult.item.location.lat
+              that.orderInfo.address = `${poiResult.item.name}`
+              // 导航参数
+              var origin = new AMAP.LngLat(that.orderInfo.shippingLongitude, that.orderInfo.shippingLatitude) // 起点
+              var destination = new AMAP.LngLat(poiResult.item.location.lng, poiResult.item.location.lat) // 终点
+
+              // 划线路
+              driving.search(origin, destination, (status, result) => {
+                if (status === 'complete') {
+                  that.orderInfo.distance = result.routes[0].distance / 1000
+                  that.orderInfo.requireTime = (result.routes[0].time / 60 / 60).toFixed(2)
+                }
               })
-              // positionPicker.on("success", (positionResult) => {
-              //   // console.log("positionResult", positionResult);
-              //   that.orderInfo.address = positionResult.address;
-              //   that.orderInfo.longitude = positionResult.position.lng;
-              //   that.orderInfo.latitude = positionResult.position.lat;
-              //   that.companyS = positionResult.regeocode.pois;
-              //   that.selectPostion = [
-              //     positionResult.position.lng,
-              //     positionResult.position.lat,
-              //   ];
-
-              // });
-              // // 注意一定要调用这个方法，不然没有效果的。
-              // positionPicker.start();
-
-              // 监听poi选中信息
-              poiPicker.on('poiPicked', function(poiResult) {
-                // 用户选中的poi点信息
-                that.zoom = 17
-                that.orderInfo.address = `${poiResult.item.name}`
-                that.mapCenter = [
-                  poiResult.item.location.lng,
-                  poiResult.item.location.lat
-                ]
-                that.selectPostion = [
-                  poiResult.item.location.lng,
-                  poiResult.item.location.lat
-                ]
-                that.orderInfo.longitude = poiResult.item.location.lng
-                that.orderInfo.latitude = poiResult.item.location.lat
-
-                var origin = new AMap.LngLat(120.42638, 27.52558) // 起点
-                var destination = new AMap.LngLat(poiResult.item.location.lng, poiResult.item.location.lat) // 终点
-                // 划线路
-                driving.search(origin, destination, (status, result) => {
-                  if (status === 'complete') {
-                    that.orderInfo.distance = result.routes[0].distance / 1000
-                    that.orderInfo.requireTime = (result.routes[0].time / 60 / 60).toFixed(2)
-                  }
-                })
-              })
-            }
-            )
-          }, 300)
+            })
+          }
+          )
         }
       },
-      mapPlugin: [
-        {
-          pName: 'Scale'
-        },
-        {
-          pName: 'Driving'
-        }
-      ]
+      mapPlugin: [{ pName: 'Geolocation' }, { pName: 'Scale' }, { pName: 'Driving' }, { pName: 'PoiPicker' }],
+      amapManager,
+      mapCenter: [121.604673, 31.171047],
+      zoom: 10
     }
   },
   mounted() {
-    this.getMapCenterByIP()
-    this.getCustomeList()
-    this.getOrderTypeList()
-    this.getValidateProductList()
-    this.getExpresList()
-    this.getSourceList()
+    this.getMapCenterByIP() // 地图中心点
+    this.getCustomeList() // 客户数据
+    this.getOrderTypeList() // 订单类型
+    this.getValidateProductList() // 产品数据
+    this.getSourceList() // 发货地
   },
   methods: {
-    getSourceList() {
-      getShippingAddress(this.orgId).then((res) => {
-        if (res.code === 10000) {
-          this.sourceList = res.data
-        }
-      })
-    },
     // IP定位设置地图中心点
     getMapCenterByIP() {
-      const ip = returnCitySN['cip']
+      const ip = window.returnCitySN['cip']
       axios
         .get(
           `https://restapi.amap.com/v5/ip?output=json&ip=${ip}&type=4&key=${map.amap.WEB_KEY}`
@@ -581,81 +531,60 @@ export default {
         .then((res) => {
           if (res.data.infocode === '10000') {
             this.mapCenter = res.data.location.split(',')
+            this.showMap = !this.showMap
           }
         })
     },
 
-    // 驾车线路
-    getDriving(origin, destination) {
-      axios
-        .get(
-          `https://restapi.amap.com/v5/direction/driving?key=${map.amap.WEB_KEY}&origin=${origin}&destination=${destination}`
-        )
-        .then((res) => {
-          if (res.data.infocode === '10000') {
-            console.log(
-              '大约',
-              res.data.route.paths[0].distance / 1000,
-              '公里'
-            )
-          }
-        })
+    // 获取发货仓库，默认选择第一个。
+    getSourceList() {
+      getShippingAddress(this.orgId).then((res) => {
+        if (res.code === 10000) {
+          this.sourceList = res.data
+          this.orderInfo.shippingSource = this.sourceList[0].id
+          // 设置发货仓的位置信息
+          this.orderInfo.shippingLongitude = Number(res.data[0].longitude)
+          this.orderInfo.shippingLatitude = Number(res.data[0].latitude)
+          this.orderInfo.shippingAddress = res.data.address
+          // 发货仓的点位
+          this.warehouse = [Number(this.sourceList[0].longitude), Number(this.sourceList[0].latitude)]
+        }
+      })
     },
 
-    loadPCC(node, resolve) {
-      const { level, value } = node
-      if (level === 0) {
-        getProvinces().then((res) => {
-          const nodes = []
-          if (res.code === 10000 && res.data.length) {
-            res.data.map((item) => {
-              nodes.push({
-                value: item.provinceId,
-                label: item.name
-              })
-            })
-            resolve(nodes)
-          }
-        })
-      } else if (level === 1) {
-        getCitys(value).then((res) => {
-          const nodes = []
-          if (res.code === 10000 && res.data.length) {
-            res.data.map((item) => {
-              nodes.push({
-                value: item.cityId,
-                label: item.name
-              })
-            })
-            resolve(nodes)
-          }
-        })
-      } else if (level === 2) {
-        getCountrys(value).then((res) => {
-          const nodes = []
-          if (res.code === 10000 && res.data.length) {
-            res.data.map((item) => {
-              nodes.push({
-                value: item.countryId,
-                label: item.name,
-                leaf: level >= 2
-              })
-            })
-            resolve(nodes)
-          }
-        })
-      }
+    // 选择仓库地址
+    changeShippingSource(id) {
+      const shippingAddress = this.sourceList.find(item => {
+        return item.id === id
+      })
+
+      this.orderInfo.shippingLongitude = Number(shippingAddress.longitude)
+      this.orderInfo.shippingLatitude = Number(shippingAddress.latitude)
+      this.orderInfo.shippingAddress = shippingAddress.remark
+
+      this.warehouse = [Number(shippingAddress.longitude), Number(shippingAddress.latitude)]
+
+      // 清空收货地址
+      this.orderInfo.longitude = null
+      this.orderInfo.latitude = null
+      this.orderInfo.address = null
     },
+
+    // 获取客户数据
     getCustomeList() {
       getCustomes().then((res) => {
         if (res.code === 10000) this.customeList = res.data
       })
     },
+
+    // 获取订单类型
     getOrderTypeList() {
       getOrderTypes().then((res) => {
         if (res.code === 10000) this.orderTypeList = res.data
       })
     },
+
+    // 获取产品数据
     getValidateProductList() {
       const loading = this.$loading({
         lock: true,
@@ -670,11 +599,7 @@ export default {
         loading.close()
       })
     },
-    getExpresList() {
-      getExpress().then((res) => {
-        if (res.code === 10000) this.expresList = res.data
-      })
-    },
+
     addGoods() {
       this.orderInfo.orderExts.push({
         productNo: null,
@@ -698,9 +623,6 @@ export default {
     saveOrderInfo() {
       const params = {
         ...this.orderInfo
-        // province: this.orderInfo.pcc[0],
-        // city: this.orderInfo.pcc[1],
-        // district: this.orderInfo.pcc[2]
       }
       this.saveOrderInfoLoading = !this.saveOrderInfoLoading
       saveOrder(params)
@@ -721,9 +643,6 @@ export default {
     saveOrSubmitOrderInfo() {
       const params = {
         ...this.orderInfo
-        // province: this.orderInfo.pcc[0],
-        // city: this.orderInfo.pcc[1],
-        // district: this.orderInfo.pcc[2]
       }
       this.saveOrSubmitOrderInfoloading = !this.saveOrSubmitOrderInfoloading
       submitOrder(params)
@@ -744,9 +663,6 @@ export default {
         })
     },
     changeProduct(index) {
-      // const changeId = this.orderInfo.orderExts[index].productId
-      // this.orderInfo.orderExts[index] = { ...(this.productList.find(item => item.id === changeId)) }
-
       const changeId = this.orderInfo.orderExts[index].productId
       const product = this.productList.find((item) => item.id === changeId)
       this.orderInfo.orderExts[index].productNo = product.productNo

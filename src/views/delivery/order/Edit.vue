@@ -33,11 +33,12 @@
                 placeholder="请选择发货"
                 filterable
                 style="width: 100%"
+                @change="changeShippingAddress"
               >
                 <el-option
                   v-for="source in sourceList"
                   :key="source.id"
-                  :label="source.address"
+                  :label="source.remark"
                   :value="source.id"
                 />
               </el-select>
@@ -70,7 +71,7 @@
               :events="mapEvents"
             >
               <el-amap-marker
-                :position="[120.426486, 27.525621]"
+                :position="warehouse"
                 :content="`<img src='http://asher.cn-sh2.ufileos.com/agabus.png' style='width:60px;height:60px;'></img>`"
               />
             </el-amap>
@@ -391,6 +392,7 @@ export default {
       sourceList: [],
       orgId: getOrgId() || '1',
       alertTitle: null,
+      warehouse: [120.42638, 27.52558],
       orderInfo: {
         status: 0, // 状态
         shippingAddressId: 1, // 发货地址
@@ -422,13 +424,32 @@ export default {
     this.getSourceList()
   },
   methods: {
+    // a
+    changeShippingAddress(addressId) {
+      const wareHouse = this.sourceList.find(item => {
+        return item.id === addressId
+      })
+      // console.log('wareHouse', wareHouse)
+      this.orderInfo.shippingAddress.Longitude = wareHouse.longitude
+      this.orderInfo.shippingAddress.Latitude = wareHouse.latitude
+      this.orderInfo.shippingAddress.address = wareHouse.address
+
+      this.warehouse = [wareHouse.longitude, wareHouse.latitude]
+
+      console.log('this.orderInfo.shippingAddress', this.orderInfo.shippingAddress)
+    },
+
     // 获取发货仓库
     getSourceList() {
       getShippingAddress(this.orgId).then((res) => {
         if (res.code === 10000) {
           this.sourceList = res.data
-          this.orderInfo.shippingAddress.Longitude = 120.42638
-          this.orderInfo.shippingAddress.Latitude = 27.52558
+          this.orderInfo.shippingAddress.Longitude = this.sourceList[0].longitude
+          this.orderInfo.shippingAddress.Latitude = this.sourceList[0].latitude
+          this.orderInfo.shippingAddress.address = this.sourceList[0].address
+
+          this.mapCenter = [this.sourceList[0].longitude, this.sourceList[0].latitude]
+          this.warehouse = [this.sourceList[0].longitude, this.sourceList[0].latitude]
         }
       })
     },
@@ -463,7 +484,9 @@ export default {
     confirmSelect() {
       this.orderInfo.orderList = this.orderInfo.orderList.concat(this.selectArr)
       this.orderInfo.orderList = devide(this.orderInfo.orderList)
-      const origin = new window.AMap.LngLat(this.orderInfo.shippingAddress.longitude, this.orderInfo.shippingAddress.latitude)
+      const origin = new window.AMap.LngLat(this.orderInfo.shippingAddress.Longitude, this.orderInfo.shippingAddress.Latitude)
+
+      console.log('origin======', origin)
 
       let destination
       const opts = { waypoints: [] }
@@ -482,7 +505,7 @@ export default {
     deleteSelectByIndex(index) {
       this.orderInfo.orderList.splice(index, 1)
 
-      const origin = new window.AMap.LngLat(this.orderInfo.shippingLongitude, this.orderInfo.shippingLatitude)
+      const origin = new window.AMap.LngLat(this.orderInfo.shippingAddress.Longitude, this.orderInfo.shippingAddress.Latitude)
       let destination
       const opts = { waypoints: [] }
 
