@@ -35,25 +35,48 @@ import filters from './filters' // 过滤器
  */
 import { mockXHR } from '../mock'
 if (process.env.NODE_ENV === 'production') {
-  mockXHR()
+    mockXHR()
 }
 
 VueAMap.initAMapApiLoader({
-  key: `${map.amap.WEB_API_KEY}`,
-  plugin: ['Geolocation', 'Autocomplete', 'PlaceSearch', 'Scale', 'ToolBar', 'MapType', 'CircleEditor', 'Driving', 'PoiPicker'],
-  uiVersion: '1.0.11', // ui库版本，不配置不加载,
-  v: '1.4.15' // 默认高德 sdk 版本为 1.4.4
+    key: `${map.amap.WEB_API_KEY}`,
+    plugin: ['Geolocation', 'Autocomplete', 'PlaceSearch', 'Scale', 'ToolBar', 'MapType', 'CircleEditor', 'Driving', 'PoiPicker'],
+    uiVersion: '1.0.11', // ui库版本，不配置不加载,
+    v: '1.4.15' // 默认高德 sdk 版本为 1.4.4
 })
+
+
+
+// 防抖处理-立即执行
+const on = Vue.prototype.$on
+Vue.prototype.$on = function(event, func) {
+    let timer;
+    let flag = true;
+    let newFunc = func
+    if (event == 'click') {
+        newFunc = function() {
+            if (flag) {
+                func.apply(this, arguments)
+                flag = false
+            }
+            clearTimeout(timer)
+            timer = setTimeout(function() {
+                flag = true
+            }, 1000)
+        }
+    }
+    on.call(this, event, newFunc)
+}
 
 // set ElementUI lang to EN
 Vue.use(ElementUI, { locale })
-// set amap
+    // set amap
 Vue.use(VueAMap)
 Vue.use(moment)
 
 Vue.use(filters)
-// echarts
-// Vue.use(Echarts)
+    // echarts
+    // Vue.use(Echarts)
 Vue.component('v-chart', VueECharts)
 
 Vue.config.productionTip = false
