@@ -23,7 +23,7 @@
         <el-option v-for="(flow,index) in flowList" :key="index" :label="flow.workName" :value="flow.workStatus" />
       </el-select>
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="queryData">查询</el-button>
-      <router-link :to="{ name: 'OrderManageAdd' }">
+      <router-link  v-permission="['salesman']"  :to="{ name: 'OrderManageAdd' }">
         <el-button class="filter-item" icon="el-icon-plus">创建销售单</el-button>
       </router-link>
       <router-link :to="{ name: 'OrderManageReturnAdd'}">
@@ -209,6 +209,7 @@
 </template>
 
 <script>
+import permission from '@/directive/permission/index.js' // 权限判断指令
 import {
   getOrders,
   getOrderTypes,
@@ -222,6 +223,9 @@ import {
   getCustomes
 } from '@/api/user'
 export default {
+  directives: {
+    permission
+  },
   data() {
     return {
       listLoading: true,
