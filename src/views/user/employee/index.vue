@@ -14,7 +14,8 @@
     <el-table :key="tableKey" v-loading="listLoading" :data="userList" border fit highlight-current-row style="width: 100%;">
       <el-table-column type="selection" align="center" width="55" />
       <el-table-column type="index" width="50" align="center" />
-      <el-table-column label="工号" prop="jobNumber" align="center" sortable="custom" />
+      <el-table-column label="工号" prop="jobNumber" align="center" />
+      <el-table-column label="登录账号" prop="loginName" align="center" />
       <el-table-column label="姓名" prop="userName" align="center" />
       <el-table-column label="性别" prop="gender" align="center">
         <template slot-scope="scope">
