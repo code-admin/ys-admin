@@ -5,6 +5,7 @@ import orderRouter from './modules/order'
 import refundRouter from './modules/refund'
 import deliveryRouter from './modules/delivery'
 import printRouter from './modules/print'
+import billRouter from './modules/bill'
 import analysisRouter from './modules/analysis'
 import productRouter from './modules/product'
 import produceRouter from './modules/produce'
@@ -119,6 +120,7 @@ export const asyncRoutes = [
     refundRouter,
     deliveryRouter,
     printRouter,
+    billRouter,
     analysisRouter,
     productRouter,
     produceRouter,

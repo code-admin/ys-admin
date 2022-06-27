@@ -23,7 +23,7 @@
         <el-option v-for="(flow,index) in flowList" :key="index" :label="flow.workName" :value="flow.workStatus" />
       </el-select>
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="queryData">查询</el-button>
-      <router-link  v-permission="['salesman']"  :to="{ name: 'OrderManageAdd' }">
+      <router-link :to="{ name: 'OrderManageAdd' }">
         <el-button class="filter-item" icon="el-icon-plus">创建销售单</el-button>
       </router-link>
       <router-link :to="{ name: 'OrderManageReturnAdd'}">
