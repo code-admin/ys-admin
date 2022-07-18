@@ -64,6 +64,16 @@
             <div v-if="row.status==1">
               <el-button type="text" size="mini" @click="publishOrderById(row.id,0)">撤消</el-button>
             </div>
+            <div v-if="row.status>1 && row.status !==8">
+               <el-popover :ref="row.id" placement="top" width="300" trigger="click">
+                <p>确定要作废此配送单吗！！？</p>
+                <div style="text-align: right; margin: 0">
+                  <el-button size="mini" type="text" @click="()=>{$refs[row.id].doClose()}">取消</el-button>
+                  <el-button type="primary" size="mini" plain @click="cancellation(row.id)">确 定</el-button>
+                </div>
+                <el-button slot="reference" type="text" size="mini">作废</el-button>
+              </el-popover>
+            </div>
           </div>
         </template>
       </el-table-column>
@@ -76,7 +86,7 @@
 </template>
 
 <script>
-import { getDeliverList, updateStatus } from '@/api/delivery'
+import { getDeliverList, updateStatus ,cancel} from '@/api/delivery'
 export default {
   data() {
     return {
@@ -101,8 +111,7 @@ export default {
         this.dataList = res.data
         this.total = res.total
         this.listLoading = !this.listLoading
-      }).catch(err => {
-        console.log('err', err)
+      }).catch(() => {
         this.listLoading = !this.listLoading
       })
     },
@@ -143,6 +152,16 @@ export default {
           })
           this.getDateList()
         }
+      })
+    },
+    // 作废
+    cancellation(id){
+      cancel(id).then(res => {
+         this.$message({
+            type: 'success',
+            message: res.message
+          })
+        this.getDateList()
       })
     },
     // 查询
